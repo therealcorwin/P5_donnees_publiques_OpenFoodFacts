@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: Utf-8 -*
+# -*- coding: Utf-8 -*-
 
 import requests
 import records
@@ -9,65 +9,58 @@ from pprint import pprint
 
 # CONSTANTS #
 
+# DB_CONNECT = records.Database("""mysql+mysqlconnector://OPFF:OCP5@localhost/Category_Product?charset=utf8mb4""")
 
-DB_CONNECT = records.Database("""mysql+mysqlconnector://OPFF:OCP5@localhost/Category_Product?charset=utf8mb4""")
+# CATEGORY = 'Chocolat'                                             # print(json.dumps(products, sort_keys=True, indent=1))
 
-ITEM = 'Chocolat'                                             # print(json.dumps(products, sort_keys=True, indent=1))
+# "https://fr.openfoodfacts.org/cgi/search.pl ?search_terms="OBJECT"&search_simple=1"
 
-PRODUCT = []
 GRADES = ["a", "b", "c", "d", "e"]
 CATEGORY = ["Viandes",
-			"Boissons",
-			"Poissons",
-			"Charcuterie",
-			"Riz",
-			"Fromage",
-			"Desserts",
-			"Produits_laitiers",
-			"Gâteaux",
-			"Biscuit",
-			"Chocolat",
-			"Pâtes",
-			"Epicerie"]
+            # "Boissons",
+            # "Poissons",
+            # "Charcuterie",
+            # "Fromage",
+            # "Produits_laitiers",
+            # "Chocolat",
+            # "Pâtes",
+            "Epicerie"]
+ITEM = "Viandes"
+PRODUCT = {}
 
 
 def research():
+        api = "https://fr.openfoodfacts.org/cgi/search.pl?search_terms=" + ITEM + "&search_simple=1"
+        config = {"action": "process", "page_size": 150, "json": 1}
 
-	for category in CATEGORY:
-		for grade in GRADES:
-			url = "https://fr.openfoodfacts.org/cgi/search.pl"
-			config = {
-				"action": "process",
-				"tagtype_0": "categories",
-				"tag_contains_0": "contains",
-				"tag_0": category,
-				"tagtype_1": "nutrition_grade_fr",
-				"tag_contains_1": "contains",
-				"tag_1": grade,
-				"sort_by": "product_name",
-				"page_size": 1,
-				"json": 1
-			}
-			req = requests.get(url, params=config)
-			response = req.json()
-			PRODUCT.extend(response["products"])
+        req = requests.get(api, params=config)
+        response = req.json()
 
+        pos = 0
+        while pos < 10:
+            product = (
+                response['products'][pos]['categories'],
+                response['products'][pos]['product_name'],
+                response['products'][pos]['generic_name_fr'],
+                response['products'][pos]['url'],
+                response['products'][pos]['nutrition_grade_fr'],
+                response['products'][pos]['stores'])
 
-			pprint(PRODUCT)
+            preform = sorted(product)
+            pos += 1
 
-research()
-
-#     products = (
-#         response['products'][1]['product_name'],
-#         response['products'][1]['generic_name_fr'],
-#         response['products'][1]['url'],
-#         response['products'][1]['nutrition_grade_fr'],  # + Picture
-#         response['products'][1]['stores'])
+            pprint(preform)
 
 
-#  QUERY_INSERT = """()"""
-#  QUERY_ALTER = """()"""
-#  QUERY_MODIFY = """()"""
-#  QUERY_INSERT = """(INSERT IN TO Product(product_name, generic_name, url, nutrition_grade_fr, store)
-#                     VALUES(:product_name, :generic_name, :url, :nutrition_grade_fr, :store))"""
+def formating():
+    for form in PRODUCT:
+        pass
+
+
+def main():
+    research()
+
+
+if __name__ == "__main__":
+    main()
 
