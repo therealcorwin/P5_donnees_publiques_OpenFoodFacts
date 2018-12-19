@@ -9,13 +9,8 @@ from pprint import pprint
 
 # CONSTANTS #
 
-# DB_CONNECT = records.Database("""mysql+mysqlconnector://OPFF:OCP5@localhost/Category_Product?charset=utf8mb4""")
+# print(json.dumps(products, sort_keys=True, indent=1))
 
-# CATEGORY = 'Chocolat'                                             # print(json.dumps(products, sort_keys=True, indent=1))
-
-# "https://fr.openfoodfacts.org/cgi/search.pl ?search_terms="OBJECT"&search_simple=1"
-
-GRADES = ["a", "b", "c", "d", "e"]
 CATEGORY = ["Viandes",
             # "Boissons",
             # "Poissons",
@@ -25,40 +20,47 @@ CATEGORY = ["Viandes",
             # "Chocolat",
             # "Pâtes",
             "Epicerie"]
+
 ITEM = "Viandes"
-PRODUCT = {}
 
+class Api_call:
 
-def research():
-        api = "https://fr.openfoodfacts.org/cgi/search.pl?search_terms=" + ITEM + "&search_simple=1"
-        config = {"action": "process", "page_size": 150, "json": 1}
-
-        req = requests.get(api, params=config)
-        response = req.json()
-
-        pos = 0
-        while pos < 10:
-            product = (
-                response['products'][pos]['categories'],
-                response['products'][pos]['product_name'],
-                response['products'][pos]['generic_name_fr'],
-                response['products'][pos]['url'],
-                response['products'][pos]['nutrition_grade_fr'],
-                response['products'][pos]['stores'])
-
-            preform = sorted(product)
-            pos += 1
-
-            pprint(preform)
-
-
-def formating():
-    for form in PRODUCT:
+    def __init__(self):
         pass
 
+    def research(self):
+            api = "https://fr.openfoodfacts.org/cgi/search.pl?search_terms=" + ITEM + "&search_simple=1"
+            config = {"action": "process", "page_size": 1000, "json": 1}
+
+            req = requests.get(api, params=config)
+            response = req.json()
+
+            pos = 0
+            try:
+                while pos < 50:
+                    product = {
+                        response['products'][pos]['categories'],
+                        # response['products'][pos]['product_name'],
+                        # response['products'][pos]['generic_name_fr'],
+                        response['products'][pos]['nutrition_grade_fr'],
+                        # response['products'][pos]['stores'],
+                        response['products'][pos]['url']}
+                    preform = sorted(product)
+                    pos += 1
+                    pprint(preform)
+
+            except KeyError:
+                print("KeyError", "POSITION ACTUEL :", pos)
+
+                # gett = response.get(preform)
+                # print(gett)
+
+            except IndexError:
+                print("IndexError", "POSITION ACTUEL :", pos)
 
 def main():
-    research()
+    call = Api_call()
+    api = call.research()
 
 
 if __name__ == "__main__":
