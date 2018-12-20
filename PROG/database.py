@@ -5,15 +5,21 @@
 import records
 
 
-# DB_CONNECT = records.Database("""mysql+mysqlconnector://OPFF:OCP5@localhost/Category_Product?charset=utf8mb4""")
+# DB_CONNECT = records.Database("""mysql+mysqlconnector://OPFF:OCP5@localhost/?charset=utf8mb4""")
 
 
-class CreateDataBase:
+class DataBaseCreator:
 
     def __init__(self):
         pass
 
     def c_table(self):
+        pass
+
+    def store(self):
+        pass
+
+    def product_store(self):
         pass
 
     def c_link(self):

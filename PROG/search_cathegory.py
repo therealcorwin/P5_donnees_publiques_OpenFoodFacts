@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: Utf-8 -*-
 
-import requests
-import records
+import requests as req
 
 from pprint import pprint
 
@@ -28,13 +27,22 @@ class Api_call:
     def __init__(self):
         pass
 
-    def research(self):
-            api = "https://fr.openfoodfacts.org/cgi/search.pl?search_terms=" + ITEM + "&search_simple=1"
-            config = {"action": "process", "page_size": 1000, "json": 1}
+    def connecting(self):
+        api = "https://fr.openfoodfacts.org/cgi/search.pl"  # Address OpenFooFact.org the API FR locating
+        config = {"action": "process",  # This config for  for connecting API
+                  "tagtype_0": "categories",  # Get the result by category
+                  'tag_0': CATEGORY,  # the tag represents the article search
+                  "tag_contains_0": "contains",
+                  "page_size": 10,  # Number of articles per page
+                  "json": 1}  # The API response in JSON
 
-            req = requests.get(api, params=config)
-            response = req.json()
+        requests = req.get(api, params=config)  # Uses the configuration for the connection
+        response = requests.json()  # Return the response in JSON
+        products = response['products']  # Finally result of API
+        pprint(products)
+        return products  # Return the finally response
 
+    def research(self, response):
             pos = 0
             try:
                 while pos < 50:
@@ -57,6 +65,7 @@ class Api_call:
 
             except IndexError:
                 print("IndexError", "POSITION ACTUEL :", pos)
+
 
 def main():
     call = Api_call()
