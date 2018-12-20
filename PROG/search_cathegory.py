@@ -43,28 +43,28 @@ class Api_call:
         return products  # Return the finally response
 
     def research(self, response):
-            pos = 0
+        pos = 0
+        print(len(response['products']))
+        formated_product = []
+        for product in response['products']:
             try:
-                while pos < 50:
-                    product = {
-                        response['products'][pos]['categories'],
-                        # response['products'][pos]['product_name'],
-                        # response['products'][pos]['generic_name_fr'],
-                        response['products'][pos]['nutrition_grade_fr'],
-                        # response['products'][pos]['stores'],
-                        response['products'][pos]['url']}
-                    preform = sorted(product)
-                    pos += 1
-                    pprint(preform)
+                product_cat = {
+                    # product['categories'],
+                    # product['product_name'],
+                    # product['generic_name_fr'],
+                    # product['nutrition_grade_fr'],
+                    # product['stores'],
+                    product['url']}
+                preform = sorted(product_cat)
+                pos += 1
+                formated_product.append(preform)
+                pprint(preform)
 
             except KeyError:
                 print("KeyError", "POSITION ACTUEL :", pos)
-
-                # gett = response.get(preform)
-                # print(gett)
-
             except IndexError:
                 print("IndexError", "POSITION ACTUEL :", pos)
+        print(pos)
 
 
 def main():
