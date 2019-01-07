@@ -7,65 +7,50 @@ from pprint import pprint
 
 # CONSTANTS #
 
-CATEGORY = ["Viandes",
-            "Boissons",
-            "Diététique",
-            "Produits_laitiers",
-            "Produits_de_la_mer",
-            "Biscuiterie"
-            ]
+CATEGORIES = ["Charcuterie",          # 6 879 line total
+              "Boissons",             # 9 808 line total
+              "Céréales",             # 8 027 line total
+              "Plats_préparé",        # 10 013 line total
+              "Plats_surgelé",        # 9 180 line total
+              "Biscuit",              # 11 385 line total
+              "Viennoiseries"]        # 8 074 line total
 
 
-class ApiCall:
-    """ CALL THE API OPEN FOOD FACT """
+class ApiCollecting:
+    """ Call the Api Open Food Fact """
 
     def __init__(self):
-        """  """
+        """ The constructor is not useful here """
         pass
 
-    def connecting(self):  # -> Pourquoi PyCharm me suggère d'utiliser la méthode static?
-        """ USE THE CONFIGURATION FOR THE CONNECTING """
+    @classmethod
+    def bring_out(cls):
+        """ Use the configuration for the connecting interface """
 
-        global api, config
+        for categories in CATEGORIES:
+            cls.api = "https://fr.openfoodfacts.org/cgi/search.pl"         # Address OpenFooFact.org the API FR locating
+            cls.config = {"action": "process",                                     # This config for  for connecting API
+                          "tagtype_0": "categories",                                        # Get the result by category
+                          'tag_0': categories,                                   # the tag represents the article search
+                          "tag_contains_0": "contains",
+                          "page_size": 10,                                                 # Number of articles per page
+                          "json": 1}                                                          # The API response in JSON
 
-        for category in CATEGORY:
+            response = req.get(cls.api, params=cls.config)                   # Uses the configuration for the connection
+            results = response.json()                                                      # Return the response in JSON
+            products = results['products']                                                       # Finally result of API
 
-            """ Ma boucle qui collect mes produits de chaque categories ne fonctionne plus, 
-            pourtant avant la création de ma classe celle-ci marchait trés bien^^ """
+            pprint(products)
 
-            api = "https://fr.openfoodfacts.org/cgi/search.pl"             # Address OpenFooFact.org the API FR locating
-            config = {"action": "process",                                         # This config for  for connecting API
-                      "tagtype_0": "categories",                                            # Get the result by category
-                      'tag_0': category,                                         # the tag represents the article search
-                      "tag_contains_0": "contains",
-                      "page_size": 50,                                                     # Number of articles per page
-                      "json": 1}                                                              # The API response in JSON
+            return products
 
-        return api, config
-
-    def api_response(self):  # -> Pourquoi PyCharm me suggère d'utiliser la méthode static?
-        """ USE THE RESPONSE THE API """
-
-        global products
-
-        requests = req.get(api, params=config)                               # Uses the configuration for the connection
-        response = requests.json()                                                         # Return the response in JSON
-        products = response['products']                                                          # Finally result of API
-
-        return products                                                                    # Return the finally response
-
-    def final_product(self):  # -> Pourquoi PyCharm me suggère d'utiliser la méthode static?
-        """ FORMATTED THE RESPONSE JUST HARVEST THE CATEGORY'S SELECTED """
-
+    def format_final_response(self, products):
+        """ Formatted the response just harvest the categories selected """
         pos = 0
         print(len(products))
-
         product_final = []
 
         for product in products:
-            """ J'ai supprimé le dictionnaire pour mes champs, et a opter 
-            pour le nomage de mes champ afin de pouvoir les manipuler """
-
             try:
                 categories = product['categories']
                 name = product['product_name_fr']
@@ -73,36 +58,22 @@ class ApiCall:
                 website = product['url']
                 store = product['stores']
                 keys = (categories, name, grade, website, store)
-                # A tuple that organizes and respect the order of the fields
 
-                pos += 1
-
-                refactor = sorted(keys)
-                product_final.append(refactor)
+                preform = sorted(keys)
+                product_final.append(preform)
                 pprint(product_final)
-
+                pos += 1
             except KeyError:
                 print("KeyError", "POSITION ACTUEL :", pos)
-                continue     # Tester si le 'continue' termine le travail
-            except IndexError:
-                print("IndexError", "POSITION ACTUEL :", pos)
-
         print(pos)
 
         return product_final
 
 
 def main():
-    """ A cette heure ma classe marche bien, sauf la boucle
-    d'entrè, puis mes champs vide qui arrete le receuil des donnèes """
-
-    """Mes variables 'global' me servent juste à fonctionnner ma classe, elle seront remplacer et organiser
-     par le constructeur """
-
-    call = ApiCall()
-    connect = call.connecting()
-    formated = call.api_response()
-    final = call.final_product()
+    call = ApiCollecting()
+    connect = call.bring_out()
+    final = call.format_final_response(connect)
 
 
 if __name__ == "__main__":
