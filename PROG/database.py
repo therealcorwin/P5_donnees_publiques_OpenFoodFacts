@@ -1,9 +1,7 @@
-#!/usr/bin/env python3
+# -*- PipEnv -*-
 # -*- coding: Utf-8 -*-
 
-
-import records
-
+import records as rec
 
 # DB_CONNECT = records.Database("""mysql+mysqlconnector://OPFF:OCP5@localhost/?charset=utf8mb4""")
 

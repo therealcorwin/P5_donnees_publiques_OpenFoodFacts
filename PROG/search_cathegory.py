@@ -26,45 +26,48 @@ class ApiCollecting:
     @classmethod
     def bring_out(cls):
         """ Use the configuration for the connecting interface """
-
+        all_products = []
+        api = "https://fr.openfoodfacts.org/cgi/search.pl"  # Address OpenFooFact.org the API FR locating
         for categories in CATEGORIES:
-            cls.api = "https://fr.openfoodfacts.org/cgi/search.pl"         # Address OpenFooFact.org the API FR locating
-            cls.config = {"action": "process",                                     # This config for  for connecting API
-                          "tagtype_0": "categories",                                        # Get the result by category
-                          'tag_0': categories,                                   # the tag represents the article search
-                          "tag_contains_0": "contains",
-                          "page_size": 10,                                                 # Number of articles per page
-                          "json": 1}                                                          # The API response in JSON
+            config = {"action": "process",  # This config for  for connecting API
+                      "tagtype_0": "categories",  # Get the result by category
+                      'tag_0': categories,  # the tag represents the article search
+                      "tag_contains_0": "contains",
+                      "page_size": 10,  # Number of articles per page
+                      "json": 1}  # The API response in JSON
 
-            response = req.get(cls.api, params=cls.config)                   # Uses the configuration for the connection
-            results = response.json()                                                      # Return the response in JSON
-            products = results['products']                                                       # Finally result of API
+            response = req.get(api, params=config)  # Uses the configuration for the connection
+            results = response.json()  # Return the response in JSON
+            products = results['products']  # Finally result of API
+            all_products.extend(products)
 
-            pprint(products)
+        # pprint(all_products)
 
-            return products
+        return all_products
 
-    def format_final_response(self, products):
+    def format_final_response(self, all_products):
         """ Formatted the response just harvest the categories selected """
         pos = 0
-        print(len(products))
+        print(len(all_products))
         product_final = []
 
-        for product in products:
+        for product in all_products:
             try:
                 categories = product['categories']
                 name = product['product_name_fr']
                 grade = product['nutrition_grade_fr']
                 website = product['url']
                 store = product['stores']
-                keys = (categories, name, grade, website, store)
+                keys = (name, website)
 
-                preform = sorted(keys)
-                product_final.append(preform)
-                pprint(product_final)
+                formatting = sorted(keys)
+                product_final.append(formatting)
                 pos += 1
+
             except KeyError:
                 print("KeyError", "POSITION ACTUEL :", pos)
+
+        pprint(product_final)
         print(pos)
 
         return product_final
