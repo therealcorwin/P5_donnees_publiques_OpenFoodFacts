@@ -54,29 +54,37 @@ class ApiCollecting:
         for product in all_products:
             try:
                 categories = product['categories']
-                name = product['product_name_fr']
+                name = categories.upper() + product['product_name_fr']
                 grade = product['nutrition_grade_fr']
                 website = product['url']
                 store = product['stores']
-                keys = (name, website)
+                keys = (name, grade, website, store)
 
+                pos += 1
                 formatting = sorted(keys)
                 product_final.append(formatting)
-                pos += 1
 
             except KeyError:
                 print("KeyError", "POSITION ACTUEL :", pos)
 
         pprint(product_final)
         print(pos)
-
         return product_final
+
+    def validate_the_data(self, keys, products):
+        """ Validates the complete fields """
+
+        for key in keys:
+            if key not in products or not products[key]:
+                return True
+            return False
 
 
 def main():
     call = ApiCollecting()
     connect = call.bring_out()
     final = call.format_final_response(connect)
+    valid = call.validate_the_data(final, connect)
 
 
 if __name__ == "__main__":
