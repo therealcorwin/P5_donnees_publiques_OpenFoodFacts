@@ -7,13 +7,13 @@ from pprint import pprint
 
 # CONSTANTS #
 
-CATEGORIES = ["Charcuterie",          # 6 879 line total
-              "Boissons",             # 9 808 line total
-              "Céréales",             # 8 027 line total
-              "Plats_préparé",        # 10 013 line total
-              "Plats_surgelé",        # 9 180 line total
-              "Biscuit",              # 11 385 line total
-              "Viennoiseries"]        # 8 074 line total
+CATEGORIES = {"Charcuterie": 'Charcuterie',
+              "Boissons": 'boissons',
+              "Céréales": 'Céréales',
+              "Plats_préparé": 'Plats_préparé',
+              "Plats_surgelé": 'Plats_préparé',
+              "Biscuit": 'Biscuit',
+              "Viennoiseries": 'Viennoiseries'}
 
 
 class ApiCollecting:
@@ -23,61 +23,59 @@ class ApiCollecting:
         """ The constructor is not useful here """
         pass
 
-    @classmethod
-    def bring_out(cls):
+    def bring_out(self):
         """ Use the configuration for the connecting interface """
-        all_products = []
-        api = "https://fr.openfoodfacts.org/cgi/search.pl"  # Address OpenFooFact.org the API FR locating
-        for categories in CATEGORIES:
-            config = {"action": "process",  # This config for  for connecting API
-                      "tagtype_0": "categories",  # Get the result by category
-                      'tag_0': categories,  # the tag represents the article search
-                      "tag_contains_0": "contains",
-                      "page_size": 10,  # Number of articles per page
-                      "json": 1}  # The API response in JSON
 
-            response = req.get(api, params=config)  # Uses the configuration for the connection
-            results = response.json()  # Return the response in JSON
-            products = results['products']  # Finally result of API
+        all_products = []
+        api = "https://fr.openfoodfacts.org/cgi/search.pl"                 # Address OpenFooFact.org the API FR locating
+        for category in CATEGORIES:
+            config = {"action": "process",                                         # This config for  for connecting API
+                      "tagtype_0": "categories",                                            # Get the result by category
+                      'tag_0': category,                                         # the tag represents the article search
+                      "tag_contains_0": "contains",
+                      "page_size": 10,                                                     # Number of articles per page
+                      "json": 1}                                                              # The API response in JSON
+
+            response = req.get(api, params=config)                           # Uses the configuration for the connection
+            results = response.json()                                                      # Return the response in JSON
+            products = results['products']                                                       # Finally result of API
+
+            for product in products:
+                product['main_category'] = category
+
             all_products.extend(products)
 
-        # pprint(all_products)
-
         return all_products
-
-    def format_final_response(self, all_products):
-        """ Formatted the response just harvest the categories selected """
-        pos = 0
-        print(len(all_products))
-        product_final = []
-
-        for product in all_products:
-            try:
-                categories = product['categories']
-                name = categories.upper() + product['product_name_fr']
-                grade = product['nutrition_grade_fr']
-                website = product['url']
-                store = product['stores']
-                keys = (name, grade, website, store)
-
-                pos += 1
-                formatting = sorted(keys)
-                product_final.append(formatting)
-
-            except KeyError:
-                print("KeyError", "POSITION ACTUEL :", pos)
-
-        pprint(product_final)
-        print(pos)
-        return product_final
 
     def validate_the_data(self, keys, products):
         """ Validates the complete fields """
 
         for key in keys:
             if key not in products or not products[key]:
-                return True
-            return False
+                return False
+        return True
+
+    def format_final_response(self, all_products):
+        """ Formatted the response just harvest the categories selected """
+
+        product_final = []
+        keys = ['categories', 'product_name_fr', 'nutrition_grade_fr', 'url', 'stores']
+
+        for product in all_products:
+            if self.validate_the_data(keys, product):
+                categories = product['categories']
+                categorie = product['main_category']
+                name = product['product_name_fr']
+                grade = product['nutrition_grade_fr']
+                website = product['url']
+                store = product['stores']
+                key = (categorie, name, grade, website, store)
+
+                formatting = key
+                product_final.append(formatting)
+        pprint(product_final)
+
+        return product_final
 
 
 def main():
