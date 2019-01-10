@@ -1,30 +1,12 @@
 # -*- PipEnv -*-
 # -*- coding: Utf-8 -*-
 
-import requests as req
+import constants as cons
 
 from pprint import pprint
 
-# CONSTANTS #
-
-CATEGORIES = ["Plats préparé",
-              "Plats surgelé",
-
-              "AlimentS d'origine végétales",
-              "bio",
-              "Céréales",
-
-              "Biscuits",
-              "Viennoiseries",
-              
-              "Desserts",
-              "Produit laitiers",
-              "Fromages",
-
-              "Charcuteries",
-              "viandes",
-              
-              "Boissons"]
+import csv
+import requests as req
 
 
 class ApiCollectingData:
@@ -39,12 +21,12 @@ class ApiCollectingData:
 
         all_products = []
         api = "https://fr.openfoodfacts.org/cgi/search.pl"                 # Address OpenFooFact.org the API FR locating
-        for category in CATEGORIES:
+        for category in cons.CATEGORIES:
             config = {"action": "process",                                         # This config for  for connecting API
                       "tagtype_0": "categories",                                            # Get the result by category
                       'tag_0': category,                                         # the tag represents the article search
                       "tag_contains_0": "contains",
-                      "page_size": 50,                                                    # Number of articles per page
+                      "page_size": 20,                                                     # Number of articles per page
                       "json": 1}                                                              # The API response in JSON
 
             response = req.get(api, params=config)                           # Uses the configuration for the connection
@@ -95,6 +77,11 @@ class ApiCollectingData:
 
         return product_final
 
+    def save_data(self, key):
+        with open('save.csv', 'w', newline='') as csvfile:
+            for e in key:
+                csvfile.write(str(e))
+
 
 def main():
 
@@ -102,6 +89,8 @@ def main():
     connect = call.bring_out()
     final = call.format_final_response(connect)
     valid = call.validate_the_data(final, connect)
+
+    save = call.save_data(final)
 
 
 if __name__ == "__main__":

@@ -3,11 +3,6 @@
 
 import records as rec
 
-# DB_CONNECT = records.Database("""mysql+mysqlconnector://OPFF:OCP5@localhost/?charset=utf8mb4""")
-
-# -tc-utiliser des verbes d'action pour les méthodes, comme create_category_table, create_store_table,
-# -tc- create_product_store_table(), create_database(), drop_database(), etc.
-
 
 class DataBaseCreator:
 
