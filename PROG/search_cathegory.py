@@ -77,11 +77,13 @@ class ApiCollectingData:
 
         return product_final
 
-    def save_data(self, key):
-        with open('save.csv', 'w', newline='') as csvfile:
-            for e in key:
-                csvfile.write(str(e))
+    def save_data(self, product_final, filename):
+        with open(filename, 'w') as file:
+            writer = csv.writer(file, delimiter=';')
+            for e in product_final:
+                writer.writerow(e)
 
+        return filename
 
 def main():
 
@@ -89,8 +91,7 @@ def main():
     connect = call.bring_out()
     final = call.format_final_response(connect)
     valid = call.validate_the_data(final, connect)
-
-    save = call.save_data(final)
+    save_in_file = call.save_data(final , 'output.csv')
 
 
 if __name__ == "__main__":
