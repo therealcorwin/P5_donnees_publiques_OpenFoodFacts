@@ -26,7 +26,7 @@ class ApiCollectingData:
                       "tagtype_0": "categories",                                            # Get the result by category
                       'tag_0': category,                                         # the tag represents the article search
                       "tag_contains_0": "contains",
-                      "page_size": 50,                                                     # Number of articles per page
+                      "page_size": 500,                                                     # Number of articles per page
                       "json": 1}                                                              # The API response in JSON
 
             response = req.get(api, params=config)                           # Uses the configuration for the connection
@@ -54,7 +54,7 @@ class ApiCollectingData:
         """ Formatted the response just harvest the categories selected """
 
         product_final = []
-        keys = ['id', 'categories', 'product_name_fr', 'nutrition_grade_fr', 'url', 'stores']
+        keys = ['id', 'categories', 'product_name_fr', 'nutrition_grade_fr', 'stores', 'url']
 
         print(len(all_products))
 
@@ -66,9 +66,10 @@ class ApiCollectingData:
                 format_categories = product['main_category']
                 name = product['product_name_fr']
                 grade = product['nutrition_grade_fr']
-                website = product['url']
                 store = product['stores']
-                key = (int(barre_code), format_categories.upper(), name, grade, website, store)
+                website = product['url']
+
+                key = (barre_code, format_categories.upper(), name, grade, store, website)
 
                 formatting = key
                 product_final.append(formatting)
@@ -89,11 +90,10 @@ class ApiCollectingData:
 
 def main():
 
-    call = ApiCollectingData()
-    connect = call.bring_out()
-    final = call.format_final_response(connect)
-    valid = call.validate_the_data(final, connect)
-    save_in_file = call.save_data(final , 'output_data_save.csv')
+    name = ApiCollectingData()
+    connect = name.bring_out()
+    final = name.format_final_response(connect)
+    # save_in_file = call.save_data(final , 'output_data_save.csv')
 
 
 if __name__ == "__main__":

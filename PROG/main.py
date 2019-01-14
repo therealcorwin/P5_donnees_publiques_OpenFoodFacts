@@ -3,7 +3,7 @@
 
 import records as rec
 
-from constants import *
+import constants as cons
 
 
 class Main:
@@ -11,17 +11,17 @@ class Main:
     def __init__(self):
         pass
 
-    def step_1(self, connect):
-        DB_CONNECT = rec.Database("""mysql+mysqlconnector://USER:PASSWORD@localhost/?charset=utf8mb4""")
+    def step_1(self):
         pass
 
-    def step_2(self, create):
-        DB_CREATE = rec.Database("""mysql+mysqlconnector://USER:PASSWORD@localhost/?charset=utf8mb4""")
+    def step_2(self):
         pass
 
 
 def main():
-    pass
+    main = Main()
+    step1 = main.step_1()
+    step2 = main.step_2()
 
 
 if __name__ == "__main__":

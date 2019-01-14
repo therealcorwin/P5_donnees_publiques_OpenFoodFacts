@@ -22,9 +22,17 @@ CATEGORIES = ["Plats préparé",
               ]
 
 #  DATABASE CONSTANTS #
-#  Record package
 
-USER = "OPFF"
-PASSWORD = "OCP5"
+# Profile demo
+
+USER = 'OPFF'
+PASSWORD = 'OCP5'
+DATABASE = 'demo'
+
+# New profile
+
+NEW_USER = ' '
+NEW_PASSWORD = ' '
+NEW_DATABASE = ' '
 
 
