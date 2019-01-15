@@ -12,16 +12,10 @@ from Config import constants as cons
 class ApiCollectingData:
     """ Call the Api Open Food Fact """
 
-    def __init__(self, barre_code, name, grade, website, categories, format_categories, stores):
-        """ The constructor is not useful here """
-        self.barre_code = barre_code
-        self.name = name
-        self.grade = grade
-        self.website = website
-        self.categories = categories
-        self.format_categories = format_categories
-        self.stores = stores
-        self.final_response = ()
+    def __init__(self):
+        """ The constructor init the criteria """
+
+
 # self.key = (barre_code, name, grade, website, format_categories.upper(), store)
 
     def bring_out(self):
@@ -62,17 +56,17 @@ class ApiCollectingData:
         print(len(all_products))
         for product in all_products:
             if self.validate_the_data(keys, product):
-                self.barre_code = product['id']
-                self.format_categories = product['main_category'].upper()
-                self.name = product['product_name_fr']
-                self.grade = product['nutrition_grade_fr']
-                self.website = product['url']
-                self.categories = product['categories']
-                self.stores = product['stores']
-                key = (self.barre_code, self.name, self.grade, self.website, self.format_categories, self.stores)
+                barre_code = product['id']
+                format_categories = product['main_category'].upper()
+                name = product['product_name_fr']
+                grade = product['nutrition_grade_fr']
+                website = product['url']
+                categories = product['categories']
+                stores = product['stores']
+                key = (barre_code, name, grade, website, format_categories, stores)
                 formatting = key
                 product_final.append(formatting)
-        # pprint(product_final)
+        pprint(product_final)
         # print(type(product_final))
         return product_final
 
@@ -91,13 +85,11 @@ class ApiCollectingData:
 
 def main():
 
-    name = ApiCollectingData(
-        ['id'], ['product_name_fr'], ['nutrition_grade_fr'], ['url'], ['categories'], ['main_category'], ['stores'])
-
+    name = ApiCollectingData()
     connect = name.bring_out()
     final = name.format_final_response(connect)
-    convert = name.convert_type_final(final)
 
+    #convert = name.convert_type_final(final)
     # save_in_file = call.save_data(final , 'output_data_save.csv')
 
 

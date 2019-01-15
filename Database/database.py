@@ -5,7 +5,7 @@
 import records as rec
 
 import Config.constants as cons
-from Api.search_cathegory import ApiCollectingData as search
+from Api.search_cathegory import ApiCollectingData as Search
 
 
 class DataBaseCreator:
@@ -69,7 +69,7 @@ class DataBaseCreator:
         return product, categories, stores
 
     def insert_product(self, connect):
-        response_api = search()
+        response_api = Search.convert_type_final()
         connect.query("""
                         INSERT INTO Products_10k_Table (
                         Barre_code,
@@ -84,7 +84,7 @@ class DataBaseCreator:
                        url='')
 
     def insert_categories(self, connect):
-        response_api = search(None, None, None, None, None, ['main_category'], None)
+        response_api = Search()
         insert_categories = """
                             INSERT INTO Categories ( 
                             categories) 
@@ -94,7 +94,7 @@ class DataBaseCreator:
         pass
 
     def insert_stores(self, connect):
-        response_api = search(None, None, None, None, None, None, ['stores'])
+        response_api = Search()
         insert_stores = """
                         INSERT INTO Stores (
                         stores) 
