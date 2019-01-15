@@ -4,7 +4,7 @@
 
 import records as rec
 
-from Config import constants as cons
+import Config.constants as cons
 from Api.search_cathegory import ApiCollectingData as search
 
 
@@ -69,7 +69,7 @@ class DataBaseCreator:
         return product, categories, stores
 
     def insert_product(self, connect):
-        response_api = search(['id'], ['product_name_fr'], ['nutrition_grade_fr'], ['url'], None, None, None)
+        response_api = search()
         connect.query("""
                         INSERT INTO Products_10k_Table (
                         Barre_code,
@@ -78,16 +78,16 @@ class DataBaseCreator:
                         Web) 
                         VALUES 
                         (:id, :name, :grade, :url) """,
-                       id=response_api[0],
-                       name=response_api[1],
-                       grade=response_api[2],
-                       url=response_api[3])
+                       id='',
+                       name='',
+                       grade='',
+                       url='')
 
     def insert_categories(self, connect):
         response_api = search(None, None, None, None, None, ['main_category'], None)
         insert_categories = """
                             INSERT INTO Categories ( 
-                            col1,) 
+                            categories) 
                             VALUES 
                             (:format_categories);
                             """
@@ -97,7 +97,7 @@ class DataBaseCreator:
         response_api = search(None, None, None, None, None, None, ['stores'])
         insert_stores = """
                         INSERT INTO Stores (
-                        col1) 
+                        stores) 
                         VALUES 
                         (:stores);
                         """
