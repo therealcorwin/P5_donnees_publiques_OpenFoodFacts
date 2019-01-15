@@ -4,8 +4,8 @@
 
 import records as rec
 
-import constants as cons
-import search_cathegory as search
+from Config import constants as cons
+from Api import search_cathegory as search
 
 
 class DataBaseCreator:
@@ -68,28 +68,39 @@ class DataBaseCreator:
         stores = self.create_table_stores(connecting)
         return product, categories, stores
 
-    def insert_product(self, connect):
-        response_api = search.convert_type_final()
-        insert_product = """INSERT INTO Products_10k_Table (
-                            Barre_code,
-                            Name_product,
-                            Grade,
-                            name,
-                            Web_site) 
-                            VALUES (%s, %s, %s, %s, %s)"""
+    def insert_product(self, connect, ):
+        response_api = search()
+        insert_product = """
+                        INSERT INTO Products_10k_Table (
+                        col1,
+                        col2,
+                        col3,
+                        col4,
+                        col5) 
+                        VALUES 
+                        (:barre_code, :name, :grade, :Name, :website)
+                         """
         connect.query(insert_product, response_api)
         return insert_product
 
     def insert_categories(self):
-        insert_categories = """INSERT INTO Categories (
-                               Categories)
-                               VALUES (%s)"""
+        response_api = search()
+        insert_categories = """
+                            INSERT INTO Categories ( 
+                            col1,) 
+                            VALUES 
+                            (:format_categories)
+                            """
         pass
 
     def insert_stores(self):
-        insert_Stores = """INSERT INTO Stores (
-                          Stores) 
-                          VALUES (%s)"""
+        response_api = search()
+        insert_stores = """
+                        INSERT INTO Stores (
+                        col1) 
+                        VALUES 
+                        (:stores)
+                        """
         pass
 
 
@@ -99,14 +110,15 @@ def main():
     connecting = databases.connect_mysql()
 
     """ Control the database """
-    # show = databases.show_table(connecting)
+    # show_base = databases.show_database(connecting)
+    # show_table = databases.show_table(connecting)
     # choose = databases.choose_database(connecting)
 
     """ Create table """
     # categories = databases.create_table(connecting)
 
     """ Insert data """
-    insert_p = databases.insert_product(connecting)
+    # insert_p = databases.insert_product(connecting)
 
 
 if __name__ == "__main__":

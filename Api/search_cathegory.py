@@ -1,20 +1,28 @@
 # -*- PipEnv -*-
 # -*- coding: Utf-8 -*-
 
-import constants as cons
 
+import requests as req
+import csv
 from pprint import pprint
 
-import csv
-import requests as req
+from Config import constants as cons
 
 
 class ApiCollectingData:
     """ Call the Api Open Food Fact """
 
-    def __init__(self):
+    def __init__(self, barre_code, name, grade, website, categories, format_categories, stores):
         """ The constructor is not useful here """
-        pass
+        self.barre_code = barre_code
+        self.name = name
+        self.grade = grade
+        self.website = website
+        self.categories = categories
+        self.format_categories = format_categories
+        self.stores = stores
+        self.final_response = ()
+# self.key = (barre_code, name, grade, website, format_categories.upper(), store)
 
     def bring_out(self):
         """ Use the configuration for the connecting interface """
@@ -49,19 +57,19 @@ class ApiCollectingData:
     def format_final_response(self, all_products):
         """ Formatted the response just harvest the categories selected """
         product_final = []
-        keys = ['id', 'categories', 'product_name_fr', 'nutrition_grade_fr', 'stores', 'url']
+        keys = ['id', 'product_name_fr', 'nutrition_grade_fr', 'url', 'categories', 'stores']
 
         print(len(all_products))
         for product in all_products:
             if self.validate_the_data(keys, product):
-                barre_code = product['id']
-                categories = product['categories']
-                format_categories = product['main_category']
-                name = product['product_name_fr']
-                grade = product['nutrition_grade_fr']
-                store = product['stores']
-                website = product['url']
-                key = (barre_code, format_categories.upper(), name, grade, store, website)
+                self.barre_code = product['id']
+                self.format_categories = product['main_category'].upper()
+                self.name = product['product_name_fr']
+                self.grade = product['nutrition_grade_fr']
+                self.website = product['url']
+                self.categories = product['categories']
+                self.stores = product['stores']
+                key = (self.barre_code, self.name, self.grade, self.website, self.format_categories, self.stores)
                 formatting = key
                 product_final.append(formatting)
         # pprint(product_final)
@@ -70,7 +78,7 @@ class ApiCollectingData:
 
     def convert_type_final(self, convert_type):
         convert = tuple(convert_type)
-        print(convert)
+        pprint(convert)
         return convert
 
     def save_data(self, product_final, filename):
@@ -83,9 +91,12 @@ class ApiCollectingData:
 
 def main():
 
-    name = ApiCollectingData()
+    name = ApiCollectingData(
+        ['id'], ['product_name_fr'], ['nutrition_grade_fr'], ['url'], ['categories'], ['main_category'], ['stores'])
+
     connect = name.bring_out()
     final = name.format_final_response(connect)
+    convert = name.convert_type_final(final)
 
     # save_in_file = call.save_data(final , 'output_data_save.csv')
 
