@@ -5,7 +5,7 @@
 import records as rec
 
 from Config import constants as cons
-from Api import search_cathegory as search
+from Api.search_cathegory import ApiCollectingData as search
 
 
 class DataBaseCreator:
@@ -21,14 +21,14 @@ class DataBaseCreator:
 
     def show_database(self, connect):
         """ Control the datanase """
-        databases = connect.query("SHOW DATABASES")
+        databases = connect.query("SHOW DATABASES;")
         for row in databases:
             print(row['Database'])
         return databases
 
     def show_table(self, connect):
         """"""
-        tables = connect.query("SHOW TABLES")
+        tables = connect.query("SHOW TABLES;")
         for table in tables:
             print(table)
         return tables
@@ -43,19 +43,19 @@ class DataBaseCreator:
                                 Barre_code TINYINT(13) PRIMARY KEY,
                                 Name_product VARCHAR(30),
                                 Grade CHAR(1),
-                                Web_site VARCHAR(255))""")
+                                Web_site VARCHAR(255));""")
         return connect
 
     def create_table_categories(self, connect):
         """"""
         connect.query("""CREATE TABLE Categories (
-                                Categories VARCHAR(15))""")
+                                Categories VARCHAR(15));""")
         return connect
 
     def create_table_stores(self, connect):
         """"""
         connect.query("""CREATE TABLE Stores (
-                                Stores VARCHAR(50))""")
+                                Stores VARCHAR(50));""")
         return connect
 
     def create_favorites_table(self):
@@ -68,38 +68,38 @@ class DataBaseCreator:
         stores = self.create_table_stores(connecting)
         return product, categories, stores
 
-    def insert_product(self, connect, ):
-        response_api = search()
-        insert_product = """
+    def insert_product(self, connect):
+        response_api = search(['id'], ['product_name_fr'], ['nutrition_grade_fr'], ['url'], None, None, None)
+        connect.query("""
                         INSERT INTO Products_10k_Table (
-                        col1,
-                        col2,
-                        col3,
-                        col4,
-                        col5) 
+                        Barre_code,
+                        Product_name,
+                        Score,
+                        Web) 
                         VALUES 
-                        (:barre_code, :name, :grade, :Name, :website)
-                         """
-        connect.query(insert_product, response_api)
-        return insert_product
+                        (:id, :name, :grade, :url) """,
+                       id=response_api[0],
+                       name=response_api[1],
+                       grade=response_api[2],
+                       url=response_api[3])
 
-    def insert_categories(self):
-        response_api = search()
+    def insert_categories(self, connect):
+        response_api = search(None, None, None, None, None, ['main_category'], None)
         insert_categories = """
                             INSERT INTO Categories ( 
                             col1,) 
                             VALUES 
-                            (:format_categories)
+                            (:format_categories);
                             """
         pass
 
-    def insert_stores(self):
-        response_api = search()
+    def insert_stores(self, connect):
+        response_api = search(None, None, None, None, None, None, ['stores'])
         insert_stores = """
                         INSERT INTO Stores (
                         col1) 
                         VALUES 
-                        (:stores)
+                        (:stores);
                         """
         pass
 
@@ -118,7 +118,9 @@ def main():
     # categories = databases.create_table(connecting)
 
     """ Insert data """
-    # insert_p = databases.insert_product(connecting)
+    insert_p = databases.insert_product(connecting)
+    # insert_c = databases.insert_categories(connecting)
+    # insert_s = databases.insert_stores(connecting)
 
 
 if __name__ == "__main__":
