@@ -13,10 +13,8 @@ class ApiCollectingData:
     """ Call the Api Open Food Fact """
 
     def __init__(self):
-        """ The constructor init the criteria """
-
-
-# self.key = (barre_code, name, grade, website, format_categories.upper(), store)
+        """ The constructor is not used here """
+        pass
 
     def bring_out(self):
         """ Use the configuration for the connecting interface """
@@ -85,12 +83,12 @@ class ApiCollectingData:
 
 def main():
 
-    name = ApiCollectingData()
-    connect = name.bring_out()
-    final = name.format_final_response(connect)
+    downloader = ApiCollectingData()
+    connect = downloader.bring_out()
+    final = tuple(downloader.format_final_response(connect))
 
-    #convert = name.convert_type_final(final)
-    # save_in_file = call.save_data(final , 'output_data_save.csv')
+    pprint(final)
+    print(f"Nous avons récupéré {len(final)} produits")
 
 
 if __name__ == "__main__":

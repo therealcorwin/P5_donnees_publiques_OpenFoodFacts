@@ -5,23 +5,24 @@
 import records as rec
 
 import Config.constants as cons
-from Api.search_cathegory import ApiCollectingData as Search
-
+from Api.search_cathegory import ApiCollectingData
 
 class DataBaseCreator:
 
     def __init__(self):
-        pass
+        self.db = None
 
     def connect_mysql(self):
         """ Connecting in the database """
-        connect = rec.Database("mysql+mysqlconnector://%s:%s@localhost/%s?charset=utf8mb4"
-                               % (cons.USER, cons.PASSWORD, cons.DATABASE))
-        return connect
+        self.db = rec.Database(
+            f"mysql+mysqlconnector://{cons.USER}:{cons.PASSWORD}@localhost/"
+            f"{cons.DATABASE}?charset=utf8mb4"
+        )
+        return self.db
 
-    def show_database(self, connect):
+    def show_database(self):
         """ Control the datanase """
-        databases = connect.query("SHOW DATABASES;")
+        databases = self.db.query("SHOW DATABASES;")
         for row in databases:
             print(row['Database'])
         return databases
@@ -33,58 +34,65 @@ class DataBaseCreator:
             print(table)
         return tables
 
-    def use_database(self, connect):
+    def use_database(self):
         """"""
         pass
 
-    def create_table_product(self, connect):
+    def create_table_product(self):
         """ Create table """
-        connect.query("""CREATE TABLE Products_10k_Table (
-                                Barre_code TINYINT(13) PRIMARY KEY,
-                                Name_product VARCHAR(30),
-                                Grade CHAR(1),
-                                Web_site VARCHAR(255));""")
-        return connect
+        self.db.query("""
+            CREATE TABLE Products_10k_Table (
+                Barre_code BIGINT PRIMARY KEY,
+                Name_product VARCHAR(255),
+                Grade CHAR(1),
+                Web_site VARCHAR(255))
+        """)
 
-    def create_table_categories(self, connect):
+    def create_table_categories(self):
         """"""
-        connect.query("""CREATE TABLE Categories (
+        self.db.query("""CREATE TABLE Categories (
                                 Categories VARCHAR(15));""")
-        return connect
 
-    def create_table_stores(self, connect):
+    def create_table_stores(self):
         """"""
-        connect.query("""CREATE TABLE Stores (
+        self.db.query("""CREATE TABLE Stores (
                                 Stores VARCHAR(50));""")
-        return connect
 
     def create_favorites_table(self):
         pass
 
-    def create_table(self, connecting):
+    def create_table(self):
         """ Execute the creating table """
-        product = self.create_table_product(connecting)
-        categories = self.create_table_categories(connecting)
-        stores = self.create_table_stores(connecting)
-        return product, categories, stores
+        self.create_table_product()
+        self.create_table_categories()
+        self.create_table_stores()
 
-    def insert_product(self, connect):
-        response_api = Search.convert_type_final()
-        connect.query("""
-                        INSERT INTO Products_10k_Table (
+    def get_all_products(self):
+        return self.db.query("""
+                SELECT * FROM Products_10k_Table""",
+                             fetchall=True
+                             ).as_dict()
+
+    def insert_product(self, id, name, grade, url, *args):
+        self.db.query("""                        INSERT INTO Products_10k_Table (
                         Barre_code,
-                        Product_name,
-                        Score,
-                        Web) 
+                        Name_product,
+                        Grade,
+                        Web_site) 
                         VALUES 
-                        (:id, :name, :grade, :url) """,
-                       id='',
-                       name='',
-                       grade='',
-                       url='')
+                        (:id, :name, :grade, :url) 
+                        ON DUPLICATE KEY UPDATE Barre_code = :id
+            """,
+                      id=id,
+                      name=name,
+                      grade=grade,
+                      url=url)
+
+    def insert_products(self, products):
+        for product in products:
+            self.insert_product(*product)
 
     def insert_categories(self, connect):
-        response_api = Search()
         insert_categories = """
                             INSERT INTO Categories ( 
                             categories) 
@@ -94,7 +102,6 @@ class DataBaseCreator:
         pass
 
     def insert_stores(self, connect):
-        response_api = Search()
         insert_stores = """
                         INSERT INTO Stores (
                         stores) 
@@ -108,6 +115,15 @@ def main():
     """ Connecting in the database """
     databases = DataBaseCreator()
     connecting = databases.connect_mysql()
+    databases.connect_mysql()
+    # databases.show_database()
+    databases.create_table_product()
+
+    downloader = ApiCollectingData()
+    connect = downloader.bring_out()
+    final_products = tuple(downloader.format_final_response(connect))
+
+    databases.insert_products(final_products)
 
     """ Control the database """
     # show_base = databases.show_database(connecting)
@@ -118,7 +134,7 @@ def main():
     # categories = databases.create_table(connecting)
 
     """ Insert data """
-    insert_p = databases.insert_product(connecting)
+    # insert_p = databases.insert_product(connecting)
     # insert_c = databases.insert_categories(connecting)
     # insert_s = databases.insert_stores(connecting)
 
