@@ -37,7 +37,7 @@ class DataBaseCreator:
     def get_all_products(self):
         return self.db.query(
             """
-                SELECT * FROM Products;
+                SELECT * FROM demo.Products;
             """,
             fetchall=True
             ).as_dict()
@@ -76,10 +76,10 @@ class DataBaseCreator:
     def create_tables(self):
         """ Execute the creating table """
         self.create_table_product()
-        # self.create_table_category()
-        # self.create_table_store()
+        self.create_table_category()
+        self.create_table_store()
         # self.create_favorites_table()
-        return None
+        return True
 
     def insert_product(self, id, name, grade, url, *args):
         self.db.query("""                        
@@ -99,7 +99,7 @@ class DataBaseCreator:
                         INSERT INTO Categories ( 
                         categories) 
                         VALUES 
-                        (:categories);
+                        (:categories)
                       """,
                       categories=categories)
 
@@ -109,7 +109,7 @@ class DataBaseCreator:
                 INSERT INTO Stores ( 
                 stores) 
                 VALUES 
-                :stores);
+                :stores)
             """,
             stores=stores)
 
@@ -120,27 +120,27 @@ class DataBaseCreator:
 
 def main():
     """ Connecting in the database """
-    # downloader = ApiCollectingData()                                                          # Load the API class
-    # connect = downloader.bring_out()                                                          # Load the API connexion
-    # final_products = tuple(downloader.format_final_response(connect))                         # Harvest OPFF's request
+    downloader = ApiCollectingData()                                                          # Load the API class
+    connect = downloader.bring_out()                                                          # Load the API connexion
+    final_products = downloader.format_final_response(connect)                         # Harvest OPFF's request
 
-    # databases = DataBaseCreator()                                                          # Load the database class
-    # connecting = databases.connect_mysql()                                                 # Load the MySQL connexion
+    databases = DataBaseCreator()                                                          # Load the database class
+    connecting = databases.connect_mysql()                                                 # Load the MySQL connexion
 
     """ Control the database """
     # get_bases = databases.get_databases()                                                   # Get the database list
     # get_tables = databases.get_tables()                                                          # Get the table list
-    # get_products = databases.get_all_products()   /***** # Get the insert list *****\
+    # get_products = databases.get_all_products()                                                  # Get the insert list
+
     # choose = databases.choose_database()
 
     """ Create table """
     # create_table = databases.create_tables()                                    # Creating Create the necessary tables
 
     """ Insert data """
-    # databases.insert_rows_product(final_products)
-    # insert_p = databases.insert_product()
-    # insert_c = databases.insert_categories()
-    # insert_s = databases.insert_stores
+    # insert_p = databases.insert_rows_product(final_products)
+    # insert_c = databases.insert_categories(final_products)
+    # insert_s = databases.insert_stores(final_products)
 
 
 if __name__ == "__main__":
