@@ -68,11 +68,6 @@ class ApiCollectingData:
         # print(type(product_final))
         return product_final
 
-    def convert_type_final(self, convert_type):
-        convert = tuple(convert_type)
-        pprint(convert)
-        return convert
-
     def save_data(self, product_final, filename):
         with open(filename, 'w', encoding='utf-8') as file:
             writer = csv.writer(file, delimiter=';')

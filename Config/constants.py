@@ -9,14 +9,14 @@ CATEGORIES = ["Plats préparé",
               "Conserves",
               # Produits en commun par categories
               "Bio",
-              "Céréales",
-              "Biscuits",
-              "Viennoiseries",
-              # Produits en commun par categories
-              "Desserts",
-              "Produit laitiers",
-              # Produits en commun par categories
-              "Charcuteries",
+              # "Céréales",
+              # "Biscuits",
+              # "Viennoiseries",
+              # # Produits en commun par categories
+              # "Desserts",
+              # "Produit laitiers",
+              # # Produits en commun par categories
+              # "Charcuteries",
               "Viandes",
               "Boissons"
               ]
