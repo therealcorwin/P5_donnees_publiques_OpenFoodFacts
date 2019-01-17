@@ -60,14 +60,14 @@ class DataBaseCreator:
         """"""
         self.db.query("""
                         CREATE TABLE Categories (
-                        Categories VARCHAR(15));
+                        Categories VARCHAR(125));
                       """)
 
     def create_table_store(self):
         """"""
         self.db.query("""
                         CREATE TABLE Stores (
-                        Stores VARCHAR(50));
+                        Stores TEXT);
                       """)
 
     def create_favorites_table(self):
@@ -94,7 +94,7 @@ class DataBaseCreator:
                        """,
                       id=id, name=name, grade=grade, url=url)
 
-    def insert_categories(self, categories):
+    def insert_category(self, id, name, grade, url, categories, stores):
         self.db.query("""
                         INSERT INTO Categories ( 
                         categories) 
@@ -103,19 +103,26 @@ class DataBaseCreator:
                       """,
                       categories=categories)
 
-    def insert_stores(self, stores):
-        self.db.query(
-            """
+    def insert_store(self, id, name, grade, url, categories, stores):
+        self.db.query("""
                 INSERT INTO Stores ( 
                 stores) 
                 VALUES 
-                :stores)
+                (:stores)
             """,
-            stores=stores)
+                      stores=stores)
 
-    def insert_rows_product(self, products):
+    def insert_rows_products(self, products):
         for product in products:
             self.insert_product(*product)
+
+    def insert_rows_categories(self, categories):
+        for category in categories:
+            self.insert_category(*category)
+
+    def insert_rows_stores(self, stores):
+        for store in stores:
+            self.insert_store(*store)
 
 
 def main():
@@ -135,12 +142,12 @@ def main():
     # choose = databases.choose_database()
 
     """ Create table """
-    # create_table = databases.create_tables()                                    # Creating Create the necessary tables
+    create_table = databases.create_tables()                                    # Creating Create the necessary tables
 
     """ Insert data """
-    # insert_p = databases.insert_rows_product(final_products)
-    # insert_c = databases.insert_categories(final_products)
-    # insert_s = databases.insert_stores(final_products)
+    insert_p = databases.insert_rows_products(final_products)
+    insert_c = databases.insert_rows_categories(final_products)
+    insert_s = databases.insert_rows_stores(final_products)
 
 
 if __name__ == "__main__":
