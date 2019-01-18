@@ -92,7 +92,7 @@ class DataBaseCreator:
                         VALUES 
                         (:id, :name, :grade, :url) 
                         ON DUPLICATE KEY UPDATE Barre_code = :id
-                       """,
+                      """,
                       id=id, name=name, grade=grade, url=url)
 
     def insert_category(self, id, name, grade, url, category, categories, stores, *args):
