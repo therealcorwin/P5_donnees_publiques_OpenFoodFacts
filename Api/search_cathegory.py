@@ -49,23 +49,22 @@ class ApiCollectingData:
     def format_final_response(self, all_products):
         """ Formatted the response just harvest the categories selected """
         product_final = []
-        keys = ['id', 'product_name_fr', 'nutrition_grade_fr', 'url', 'categories', 'stores']
+        keys = ['id', 'product_name_fr', 'nutrition_grade_fr', 'url', 'main_category', 'categories', 'stores']
 
         print(len(all_products))
         for product in all_products:
             if self.validate_the_data(keys, product):
                 barre_code = product['id']
-                format_categories = product['main_category'].upper()
                 name = product['product_name_fr']
                 grade = product['nutrition_grade_fr']
                 website = product['url']
-                categories = product['categories']
-                stores = product['stores']
-                key = (barre_code, name, grade, website, format_categories, stores)
+                format_category = product['main_category'].upper()
+                categories = product['categories'].capitalize()                      # .split(',')
+                stores = product['stores'].upper()                              # .split(',')
+                key = (barre_code, name, grade, website, format_category, stores)  # adding categories
                 formatting = key
                 product_final.append(formatting)
-        pprint(product_final)
-        # print(type(product_final))
+
         return product_final
 
     def save_data(self, product_final, filename):
@@ -81,9 +80,8 @@ def main():
     downloader = ApiCollectingData()
     connect = downloader.bring_out()
     final = tuple(downloader.format_final_response(connect))
-
-    pprint(final)
     print(f"Nous avons récupéré {len(final)} produits")
+    pprint(final)
 
 
 if __name__ == "__main__":

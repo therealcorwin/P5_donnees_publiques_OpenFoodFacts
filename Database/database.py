@@ -60,15 +60,16 @@ class DataBaseCreator:
         """"""
         self.db.query("""
                         CREATE TABLE Categories (
-                        Categories VARCHAR(125));
+                        Category VARCHAR(125),
+                        Categories_text TEXT); 
                       """)
 
     def create_table_store(self):
         """"""
         self.db.query("""
                         CREATE TABLE Stores (
-                        Stores TEXT);
-                      """)
+                        Stores TEXT);  
+                      """)                                   # UNIQUE?
 
     def create_favorites_table(self):
         pass
@@ -94,19 +95,19 @@ class DataBaseCreator:
                        """,
                       id=id, name=name, grade=grade, url=url)
 
-    def insert_category(self, id, name, grade, url, categories, stores):
+    def insert_category(self, id, name, grade, url, category, stores, *args):
         self.db.query("""
                         INSERT INTO Categories ( 
-                        categories) 
+                        Category) 
                         VALUES 
-                        (:categories)
+                        (:category)
                       """,
-                      categories=categories)
+                      category=category)
 
-    def insert_store(self, id, name, grade, url, categories, stores):
+    def insert_store(self, id, name, grade, url, category, stores, *args):
         self.db.query("""
                 INSERT INTO Stores ( 
-                stores) 
+                Stores) 
                 VALUES 
                 (:stores)
             """,
@@ -116,9 +117,9 @@ class DataBaseCreator:
         for product in products:
             self.insert_product(*product)
 
-    def insert_rows_categories(self, categories):
-        for category in categories:
-            self.insert_category(*category)
+    def insert_rows_categories(self, category):
+        for category_ in category:
+            self.insert_category(*category_)
 
     def insert_rows_stores(self, stores):
         for store in stores:
