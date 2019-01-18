@@ -76,8 +76,8 @@ class DataBaseCreator:
 
     def create_tables(self):
         """ Execute the creating table """
-        self.create_table_product()
-        self.create_table_category()
+        # self.create_table_product()
+        # self.create_table_category()
         self.create_table_store()
         # self.create_favorites_table()
         return True
@@ -95,7 +95,7 @@ class DataBaseCreator:
                        """,
                       id=id, name=name, grade=grade, url=url)
 
-    def insert_category(self, id, name, grade, url, category, stores, *args):
+    def insert_category(self, id, name, grade, url, category, categories, stores, *args):
         self.db.query("""
                         INSERT INTO Categories ( 
                         Category) 
@@ -104,7 +104,7 @@ class DataBaseCreator:
                       """,
                       category=category)
 
-    def insert_store(self, id, name, grade, url, category, stores, *args):
+    def insert_store(self, id, name, grade, url, category, categories, stores, *args):
         self.db.query("""
                 INSERT INTO Stores ( 
                 Stores) 
@@ -118,8 +118,8 @@ class DataBaseCreator:
             self.insert_product(*product)
 
     def insert_rows_categories(self, category):
-        for category_ in category:
-            self.insert_category(*category_)
+        for category in category:
+            self.insert_category(*category)
 
     def insert_rows_stores(self, stores):
         for store in stores:
@@ -146,8 +146,8 @@ def main():
     create_table = databases.create_tables()                                    # Creating Create the necessary tables
 
     """ Insert data """
-    insert_p = databases.insert_rows_products(final_products)
-    insert_c = databases.insert_rows_categories(final_products)
+    # insert_p = databases.insert_rows_products(final_products)
+    # insert_c = databases.insert_rows_categories(final_products)
     insert_s = databases.insert_rows_stores(final_products)
 
 

@@ -60,8 +60,8 @@ class ApiCollectingData:
                 website = product['url']
                 format_category = product['main_category'].upper()
                 categories = product['categories'].capitalize()                      # .split(',')
-                stores = product['stores'].upper()                              # .split(',')
-                key = (barre_code, name, grade, website, format_category, stores)  # adding categories
+                stores = product['stores'].upper() # .split(',')
+                key = (barre_code, name, grade, website, format_category, categories, stores)  # adding categories
                 formatting = key
                 product_final.append(formatting)
 
