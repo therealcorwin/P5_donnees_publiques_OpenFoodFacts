@@ -68,10 +68,10 @@ class DataBaseCreator:
         """"""
         self.db.query("""
                         CREATE TABLE Stores (
-                        Stores VARCHAR(30) UNIQUE),
-                        CONSTRAINT (Products_id) REFERENCES Products(Barre_code) 
+                        stores VARCHAR(30) UNIQUE);
+                        
                       """)
-
+#                         CONSTRAINT (Products_id) REFERENCES Products(Barre_code)
     def create_favorites_table(self):
         self.db.query("""
                         CREATE TABLE Products (
@@ -84,6 +84,7 @@ class DataBaseCreator:
     def create_table_subkey(self):
         self.db.query("""
                         CREATE TABLE Subkey (
+                        
                         Products_id FOREIGN KEY products.stores REFERENCES (Products.id))                       
                       """)
 
@@ -119,7 +120,7 @@ class DataBaseCreator:
                       """,
                       category=category)
 
-    def insert_store(self, id, name, grade, url, category, categories, stores, *args):
+    def insert_stores(self, id, name, grade, url, category, categories, stores, *args):
         self.db.query("""
                         INSERT INTO Stores ( 
                         Stores) 
@@ -131,12 +132,13 @@ class DataBaseCreator:
                       """,
                       stores=stores)
 
-    # from typing import List
-    # def to_multiple_insert(values: List[str]) -> str:
-    #     sql_insert: str = 'INSERT INTO my_table VALUES '
-    #     sql_insert += ','.join(['({})' for i in range(len(values))])
-    #     sql_insert += ';'
-    #     return sql_insert.format(*values)
+    from typing import List
+
+    def insert_store(self, stores: List[str] ) -> str:
+        sql_insert: str = 'INSERT INTO Stores VALUES '
+        sql_insert += ','.join(['({})' for i in range(len(stores))])
+        sql_insert += ';'
+        return sql_insert.format(*stores)
 
     def insert_rows_products(self, products):
         for product in products:
@@ -173,7 +175,7 @@ def main():
     """ Insert data """
     # insert_p = databases.insert_rows_products(final_products)
     # insert_c = databases.insert_rows_categories(final_products)
-    # insert_s = databases.insert_rows_stores(final_products )
+    insert_s = databases.insert_store(final_products)
 
 
 if __name__ == "__main__":

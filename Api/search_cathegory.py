@@ -67,7 +67,7 @@ class ApiCollectingData:
                 product_final.append(formatting)
                 print('produit: ', name.upper())
                 print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
-                print('présent dans', [len(categories)], 'categories: = ', categories, '\n'
+                print('présent dans', [len(categories)], 'categories: = ', categories, '\n')
         return product_final
 
     def save_data(self, product_final, filename):
