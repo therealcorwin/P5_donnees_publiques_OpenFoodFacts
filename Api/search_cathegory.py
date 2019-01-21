@@ -58,7 +58,7 @@ class ApiCollectingData:
                 name = product['product_name_fr']
                 grade = product['nutrition_grade_fr']
                 website = product['url']
-                format_category = product['main_category'].upper()
+                format_category = product['main_category']
                 categories = product['categories'].upper().split(',')
                 stores = product['stores'].upper().split(',')
 

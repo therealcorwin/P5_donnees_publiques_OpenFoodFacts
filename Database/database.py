@@ -35,16 +35,14 @@ class DataBaseCreator:
         return tables
 
     def get_all_products(self):
-        return self.db.query(
-            """
-                SELECT * FROM demo.Products;
-            """,
-            fetchall=True
-            ).as_dict()
+        return self.db.query("""
+                                SELECT * FROM demo.Products;
+                             """,
+                             fetchall=True).as_dict()
 
     def use_database(self):
         """"""
-        pass
+        pass#
 
     def create_table_product(self):
         """ Create table """
@@ -53,7 +51,7 @@ class DataBaseCreator:
                         Barre_code BIGINT PRIMARY KEY,
                         Name_product VARCHAR(255),
                         Grade CHAR(1),
-                        Web_site VARCHAR(255))
+                        Web_site VARCHAR(255));
                        """)
 
     def create_table_category(self):
@@ -68,32 +66,33 @@ class DataBaseCreator:
         """"""
         self.db.query("""
                         CREATE TABLE Stores (
-                        stores VARCHAR(30) UNIQUE);
-                        
+                        store VARCHAR(30) UNIQUE);
                       """)
-#                         CONSTRAINT (Products_id) REFERENCES Products(Barre_code)
     def create_favorites_table(self):
         self.db.query("""
                         CREATE TABLE Products (
                         Barre_code BIGINT PRIMARY KEY,
                         Name_product VARCHAR(255),
                         Grade CHAR(1),
-                        Web_site VARCHAR(255))
+                        Web_site VARCHAR(255));
                        """)
 
     def create_table_subkey(self):
         self.db.query("""
-                        CREATE TABLE Subkey (
-                        
-                        Products_id FOREIGN KEY products.stores REFERENCES (Products.id))                       
-                      """)
+                        CREATE TABLE Sub_key (
+                        id BIGINT,
+                        store VARCHAR(125),
+                        CONSTRAINT id_code
+                            FOREIGN KEY (id) REFERENCES Products(Barre_code),
+                        CONSTRAINT link_store
+                            FOREIGN KEY (store) REFERENCES Stores(store));
+                        """)
 
     def create_tables(self):
         """ Execute the creating table """
         # self.create_table_product()
         # self.create_table_category()
-        self.create_table_store()
-
+        # self.create_table_store()
         # self.create_table_subkey()
         # self.create_favorites_table()
         return True
@@ -107,7 +106,7 @@ class DataBaseCreator:
                         Web_site) 
                         VALUES 
                         (:id, :name, :grade, :url) 
-                        ON DUPLICATE KEY UPDATE Barre_code = :id
+                        ON DUPLICATE KEY UPDATE Barre_code = :id;
                       """,
                       id=id, name=name, grade=grade, url=url)
 
@@ -116,25 +115,25 @@ class DataBaseCreator:
                         INSERT INTO Categories ( 
                         Category) 
                         VALUES 
-                        (:category)
+                        (:category);
                       """,
                       category=category)
 
     def insert_stores(self, id, name, grade, url, category, categories, stores, *args):
         self.db.query("""
                         INSERT INTO Stores ( 
-                        Stores) 
+                        Store) 
                         VALUES 
                         (:stores)
                         WHERE(INSERT INTO Stores ( 
                         VALUES 
-                        (:stores))                        
+                        (:stores));                     
                       """,
                       stores=stores)
 
     from typing import List
 
-    def insert_store(self, stores: List[str] ) -> str:
+    def insert_store(self, id, name, grade, url, category, categories, stores: List[str], *args) -> str:
         sql_insert: str = 'INSERT INTO Stores VALUES '
         sql_insert += ','.join(['({})' for i in range(len(stores))])
         sql_insert += ';'
@@ -170,12 +169,12 @@ def main():
     # choose = databases.choose_database()
 
     """ Create table """
-    create_table = databases.create_tables()                                    # Creating Create the necessary tables
+    # create_table = databases.create_tables()                                    # Creating Create the necessary tables
 
     """ Insert data """
     # insert_p = databases.insert_rows_products(final_products)
     # insert_c = databases.insert_rows_categories(final_products)
-    insert_s = databases.insert_store(final_products)
+    insert_s = databases.insert_rows_stores(final_products)
 
 
 if __name__ == "__main__":
