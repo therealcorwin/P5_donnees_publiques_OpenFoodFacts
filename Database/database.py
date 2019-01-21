@@ -68,17 +68,31 @@ class DataBaseCreator:
         """"""
         self.db.query("""
                         CREATE TABLE Stores (
-                        Stores TEXT);  
-                      """)                                   # UNIQUE?
+                        Stores VARCHAR(30) UNIQUE),
+                        CONSTRAINT (Products_id) REFERENCES Products(Barre_code) 
+                      """)
 
     def create_favorites_table(self):
-        pass
+        self.db.query("""
+                        CREATE TABLE Products (
+                        Barre_code BIGINT PRIMARY KEY,
+                        Name_product VARCHAR(255),
+                        Grade CHAR(1),
+                        Web_site VARCHAR(255))
+                       """)
+
+    def create_table_subkey(self):
+        self.db.query("""
+                        CREATE TABLE Subkey (
+                        Products_id FK products.stores REF(Products.id))                       """)
 
     def create_tables(self):
         """ Execute the creating table """
         # self.create_table_product()
         # self.create_table_category()
         self.create_table_store()
+
+        # self.create_table_subkey()
         # self.create_favorites_table()
         return True
 
@@ -106,11 +120,14 @@ class DataBaseCreator:
 
     def insert_store(self, id, name, grade, url, category, categories, stores, *args):
         self.db.query("""
-                INSERT INTO Stores ( 
-                Stores) 
-                VALUES 
-                (:stores)
-            """,
+                        INSERT INTO Stores ( 
+                        Stores) 
+                        VALUES 
+                        (:stores)
+                        WHERE(INSERT INTO Stores ( 
+                        VALUES 
+                        (:stores))                        
+                      """,
                       stores=stores)
 
     def insert_rows_products(self, products):
@@ -148,7 +165,7 @@ def main():
     """ Insert data """
     # insert_p = databases.insert_rows_products(final_products)
     # insert_c = databases.insert_rows_categories(final_products)
-    insert_s = databases.insert_rows_stores(final_products)
+    # insert_s = databases.insert_rows_stores(final_products )
 
 
 if __name__ == "__main__":

@@ -61,17 +61,15 @@ class ApiCollectingData:
                 format_category = product['main_category'].upper()
                 categories = product['categories'].upper().split(',')
                 stores = product['stores'].upper().split(',')
-                key = (barre_code, name, grade, website, format_category, categories, stores)  # adding categories
+
+                key = (barre_code, name, grade, website, format_category, categories, stores)
                 formatting = key
                 product_final.append(formatting)
-
-                print('produit: ', name.upper())
-                print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
-                print('présent dans', [len(categories)], 'categories: = ', categories, '\n')
+                # print('produit: ', name.upper())
+                # print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
+                # print('présent dans', [len(categories)], 'categories: = ', categories, '\n')
 
         return product_final
-        # 2) comment insérer les stores qui n'existent pas dans TableStores
-        # 3) trouver comment lier dans SubStores les stores aux produits qu'il vend, sur base de ton modèle
 
     def save_data(self, product_final, filename):
         with open(filename, 'w', encoding='utf-8') as file:
@@ -85,9 +83,10 @@ def main():
 
     downloader = ApiCollectingData()
     connect = downloader.bring_out()
-    final = tuple(downloader.format_final_response(connect))
-    # print(f"Nous avons récupéré {len(final)} produits")
-    # pprint(final)
+
+    final = downloader.format_final_response(connect)
+    pprint(final)
+    print(f"Nous avons récupéré {len(final)} produits")
 
 
 if __name__ == "__main__":
