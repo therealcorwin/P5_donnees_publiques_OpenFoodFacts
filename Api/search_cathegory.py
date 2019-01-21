@@ -65,10 +65,9 @@ class ApiCollectingData:
                 key = (barre_code, name, grade, website, format_category, categories, stores)
                 formatting = key
                 product_final.append(formatting)
-                # print('produit: ', name.upper())
-                # print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
-                # print('présent dans', [len(categories)], 'categories: = ', categories, '\n')
-
+                print('produit: ', name.upper())
+                print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
+                print('présent dans', [len(categories)], 'categories: = ', categories, '\n'
         return product_final
 
     def save_data(self, product_final, filename):
@@ -85,7 +84,7 @@ def main():
     connect = downloader.bring_out()
 
     final = downloader.format_final_response(connect)
-    pprint(final)
+    # pprint(final)
     print(f"Nous avons récupéré {len(final)} produits")
 
 

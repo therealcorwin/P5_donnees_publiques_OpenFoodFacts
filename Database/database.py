@@ -84,7 +84,8 @@ class DataBaseCreator:
     def create_table_subkey(self):
         self.db.query("""
                         CREATE TABLE Subkey (
-                        Products_id FK products.stores REF(Products.id))                       """)
+                        Products_id FOREIGN KEY products.stores REF(Products.id))                       
+                      """)
 
     def create_tables(self):
         """ Execute the creating table """
@@ -129,6 +130,13 @@ class DataBaseCreator:
                         (:stores))                        
                       """,
                       stores=stores)
+
+# from typing import List
+    # def to_multiple_insert(values: List[str]) -> str:
+    #     sql_insert: str = 'INSERT INTO my_table VALUES '
+    #     sql_insert += ','.join(['({})' for i in range(len(values))])
+    #     sql_insert += ';'
+    #     return sql_insert.format(*values)
 
     def insert_rows_products(self, products):
         for product in products:
