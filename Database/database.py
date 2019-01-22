@@ -58,6 +58,7 @@ class DataBaseCreator:
         """"""
         self.db.query("""
                         CREATE TABLE Categories (
+                        id BIGINT,
                         Category VARCHAR(125),
                         Categories_text TEXT); 
                       """)
@@ -66,8 +67,10 @@ class DataBaseCreator:
         """"""
         self.db.query("""
                         CREATE TABLE Stores (
+                        id BIGINT,
                         store VARCHAR(30) UNIQUE);
                       """)
+
     def create_favorites_table(self):
         self.db.query("""
                         CREATE TABLE Products (
@@ -90,10 +93,10 @@ class DataBaseCreator:
 
     def create_tables(self):
         """ Execute the creating table """
-        # self.create_table_product()
-        # self.create_table_category()
-        # self.create_table_store()
-        # self.create_table_subkey()
+        self.create_table_product()
+        self.create_table_category()
+        self.create_table_store()
+        self.create_table_subkey()
         # self.create_favorites_table()
         return True
 
@@ -112,32 +115,25 @@ class DataBaseCreator:
 
     def insert_category(self, id, name, grade, url, category, categories, stores, *args):
         self.db.query("""
-                        INSERT INTO Categories ( 
-                        Category) 
+                        INSERT INTO Categories(Category) 
                         VALUES 
                         (:category);
                       """,
                       category=category)
 
     def insert_stores(self, id, name, grade, url, category, categories, stores, *args):
-        self.db.query("""
-                        INSERT INTO Stores ( 
-                        Store) 
-                        VALUES 
-                        (:stores)
-                        WHERE(INSERT INTO Stores ( 
-                        VALUES 
-                        (:stores));                     
-                      """,
-                      stores=stores)
+        store_list = [{"name": store} for store in stores]  # .split(", ")
+        self.db.query("INSERT INTO store(name) VALUES (:name) ON DUPLICATE KEY UPDATE name = :name""", *store_list)
+        return stores
 
-    from typing import List
-
-    def insert_store(self, id, name, grade, url, category, categories, stores: List[str], *args) -> str:
-        sql_insert: str = 'INSERT INTO Stores VALUES '
-        sql_insert += ','.join(['({})' for i in range(len(stores))])
-        sql_insert += ';'
-        return sql_insert.format(*stores)
+    #     from typing import List
+    #
+    #     def insert_store(self, stores: List[str], *args) -> str:
+    #         sql_insert: str = 'INSERT INTO Stores VALUES '
+    #         sql_insert += ','.join(['({})' for i in range(len(stores))])
+    #         sql_insert += ';'
+    #         sql_insert: str = 'ON DUPLICATE UPDATE stores = :stores'
+    #         return sql_insert.format(*stores)
 
     def insert_rows_products(self, products):
         for product in products:
@@ -149,7 +145,7 @@ class DataBaseCreator:
 
     def insert_rows_stores(self, stores):
         for store in stores:
-            self.insert_store(*store)
+            self.insert_stores(*store)
 
 
 def main():
