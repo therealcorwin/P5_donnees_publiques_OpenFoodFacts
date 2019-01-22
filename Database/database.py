@@ -47,7 +47,7 @@ class DataBaseCreator:
     def create_table_product(self):
         """ Create table """
         self.db.query("""
-                        CREATE TABLE Products (
+                        CREATE TABLE IF NOT EXISTS Products (
                         Barre_code BIGINT PRIMARY KEY,
                         Name_product VARCHAR(255),
                         Grade CHAR(1),
@@ -57,8 +57,8 @@ class DataBaseCreator:
     def create_table_category(self):
         """"""
         self.db.query("""
-                        CREATE TABLE Categories (
-                        id BIGINT,
+                        CREATE TABLE IF NOT EXISTS Categories (
+                        id BIGINT PRIMARY KEY AUTO_INCREMENT,
                         Category VARCHAR(125),
                         Categories_text TEXT); 
                       """)
@@ -66,14 +66,14 @@ class DataBaseCreator:
     def create_table_store(self):
         """"""
         self.db.query("""
-                        CREATE TABLE Stores (
-                        id BIGINT,
+                        CREATE TABLE IF NOT EXISTS Stores (
+                        id BIGINT PRIMARY KEY AUTO_INCREMENT,
                         store VARCHAR(30) UNIQUE);
-                      """)
+                    """)
 
     def create_favorites_table(self):
         self.db.query("""
-                        CREATE TABLE Products (
+                        CREATE TABLE IF NOT EXISTS Products (
                         Barre_code BIGINT PRIMARY KEY,
                         Name_product VARCHAR(255),
                         Grade CHAR(1),
@@ -82,14 +82,18 @@ class DataBaseCreator:
 
     def create_table_subkey(self):
         self.db.query("""
-                        CREATE TABLE Sub_key (
-                        id BIGINT,
-                        store VARCHAR(125),
-                        CONSTRAINT id_code
-                            FOREIGN KEY (id) REFERENCES Products(Barre_code),
-                        CONSTRAINT link_store
-                            FOREIGN KEY (store) REFERENCES Stores(store));
-                        """)
+                        CREATE TABLE IF NOT EXISTS product_store (
+                        product_id INT REFERENCES Products(Barre_code) ON DELETE CASCADE,
+                        store_id INT REFERENCES Stores(id) ON DELETE CASCADE,
+                        PRIMARY KEY (product_id, store_id));
+                     """)
+
+        self.db.query("""
+                        CREATE TABLE IF NOT EXISTS product_category ( 
+                        product_id INT REFERENCES Products(Barre_code) ON DELETE CASCADE,
+                        category_id INT REFERENCES Categories(id) ON DELETE CASCADE,
+                        PRIMARY KEY (product_id, category_id));
+                      """)
 
     def create_tables(self):
         """ Execute the creating table """
@@ -113,40 +117,36 @@ class DataBaseCreator:
                       """,
                       id=id, name=name, grade=grade, url=url)
 
-    def insert_category(self, id, name, grade, url, category, categories, stores, *args):
-        self.db.query("""
-                        INSERT INTO Categories(Category) 
-                        VALUES 
-                        (:category);
-                      """,
-                      category=category)
-
     def insert_stores(self, id, name, grade, url, category, categories, stores, *args):
-        store_list = [{"name": store} for store in stores]  # .split(", ")
-        self.db.query("INSERT INTO store(name) VALUES (:name) ON DUPLICATE KEY UPDATE name = :name""", *store_list)
-        return stores
+        for store in stores:
+            self.db.query("""
+                            INSERT INTO stores(store)
+                            VALUES (:store)
+                            ON DUPLICATE KEY UPDATE store=:store;
+                          """,
+                          store=store)
 
-    #     from typing import List
-    #
-    #     def insert_store(self, stores: List[str], *args) -> str:
-    #         sql_insert: str = 'INSERT INTO Stores VALUES '
-    #         sql_insert += ','.join(['({})' for i in range(len(stores))])
-    #         sql_insert += ';'
-    #         sql_insert: str = 'ON DUPLICATE UPDATE stores = :stores'
-    #         return sql_insert.format(*stores)
+    def insert_category(self, id, name, grade, url, category, categories, stores, *args):
+        for category in categories:
+            self.db.query("""
+                            INSERT INTO Categories(Category) 
+                            VALUES 
+                            (:category)
+                            ON DUPLICATE KEY UPDATE category=:category;
+                          """,
+                          category=category)
 
     def insert_rows_products(self, products):
         for product in products:
             self.insert_product(*product)
 
-    def insert_rows_categories(self, category):
-        for category in category:
-            self.insert_category(*category)
-
     def insert_rows_stores(self, stores):
         for store in stores:
             self.insert_stores(*store)
 
+    def insert_rows_categories(self, categories):
+        for category in categories:
+            self.insert_category(*category)
 
 def main():
     """ Connecting in the database """
@@ -165,11 +165,11 @@ def main():
     # choose = databases.choose_database()
 
     """ Create table """
-    # create_table = databases.create_tables()                                    # Creating Create the necessary tables
+    create_table = databases.create_tables()                                    # Creating Create the necessary tables
 
     """ Insert data """
-    # insert_p = databases.insert_rows_products(final_products)
-    # insert_c = databases.insert_rows_categories(final_products)
+    insert_p = databases.insert_rows_products(final_products)
+    insert_c = databases.insert_rows_categories(final_products)
     insert_s = databases.insert_rows_stores(final_products)
 
 
