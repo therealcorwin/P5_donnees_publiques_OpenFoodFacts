@@ -98,9 +98,7 @@ class ApiCollectingData:
 
 
 def main():
-
     """ Download the response """
-
     downloader = ApiCollectingData()
     connect = downloader.bring_out()
     final = downloader.format_final_response(connect)

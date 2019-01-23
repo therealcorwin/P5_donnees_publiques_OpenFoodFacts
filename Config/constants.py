@@ -5,19 +5,19 @@
 # API CONSTANTS #
 
 CATEGORIES = ["Plats préparé",
-              "Plats surgelé",
-              "Conserves",
+              # "Plats surgelé",
+              # "Conserves",
               # Produits en commun par categories
-              "Bio",
-              "Céréales",
+              # "Bio",
+              # "Céréales",
               "Biscuits",
-              "Viennoiseries",
+              # "Viennoiseries",
               # Produits en commun par categories
               "Desserts",
-              "Produit laitiers",
+              # "Produit laitiers",
               # Produits en commun par categories
-              "Charcuteries",
-              "Viandes",
+              # "Charcuteries",
+              # "Viandes",
               "Boissons"
               ]
 

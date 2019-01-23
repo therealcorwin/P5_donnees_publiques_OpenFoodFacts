@@ -49,7 +49,7 @@ class DataBaseCreator:
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Products (
                         barre_code BIGINT PRIMARY KEY,
-                        name_product VARCHAR(255),
+                        name_product VARCHAR(150),
                         grade CHAR(1),
                         web_site VARCHAR(255));
                        """)
@@ -68,33 +68,40 @@ class DataBaseCreator:
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Stores (
                         id BIGINT PRIMARY KEY AUTO_INCREMENT,
-                        store VARCHAR(255) UNIQUE);
+                        store VARCHAR(150) UNIQUE);
                     """)
 
     def create_favorites_table(self):
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Products (
                         barre_code BIGINT PRIMARY KEY,
-                        name_product VARCHAR(255),
+                        name_product VARCHAR(150),
                         grade CHAR(1),
                         web_site VARCHAR(255));
                        """)
 
     def create_table_subkey(self):
-        self.db.query("""
+        """ Creating the index """
+        self.db.query("""                                                           
                         CREATE TABLE IF NOT EXISTS Product_store (
                         product_id INT REFERENCES Products(barre_code) ON DELETE CASCADE,
                         store_id INT REFERENCES Stores(id) ON DELETE CASCADE,
                         PRIMARY KEY (product_id, store_id));
-                     """)
+                     """)                                                             # Index = id_products + id_ stores
 
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Product_category ( 
                         product_id INT REFERENCES Products(barre_code) ON DELETE CASCADE,
                         category_id INT REFERENCES Category(id) ON DELETE CASCADE,
                         PRIMARY KEY (product_id, category_id));
-                      """)
-#                         sub_category_id INT REFERENCES Category(id) ON DELETE CASCADE, (product_id, sub_category_id)
+                      """)                                                           # Index = id_products + id_category
+
+        self.db.query("""
+                        CREATE TABLE IF NOT EXISTS Product_sub_category ( 
+                        product_id INT REFERENCES Products(barre_code) ON DELETE CASCADE,
+                        sub_category_id INT REFERENCES Category(id) ON DELETE CASCADE,
+                        PRIMARY KEY (product_id, sub_category_id));
+                      """)                                                       # Index = id_products + id_sub_category
 
     def create_tables(self):
         """ Execute the creating table """
@@ -106,6 +113,7 @@ class DataBaseCreator:
         return True
 
     def insert_product(self, id, name, grade, url, *args):
+        """ Insert the product data in the table"""
         self.db.query("""                        
                         INSERT INTO Products (
                         barre_code,
@@ -119,6 +127,7 @@ class DataBaseCreator:
                       id=id, name=name, grade=grade, url=url)
 
     def insert_stores(self, id, name, grade, url, categories, sub_category, stores, *args):
+        """ Insert the store list data in the table"""
         for store in stores:
             self.db.query("""
                             INSERT INTO Stores(store)
@@ -128,6 +137,7 @@ class DataBaseCreator:
                           store=store)
 
     def insert_category(self, id, name, grade, url, categories, sub_category, stores, *args):
+        """ Insert the category list data in the table"""
         for category in categories:
                 self.db.query("""
                             INSERT INTO Categories(category, sub_category) 
@@ -137,42 +147,39 @@ class DataBaseCreator:
                               """,
                               category=category, sub_category=sub_category)
 
-    def insert_rows_products(self, products):
+    def insert_rows(self, products, stores, categories):
+        """ Completion the data row per row """
         for product in products:
             self.insert_product(*product)
-
-    def insert_rows_stores(self, stores):
         for store in stores:
             self.insert_stores(*store)
-
-    def insert_rows_categories(self, categories):
         for category in categories:
             self.insert_category(*category)
+        return True
 
 
 def main():
-    """ Connecting in the database """
-    downloader = ApiCollectingData()                                                          # Load the API class
-    connect = downloader.bring_out()                                                          # Load the API connexion
-    final_products = downloader.format_final_response(connect)                         # Harvest OPFF's request
+    """ Connecting in the API """
+    downloader = ApiCollectingData()                                                                # Load the API class
+    connect = downloader.bring_out()                                                            # Load the API connexion
+    final_products = downloader.format_final_response(connect)                                  # Harvest OPFF's request
 
-    databases = DataBaseCreator()                                                          # Load the database class
-    connecting = databases.connect_mysql()                                                 # Load the MySQL connexion
+    """ Connecting in the database """
+    databases = DataBaseCreator()                                                              # Load the database class
+    connecting = databases.connect_mysql()                                                    # Load the MySQL connexion
 
     """ Control the database """
-    # get_bases = databases.get_databases()                                                   # Get the database list
-    # get_tables = databases.get_tables()                                                          # Get the table list
+    # get_bases = databases.get_databases()                                                      # Get the database list
+    # get_tables = databases.get_tables()                                                           # Get the table list
     # get_products = databases.get_all_products()                                                  # Get the insert list
 
     # choose = databases.choose_database()
 
     """ Create table """
-    create_table = databases.create_tables()                                    # Creating Create the necessary tables
+    create_table = databases.create_tables()                                             # Creating the necessary tables
 
     """ Insert data """
-    insert_p = databases.insert_rows_products(final_products)
-    insert_c = databases.insert_rows_categories(final_products)
-    insert_s = databases.insert_rows_stores(final_products)
+    # insert_data = databases.insert_rows(final_products, final_products, final_products)
 
 
 if __name__ == "__main__":
