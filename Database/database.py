@@ -48,10 +48,10 @@ class DataBaseCreator:
         """ Create table """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Products (
-                        Barre_code BIGINT PRIMARY KEY,
-                        Name_product VARCHAR(255),
-                        Grade CHAR(1),
-                        Web_site VARCHAR(255));
+                        barre_code BIGINT PRIMARY KEY,
+                        name_product VARCHAR(255),
+                        grade CHAR(1),
+                        web_site VARCHAR(255));
                        """)
 
     def create_table_category(self):
@@ -59,8 +59,8 @@ class DataBaseCreator:
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Categories (
                         id BIGINT PRIMARY KEY AUTO_INCREMENT,
-                        Category VARCHAR(125),
-                        Categories_text TEXT); 
+                        category VARCHAR(125),
+                        sub_category VARCHAR(125)); 
                       """)
 
     def create_table_store(self):
@@ -68,32 +68,33 @@ class DataBaseCreator:
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Stores (
                         id BIGINT PRIMARY KEY AUTO_INCREMENT,
-                        store VARCHAR(30) UNIQUE);
+                        store VARCHAR(255) UNIQUE);
                     """)
 
     def create_favorites_table(self):
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Products (
-                        Barre_code BIGINT PRIMARY KEY,
-                        Name_product VARCHAR(255),
-                        Grade CHAR(1),
-                        Web_site VARCHAR(255));
+                        barre_code BIGINT PRIMARY KEY,
+                        name_product VARCHAR(255),
+                        grade CHAR(1),
+                        web_site VARCHAR(255));
                        """)
 
     def create_table_subkey(self):
         self.db.query("""
-                        CREATE TABLE IF NOT EXISTS product_store (
-                        product_id INT REFERENCES Products(Barre_code) ON DELETE CASCADE,
+                        CREATE TABLE IF NOT EXISTS Product_store (
+                        product_id INT REFERENCES Products(barre_code) ON DELETE CASCADE,
                         store_id INT REFERENCES Stores(id) ON DELETE CASCADE,
                         PRIMARY KEY (product_id, store_id));
                      """)
 
         self.db.query("""
-                        CREATE TABLE IF NOT EXISTS product_category ( 
-                        product_id INT REFERENCES Products(Barre_code) ON DELETE CASCADE,
-                        category_id INT REFERENCES Categories(id) ON DELETE CASCADE,
+                        CREATE TABLE IF NOT EXISTS Product_category ( 
+                        product_id INT REFERENCES Products(barre_code) ON DELETE CASCADE,
+                        category_id INT REFERENCES Category(id) ON DELETE CASCADE,
                         PRIMARY KEY (product_id, category_id));
                       """)
+#                         sub_category_id INT REFERENCES Category(id) ON DELETE CASCADE, (product_id, sub_category_id)
 
     def create_tables(self):
         """ Execute the creating table """
@@ -107,34 +108,34 @@ class DataBaseCreator:
     def insert_product(self, id, name, grade, url, *args):
         self.db.query("""                        
                         INSERT INTO Products (
-                        Barre_code,
-                        Name_product,
-                        Grade,
-                        Web_site) 
+                        barre_code,
+                        name_product,
+                        grade,
+                        web_site) 
                         VALUES 
                         (:id, :name, :grade, :url) 
-                        ON DUPLICATE KEY UPDATE Barre_code = :id;
+                        ON DUPLICATE KEY UPDATE barre_code = :id;
                       """,
                       id=id, name=name, grade=grade, url=url)
 
-    def insert_stores(self, id, name, grade, url, category, categories, stores, *args):
+    def insert_stores(self, id, name, grade, url, categories, sub_category, stores, *args):
         for store in stores:
             self.db.query("""
-                            INSERT INTO stores(store)
+                            INSERT INTO Stores(store)
                             VALUES (:store)
                             ON DUPLICATE KEY UPDATE store=:store;
                           """,
                           store=store)
 
-    def insert_category(self, id, name, grade, url, category, categories, stores, *args):
+    def insert_category(self, id, name, grade, url, categories, sub_category, stores, *args):
         for category in categories:
-            self.db.query("""
-                            INSERT INTO Categories(Category) 
+                self.db.query("""
+                            INSERT INTO Categories(category, sub_category) 
                             VALUES 
-                            (:category)
-                            ON DUPLICATE KEY UPDATE category=:category;
-                          """,
-                          category=category)
+                            (:category, :sub_category)
+                            ON DUPLICATE KEY UPDATE category=:category;                          
+                              """,
+                              category=category, sub_category=sub_category)
 
     def insert_rows_products(self, products):
         for product in products:
@@ -147,6 +148,7 @@ class DataBaseCreator:
     def insert_rows_categories(self, categories):
         for category in categories:
             self.insert_category(*category)
+
 
 def main():
     """ Connecting in the database """

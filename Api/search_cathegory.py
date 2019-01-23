@@ -20,13 +20,12 @@ class ApiCollectingData:
         """ Use the configuration for the connecting interface """
         all_products = []
         api = "https://fr.openfoodfacts.org/cgi/search.pl"                 # Address OpenFooFact.org the API FR locating
-
         for category in cons.CATEGORIES:
             config = {"action": "process",                                         # This config for  for connecting API
                       "tagtype_0": "categories",                                            # Get the result by category
                       'tag_0': category,                                         # the tag represents the article search
                       "tag_contains_0": "contains",
-                      "page_size": 5,                                                     # Number of articles per page
+                      "page_size": 50,                                                    # Number of articles per page
                       "json": 1}                                                              # The API response in JSON
 
             response = req.get(api, params=config)                           # Uses the configuration for the connection
@@ -34,9 +33,17 @@ class ApiCollectingData:
             products_section = results['products']                                               # Finally result of API
 
             for product in products_section:
-                product['main_category'] = category
+                product['main_category'] = category                             # Convert the categories -> sub_category
             all_products.extend(products_section)
-        # pprint(all_products)
+
+        ##########################
+        # PRINT RESULTS FUNCTION #
+        ##########################
+
+        # pprint(all_products)                                                # Pprint the first result the API response
+
+        ##########################
+
         return all_products
 
     def validate_the_data(self, keys, products_section):
@@ -49,30 +56,42 @@ class ApiCollectingData:
     def format_final_response(self, all_products):
         """ Formatted the response just harvest the categories selected """
         product_final = []
-        keys = ['id', 'product_name_fr', 'nutrition_grade_fr', 'url', 'main_category', 'categories', 'stores']
-
+        keys = ['id', 'product_name_fr', 'nutrition_grade_fr', 'url', 'categories', 'main_category', 'stores']
         print(len(all_products))
         for product in all_products:
             if self.validate_the_data(keys, product):
+
                 barre_code = product['id']
                 name = product['product_name_fr']
                 grade = product['nutrition_grade_fr']
                 website = product['url']
-                format_category = product['main_category']
                 categories = product['categories'].upper().split(',')
+                sub_category = product['main_category'].upper()
                 stores = product['stores'].upper().split(',')
 
-                key = (barre_code, name, grade, website, format_category, categories, stores)
+                # Respect of the order of the criteria insert in a tuple
+                key = (barre_code, name, grade, website, categories, sub_category,  stores)
                 formatting = key
                 product_final.append(formatting)
-                print('produit: ', name.upper())
-                print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
-                print('présent dans', [len(categories)], 'categorie(s): = ', categories, '\n')
+
+                ##########################
+                # PRINT RESULTS FUNCTION #
+                ##########################
+
+                # pprint(product_final)                                      # Pprint the second result the API response
+                # print(f"Nous avons récupéré {len(product_final)} produits")
+
+                # print('produit: ', name.upper())                    # Print tyhe results the stores and category count
+                # print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
+                # print('présent dans', [len(categories)], 'categorie(s): = ', categories, '\n')
+
+                ##########################
+
         return product_final
 
     def save_data(self, product_final, filename):
         with open(filename, 'w', encoding='utf-8') as file:
-            writer = csv.writer(file, delimiter=';')
+            writer = csv.writer(file, delimiter=';')                                           # Import the data in file
             for e in product_final:
                 writer.writerow(e)
         return filename
@@ -80,12 +99,14 @@ class ApiCollectingData:
 
 def main():
 
+    """ Download the response """
+
     downloader = ApiCollectingData()
     connect = downloader.bring_out()
-
     final = downloader.format_final_response(connect)
-    # pprint(final)
-    print(f"Nous avons récupéré {len(final)} produits")
+
+    """ Save the response in file """
+    save_data = downloader.save_data(final, 'Response_save.csv')
 
 
 if __name__ == "__main__":
