@@ -78,12 +78,12 @@ class ApiCollectingData:
                 # PRINT RESULTS FUNCTION #
                 ##########################
 
-                # pprint(product_final)                                      # Pprint the second result the API response
-                # print(f"Nous avons récupéré {len(product_final)} produits")
+                print('produit: ', name.upper())                      # Print type results the stores and category count
+                print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
+                print('présent dans', [sub_category], [len(categories)], 'categorie(s): = ', categories, '\n')
 
-                # print('produit: ', name.upper())                    # Print tyhe results the stores and category count
-                # print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
-                # print('présent dans', [len(categories)], 'categorie(s): = ', categories, '\n')
+                # pprint(product_final)                                      # Pprint the second result the API response
+                print(f"Nous avons récupéré {len(product_final)} produits")
 
                 ##########################
 
@@ -104,7 +104,7 @@ def main():
     final = downloader.format_final_response(connect)
 
     """ Save the response in file """
-    save_data = downloader.save_data(final, 'Response_save.csv')
+    # save_data = downloader.save_data(final, 'Response_save.csv')
 
 
 if __name__ == "__main__":

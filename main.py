@@ -16,9 +16,19 @@ class Main:
     def step_2(self):
         pass
 
+    def step_3(self):
+        pass
+
+    def step_4(self):
+        pass
+
+    def step_5(self):
+        pass
+
 
 def main():
     main = Main()
+
 
 if __name__ == "__main__":
     main()
