@@ -36,13 +36,13 @@ class ApiCollectingData:
                 product['main_category'] = category                             # Convert the categories -> sub_category
             all_products.extend(products_section)
 
-        ##########################
-        # PRINT RESULTS FUNCTION #
-        ##########################
+        ###############################
+        """ PRINT RESULTS FUNCTION """
+        ###############################
+        """ Pprint the first result the API response """
+        # pprint(all_products)
 
-        # pprint(all_products)                                                # Pprint the first result the API response
-
-        ##########################
+        """##########################"""
 
         return all_products
 
@@ -68,24 +68,23 @@ class ApiCollectingData:
                 categories = product['categories'].upper().split(',')
                 sub_category = product['main_category'].upper()
                 stores = product['stores'].upper().split(',')
-
-                # Respect of the order of the criteria insert in a tuple
+                # Respect of the order of the criteria insert in a tuple and simple format in database insert
                 key = (barre_code, name, grade, website, categories, sub_category,  stores)
                 formatting = key
                 product_final.append(formatting)
 
-                ##########################
-                # PRINT RESULTS FUNCTION #
-                ##########################
-
-                print('produit: ', name.upper())                      # Print type results the stores and category count
+                ###############################
+                """ PRINT RESULTS FUNCTION """
+                ###############################
+                """ Print type results the stores and category count """
+                print('produit: ', name.upper())
                 print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
                 print('présent dans', [sub_category], [len(categories)], 'categorie(s): = ', categories, '\n')
-
-                # pprint(product_final)                                      # Pprint the second result the API response
+                """ Pprint the second result the API response formated """
+                # pprint(product_final)
                 print(f"Nous avons récupéré {len(product_final)} produits")
 
-                ##########################
+                """##########################"""
 
         return product_final
 

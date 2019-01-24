@@ -5,77 +5,63 @@
 import tkinter as gui
 
 
-class GraphicUserInterface:
+class TkinterWidgets:
 
-    def windgets(self):
-        main_app = gui.Tk()                                                                            # Init the screen
+    def __init__(self):
+        self.main_app = gui.Tk()                                                                       # Init the screen
 
+    def tkinter_label(self):
         """ Label """
-        welcome_label = gui.Label(main_app, text="Bienvenue au programme de substitution")
-        # print(welcome_label.cget('text'))
+        welcome_label = gui.Label(self.main_app, text="Hello World")
+        print(welcome_label.cget('text'))
         welcome_label.config(text='Bienvenue dans les premiers test.')                       # mis a jour de l'affichage
-        # welcome_label.pack()          # Affichage en fonction du prefixe variable ici welcome_label ou welcome_message
 
+        """ Fonctionnement de mise à jour """
+        welcome_label.pack()            # Affichage en fonction du prefixe variable ici welcome_label ou welcome_message
+        self.main_app.mainloop()                                                                        # Rafrichir loop
+        return None
+
+
+    def tkinter_message(self):
         """ Message avec '\n' """
-        welcome_message = gui.Message(main_app, text="Bienvenue au programme de substitution (message '\n')")
+        welcome_message = gui.Message(self.main_app, text="Hello World (message '\n')")
         # print(welcome_message.cget('text'))
-        # welcome_message.pack()        # Affichage en fonction du prefixe variable ici welcome_label ou welcome_message
 
+        """ Fonctionnement de mise à jour """
+        welcome_message.pack()        # Affichage en fonction du prefixe variable ici welcome_message ou welcome_message
+        self.main_app.mainloop()                                                                        # Rafrichir loop
+        return None
+
+    def tkinter_entry(self):
         """ Demande de saisie (input()) """
-        imput_selection = gui.Entry(main_app)              # show='*' password mode # exportselection=0 bloque selection
-        # imput_selection.pack()        # Affichage en fonction du prefixe variable ici welcome_label ou welcome_message
+        imput_selection = gui.Entry(self.main_app)         # show='*' password mode # exportselection=0 bloque selection
 
+        """ Fonctionnement de mise à jour """
+        imput_selection.pack()        # Affichage en fonction du prefixe variable ici imput_selection ou welcome_message
+        self.main_app.mainloop()                                                                        # Rafrichir loop
+        return None
+
+    def tkinter_button(self):
         """ Button """
-        button_selection = gui.Button(main_app, text='ok')
-        # button_selection.pack()       # Affichage en fonction du prefixe variable ici welcome_label ou welcome_message
+        button_selection = gui.Button(self.main_app, text='ok')
 
         """ Button + appel fonction """
         def hello():
             print('hello')
-        button_selection_func = gui.Button(main_app, text='ok', command=hello)
+        button_selection_func = gui.Button(self.main_app, text='ok', command=hello)
         # button_selection.pack()       # Affichage en fonction du prefixe variable ici welcome_label ou welcome_message
 
         """ Fonctionnement de mise à jour """
-        button_selection_func.pack()    # Affichage en fonction du prefixe variable ici welcome_label ou welcome_message
-        main_app.mainloop()                                                                             # Rafrichir loop
-        return True
+        # Affichage en fonction du prefixe variable ici button_selection ou button_selection_func
+        button_selection.pack()
+        button_selection_func.pack()
+        self.main_app.mainloop()                                                                        # Rafrichir loop
+        return None
 
-    def message_test(self):
-        main_app = gui.Tk()                                                                            # Init the screen
-        welcome_label = gui.Label(main_app, text="Bienvenue au programme de substitution")
-        welcome_label.pack()
-
-
-        """"""
-        main_app.mainloop()                                                                             # Rafrichir loop
-        return True
-
-
-"""
-        - SCENARIO -
-        
-- Affiche les databases disponnible
-- Selectionne la database
-- Affiche des tables disponnible
-- Selectionne une table
-- Affiche le contenu de la table selectionner
-
-- Affichage des résultats: requêtes, insertions, 
-
-- Selection de la table Categories
-- Selection d'un produits dans la categories séléctionner
-- Comparer le produits séléctionner parmis la table Products grade '<'
-- Mettre les nouveaux substitue dans la table des favoris Substitute
-
-- * Pouvoir * savegarder la table des favoris
-- * Pouvoir * mettre à jour les requêtes
-- * Pouvoir * ré-insérer dans la table favoris les favoris sauvegarder [code barre/produit via requête barre_code]
-- * Pouvoir * 
-
-"""
-
-
-tkinter_test = GraphicUserInterface()
-message = tkinter_test.message_test()
+Tkinter_init = TkinterWidgets()
+# Label = Tkinter_init.tkinter_label()
+# Message = Tkinter_init.tkinter_message()
+# Entry = Tkinter_init.tkinter_entry()
+# Button = Tkinter_init.tkinter_button()
 
 
