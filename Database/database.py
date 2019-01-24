@@ -81,11 +81,7 @@ class DataBaseCreator:
     def insert_product(self, id, name, grade, url, *args):
         """ Insert the product data in the table"""
         self.db.query("""                        
-                        INSERT INTO Products (
-                        barre_code,
-                        name_product,
-                        grade,
-                        web_site) 
+                        INSERT INTO Products (barre_code, name_product, grade, web_site) 
                         VALUES 
                         (:id, :name, :grade, :url) 
                         ON DUPLICATE KEY UPDATE barre_code = :id;
@@ -113,28 +109,27 @@ class DataBaseCreator:
                           """,
                           store=store)
 
-    def insert_table_subkey(self):
+    def insert_table_subkey(self, product_id, store_id):
         """ Creating the index """
         self.db.query("""                                                           
-                        INSERT IN TO _Product_store (
-                        product_id INT REFERENCES Products(barre_code) ON DELETE CASCADE,
-                        store_id INT REFERENCES Stores(id) ON DELETE CASCADE,
-                        PRIMARY KEY (product_id, store_id));
-                     """)                                                             # Index = id_products + id_ stores
+                        INSERT IN TO _Product_store(product_id, store_id),
+                        VALUES (:product_id, :store_id);
+                     """,
+                      product_id=product_id, store_id=store_id)  # VALUES = :Products.id?, :Stores.store?
 
-        self.db.query("""
-                        INSERT IN TO _Product_category ( 
-                        product_id INT REFERENCES Products(barre_code) ON DELETE CASCADE,
-                        category_id INT REFERENCES Category(id) ON DELETE CASCADE,
-                        PRIMARY KEY (product_id, category_id));
-                      """)                                                           # Index = id_products + id_category
-
-        self.db.query("""
-                        INSERT IN TO _Product_sub_category ( 
-                        product_id INT REFERENCES Products(barre_code) ON DELETE CASCADE,
-                        sub_category_id INT REFERENCES Category(id) ON DELETE CASCADE,
-                        PRIMARY KEY (product_id, sub_category_id));
-                      """)                                                       # Index = id_products + id_sub_category
+    #         self.db.query("""
+    #                         INSERT IN TO _Product_category (
+    #                         product_id INT REFERENCES Products(barre_code) ON DELETE CASCADE,
+    #                         category_id INT REFERENCES Category(id) ON DELETE CASCADE,
+    #                         PRIMARY KEY (product_id, category_id));
+    #                       """)
+    #
+    #         self.db.query("""
+    #                         INSERT IN TO _Product_sub_category (
+    #                         product_id INT REFERENCES Products(barre_code) ON DELETE CASCADE,
+    #                         sub_category_id INT REFERENCES Category(id) ON DELETE CASCADE,
+    #                         PRIMARY KEY (product_id, sub_category_id));
+    #                       """)
 
     def insert_favory(self):
         pass
@@ -146,6 +141,7 @@ class DataBaseCreator:
         self.create_table_category()
         self.create_table_store()
         # self.create_favorites_table()
+        return None
 
     def insert_rows(self, products):
         """ Completion the data row per row """
@@ -154,7 +150,7 @@ class DataBaseCreator:
             self.insert_product(*product)
             self.insert_category(*product)
             self.insert_stores(*product)
-
+        return None
 
 def main():
     """ Connecting in the API """
