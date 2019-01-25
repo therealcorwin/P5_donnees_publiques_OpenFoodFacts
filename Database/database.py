@@ -134,8 +134,7 @@ class DataBaseCreator:
                          (SELECT barre_code FROM Products WHERE name=:product_id),
                          (SELECT id FROM Categories WHERE name=:sub_category_id));
                        """,
-                      product_id=id, sub_category_id=sub_category) # Bug d'insertion Sub_key -> 'result[key] = self._cmysql.convert_to_mysql(value)[0] _mysql_connector.MySQLInterfaceError: Python type list cannot be converted
-
+                      product_id=id, sub_category_id=sub_category)
     def insert_favory(self):
         pass
 
