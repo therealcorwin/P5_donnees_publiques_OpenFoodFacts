@@ -4,15 +4,12 @@
 import records as rec
 
 
-from Database.database import DataBaseCreator
+from Database.database import *
 
 
 class DataBaseUser:
 
     def __init__(self):
-        self.db = DataBaseCreator()
-
-    def connect_mysql(self):
         pass
 
     def get_databases(self):
@@ -48,7 +45,7 @@ def main():
 
     """ Database class user """
     user = DataBaseUser()
-    g_databases = user.get_databases()
+    g_databases = user.get_databases(connecting)
     g_tables = user.get_tables()
     g_products = user.get_all_products()
 

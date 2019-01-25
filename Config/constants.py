@@ -32,6 +32,6 @@ DATABASE = 'demo'
 
 NEW_USER = ' '
 NEW_PASSWORD = ' '
-NEW_DATABASE = ' '
+NEW_DATABASE = 'Demo_Tc'
 
 

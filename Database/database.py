@@ -50,21 +50,21 @@ class DataBaseCreator:
         """ Creating the index """
         self.db.query("""                                                           
                         CREATE TABLE IF NOT EXISTS _Product_store (
-                        product_id INT REFERENCES Products(barre_code) ON DELETE CASCADE,
+                        product_id BIGINT REFERENCES Products(barre_code) ON DELETE CASCADE,
                         store_id INT REFERENCES Stores(id) ON DELETE CASCADE,
                         PRIMARY KEY (product_id, store_id));
                      """)                                                             # Index = id_products + id_ stores
 
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS _Product_category ( 
-                        product_id INT REFERENCES Products(barre_code) ON DELETE CASCADE,
+                        product_id BIGINT REFERENCES Products(barre_code) ON DELETE CASCADE,
                         category_id INT REFERENCES Category(id) ON DELETE CASCADE,
                         PRIMARY KEY (product_id, category_id));
                       """)                                                           # Index = id_products + id_category
 
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS _Product_sub_category ( 
-                        product_id INT REFERENCES Products(barre_code) ON DELETE CASCADE,
+                        product_id BIGINT REFERENCES Products(barre_code) ON DELETE CASCADE,
                         sub_category_id INT REFERENCES Category(id) ON DELETE CASCADE,
                         PRIMARY KEY (product_id, sub_category_id));
                       """)                                                       # Index = id_products + id_sub_category
@@ -109,25 +109,32 @@ class DataBaseCreator:
                           """,
                           store=store)
 
-    def insert_table_subkey(self, id, name, grade, url, categories, sub_category, stores, *args):  #, category_id, sub_category_id):
+    def insert_table_subkey(self, id, name, grade, url, Categories, sub_category, stores, *args):
         """ Creating the index """
-        self.db.query("""                                                           
-                        INSERT INTO _Product_store(product_id, store_id),
-                        VALUES (:product_id, :store_id);
-                      """,
-                      id=id, store_id=store_id)
 
-#         self.db.query("""
-#                         INSERT INTO _Product_category (product_id, category_id),
-#                         VALUES (:product_id, :category_id);
-#                       """,
-#                       id=id, category_id=category_id)
-#
-#         self.db.query("""
-#                         INSERT INTO _Product_sub_category (product_id, sub_category_id),
-#                         VALUES (:product_id, :sub_category_id);
-#                       """,
-#                       id=id, sub_category_id=sub_category_id)
+        self.db.query("""
+                         INSERT INTO _product_store (product_id, store_id)
+                         VALUES (
+                         (SELECT barre_code FROM Products WHERE name=:product_id),
+                         (SELECT id FROM Stores WHERE name=:store_id));
+                         """,
+                      product_id=id, store_id=stores)
+
+        self.db.query("""
+                                  INSERT INTO _Product_category (product_id, category_id)
+                                  VALUES (
+                         (SELECT barre_code FROM Products WHERE name=:product_id),
+                                  (SELECT id FROM Categories WHERE name=:category_id));
+                                """,
+                      product_id=id, category_id=Categories)
+
+        self.db.query("""
+                         INSERT INTO _Product_sub_category (product_id, sub_category_id)
+                         VALUES (
+                         (SELECT barre_code FROM Products WHERE name=:product_id),
+                         (SELECT id FROM Categories WHERE name=:sub_category_id));
+                       """,
+                      product_id=id, sub_category_id=sub_category) # Bug d'insertion Sub_key -> 'result[key] = self._cmysql.convert_to_mysql(value)[0] _mysql_connector.MySQLInterfaceError: Python type list cannot be converted
 
     def insert_favory(self):
         pass

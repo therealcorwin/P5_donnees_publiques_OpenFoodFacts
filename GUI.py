@@ -21,7 +21,6 @@ class TkinterWidgets:
         self.main_app.mainloop()                                                                        # Rafrichir loop
         return None
 
-
     def tkinter_message(self):
         """ Message avec '\n' """
         welcome_message = gui.Message(self.main_app, text="Hello World (message '\n')")
@@ -57,6 +56,7 @@ class TkinterWidgets:
         button_selection_func.pack()
         self.main_app.mainloop()                                                                        # Rafrichir loop
         return None
+
 
 Tkinter_init = TkinterWidgets()
 # Label = Tkinter_init.tkinter_label()
