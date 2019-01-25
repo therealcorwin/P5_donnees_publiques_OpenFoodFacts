@@ -116,25 +116,33 @@ class DataBaseCreator:
                          INSERT INTO _product_store (product_id, store_id)
                          VALUES (
                          (SELECT barre_code FROM Products WHERE name=:product_id),
-                         (SELECT id FROM Stores WHERE name=:store_id));
-                         """,
-                      product_id=id, store_id=stores)
+                         (SELECT id FROM Stores WHERE name=:store_id))
+                      """, product_id=id, store_id=stores)
 
-        self.db.query("""
-                                  INSERT INTO _Product_category (product_id, category_id)
-                                  VALUES (
-                         (SELECT barre_code FROM Products WHERE name=:product_id),
-                                  (SELECT id FROM Categories WHERE name=:category_id));
-                                """,
-                      product_id=id, category_id=Categories)
+    #         self.db.query("""
+    #                          INSERT INTO _product_store (product_id, store_id)
+    #                          VALUES (
+    #                          (SELECT barre_code FROM Products WHERE name=:product_id),
+    #                          (SELECT id FROM Stores WHERE name=:store_id));
+    #                       """,
+    #                       product_id=id, store_id=stores)
 
-        self.db.query("""
-                         INSERT INTO _Product_sub_category (product_id, sub_category_id)
-                         VALUES (
-                         (SELECT barre_code FROM Products WHERE name=:product_id),
-                         (SELECT id FROM Categories WHERE name=:sub_category_id));
-                       """,
-                      product_id=id, sub_category_id=sub_category)
+    #         self.db.query("""
+    #                         INSERT INTO _Product_category (product_id, category_id)
+    #                         VALUES (
+    #                         (SELECT barre_code FROM Products WHERE name=:product_id),
+    #                         (SELECT id FROM Categories WHERE name=:category_id));
+    #                       """,
+    #                       product_id=id, category_id=Categories)
+
+    #         self.db.query("""
+    #                          INSERT INTO _Product_sub_category (product_id, sub_category_id)
+    #                          VALUES (
+    #                          (SELECT barre_code FROM Products WHERE name=:product_id),
+    #                          (SELECT id FROM Categories WHERE name=:sub_category_id));
+    #                        """,
+    #                       product_id=id, sub_category_id=sub_category)
+
     def insert_favory(self):
         pass
 
@@ -150,10 +158,11 @@ class DataBaseCreator:
     def insert_rows(self, products):
         """ Completion the data row per row """
         for product in products:
-            self.insert_table_subkey(*product)
             self.insert_product(*product)
             self.insert_category(*product)
             self.insert_stores(*product)
+            self.insert_table_subkey(*product)
+
         return None
 
 

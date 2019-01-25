@@ -8,12 +8,12 @@ CATEGORIES = ["Plats préparé",
               # "Plats surgelé",
               # "Conserves",
               # Produits en commun par categories
-              "Bio",
+              # "Bio",
               # "Céréales",
               # "Biscuits",
-              "Viennoiseries",
+              # "Viennoiseries",
               # Produits en commun par categories
-              "Desserts",
+              # "Desserts",
               # "Produit laitiers",
               # Produits en commun par categories
               # "Charcuteries",
