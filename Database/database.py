@@ -124,34 +124,31 @@ class DataBaseCreator:
     #                          VALUES (
     #                          (SELECT barre_code FROM Products WHERE name=:product_id),
     #                          (SELECT id FROM Stores WHERE name=:store_id));
-    #                       """,
-    #                       product_id=id, store_id=stores)
+    #                       """, product_id=id, store_id=stores)
 
     #         self.db.query("""
     #                         INSERT INTO _Product_category (product_id, category_id)
     #                         VALUES (
     #                         (SELECT barre_code FROM Products WHERE name=:product_id),
     #                         (SELECT id FROM Categories WHERE name=:category_id));
-    #                       """,
-    #                       product_id=id, category_id=Categories)
+    #                       """,  product_id=id, category_id=Categories)
 
     #         self.db.query("""
     #                          INSERT INTO _Product_sub_category (product_id, sub_category_id)
     #                          VALUES (
     #                          (SELECT barre_code FROM Products WHERE name=:product_id),
     #                          (SELECT id FROM Categories WHERE name=:sub_category_id));
-    #                        """,
-    #                       product_id=id, sub_category_id=sub_category)
+    #                        """, product_id=id, sub_category_id=sub_category)
 
     def insert_favory(self):
         pass
 
     def create_tables(self):
         """ Execute the creating table """
-        self.create_table_subkey()
         self.create_table_product()
         self.create_table_category()
         self.create_table_store()
+        self.create_table_subkey()
         # self.create_favorites_table()
         return None
 
@@ -175,13 +172,6 @@ def main():
     """ Connecting in the database """
     databases = DataBaseCreator()                                                              # Load the database class
     connecting = databases.connect_mysql()                                                    # Load the MySQL connexion
-
-    """ Control the database """
-    # get_bases = databases.get_databases()                                                      # Get the database list
-    # get_tables = databases.get_tables()                                                           # Get the table list
-    # get_products = databases.get_all_products()                                                  # Get the insert list
-
-    # choose = databases.choose_database()
 
     """ Create table """
     create_table = databases.create_tables()                                             # Creating the necessary tables

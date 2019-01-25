@@ -1,16 +1,23 @@
 # -*- PipEnv -*-
 # -*- coding: Utf-8 -*-
 
+
 import records as rec
-
-
 from Database.database import *
 
 
 class DataBaseUser:
 
     def __init__(self):
-        pass
+        self.db = None
+
+    """TEMP"""
+    def connect_mysql(self):
+        """ Connecting in the database """
+        self.db = rec.Database(f"mysql+mysqlconnector://{cons.USER}:{cons.PASSWORD}@localhost/"
+                               f"{cons.DATABASE}?charset=utf8mb4")
+        return self.db
+    """TEMP"""
 
     def get_databases(self):
         """ Control the database """
@@ -39,20 +46,18 @@ class DataBaseUser:
 
 
 def main():
-    """ Connecting in the database """
-    databases = DataBaseCreator()                                                              # Load the database class
-    connecting = databases.connect_mysql()                                                    # Load the MySQL connexion
 
-    """ Database class user """
+    """ Connecting in the database """
     user = DataBaseUser()
-    g_databases = user.get_databases(connecting)
-    g_tables = user.get_tables()
-    g_products = user.get_all_products()
+    connecting = user.connect_mysql()                                                    # Load the MySQL connexion
+
 
     """ Control the database """
-    get_bases = connecting.g_databases()
-    # get_tables = connecting.get_tables()                                                          # Get the table list
-    # get_products = connecting.get_all_products()                                                 # Get the insert list
+    get_bases = user.get_databases()                                                      # Get the database list
+    # get_tables = user.get_tables()                                                           # Get the table list
+    # get_products = user.get_all_products()                                                  # Get the insert list
+
+    # choose = user.choose_database()
 
     # choose = connecting.choose_database()
 
