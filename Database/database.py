@@ -183,3 +183,4 @@ def main():
 if __name__ == "__main__":
     main()
 
+# C:\Users\Admin\GoogleDrive\DATA_OPEN_PROG\OPENCLASSROOMS\MyProjectOC\PROJET_05\MySQL\bin
