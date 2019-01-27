@@ -7,8 +7,12 @@ import Config.constants as cons
 
 
 class DataBaseUser:
+    """
+
+    """
 
     def __init__(self):
+        """  """
         self.db = None
 
     def connect_mysql(self):
@@ -41,7 +45,7 @@ class DataBaseUser:
                              """,  fetchall=True).as_dict()
 
     def use_database(self):
-        """"""
+        """  """
         self.db.query("""
                           USE f"{%s};
                       """,)
@@ -53,12 +57,12 @@ def main():
     databases = DataBaseUser()                                                                 # Load the database class
     connecting = databases.connect_mysql()                                                    # Load the MySQL connexion
 
+    """ Choose the existing databases """
+
     """ Control the database """
     get_bases = databases.get_databases()                                                        # Get the database list
     get_tables = databases.get_tables()                                                             # Get the table list
     get_products = databases.get_all_products()                                                    # Get the insert list
-
-    # choose = user.choose_database()
 
 
 if __name__ == "__main__":

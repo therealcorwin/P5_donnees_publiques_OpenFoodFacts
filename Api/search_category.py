@@ -80,7 +80,7 @@ class ApiCollectingData:
                 print('produit: ', name.upper())
                 print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
                 print('présent dans', [sub_category], [len(categories)], 'categorie(s): = ', categories, '\n')
-                """ Pprint the second result the API response formated """
+                """ Pprint final result the API response formatted """
                 # pprint(product_final)
                 print(f"Nous avons récupéré {len(product_final)} produits")
 

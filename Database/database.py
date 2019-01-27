@@ -5,19 +5,18 @@
 import records as rec
 
 import Config.constants as cons
+from Database.database_user import DataBaseUser
 from Api.search_category import ApiCollectingData
 
 
 class DataBaseCreator:
+    """
+    """
 
     def __init__(self):
-        self.db = None
-
-    def connect_mysql(self):
-        """ Connecting in the database """
-        self.db = rec.Database(f"mysql+mysqlconnector://{cons.USER}:{cons.PASSWORD}@localhost/"
-                               f"{cons.DATABASE}?charset=utf8mb4")
-        return self.db
+        """ Connect to Mysql database from the class DataBaseUser() """
+        self.database = DataBaseUser()
+        self.db = self.database.connect_mysql()
 
     def create_table_product(self):
         """ Create table """
@@ -30,7 +29,7 @@ class DataBaseCreator:
                        """)
 
     def create_table_category(self):
-        """"""
+        """  """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Categories (
                         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -39,7 +38,7 @@ class DataBaseCreator:
                       """)
 
     def create_table_store(self):
-        """"""
+        """  """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Stores (
                         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -139,6 +138,7 @@ class DataBaseCreator:
     #                          (SELECT barre_code FROM Products WHERE name=:product_id),
     #                          (SELECT id FROM Categories WHERE name=:sub_category_id));
     #                        """, product_id=id, sub_category_id=sub_category)
+        return True
 
     def insert_favory(self):
         pass
@@ -150,7 +150,7 @@ class DataBaseCreator:
         self.create_table_store()
         self.create_table_subkey()
         # self.create_favorites_table()
-        return None
+        return True
 
     def insert_rows(self, products):
         """ Completion the data row per row """
@@ -158,26 +158,24 @@ class DataBaseCreator:
             self.insert_product(*product)
             self.insert_category(*product)
             self.insert_stores(*product)
-            self.insert_table_subkey(*product)
-
-        return None
+            # self.insert_table_subkey(*product)
+        return True
 
 
 def main():
+    """ Init the class """
+    creating = DataBaseCreator()
+
     """ Connecting in the API """
     downloader = ApiCollectingData()                                                                # Load the API class
     connect = downloader.bring_out()                                                            # Load the API connexion
     final_products = downloader.format_final_response(connect)                                  # Harvest OPFF's request
 
-    """ Connecting in the database """
-    databases = DataBaseCreator()                                                              # Load the database class
-    connecting = databases.connect_mysql()                                                    # Load the MySQL connexion
-
     """ Create table """
-    create_table = databases.create_tables()                                             # Creating the necessary tables
+    create_table = creating.create_tables()                                              # Creating the necessary tables
 
     """ Insert data """
-    insert_data = databases.insert_rows(final_products)
+    insert_data = creating.insert_rows(final_products)
 
 
 if __name__ == "__main__":
