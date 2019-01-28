@@ -44,6 +44,13 @@ class DataBaseUser:
                                 SELECT * FROM demo.Products;
                              """,  fetchall=True).as_dict()
 
+    def get_all_category(self):
+        """ Control in the tables """
+        get_cat =  self.db.query("""
+                                SELECT sub_category FROM demo.Categories;
+                             """,  fetchall=True).as_dict()
+        print(get_cat)
+
     def use_database(self):
         """  """
         self.db.query("""
@@ -60,9 +67,9 @@ def main():
     """ Choose the existing databases """
 
     """ Control the database """
-    get_bases = databases.get_databases()                                                        # Get the database list
-    get_tables = databases.get_tables()                                                             # Get the table list
-    get_products = databases.get_all_products()                                                    # Get the insert list
+    # get_bases = databases.get_databases()                                                        # Get the database list
+    # get_tables = databases.get_tables()                                                             # Get the table list
+    get_products = databases.get_all_category()                                                    # Get the insert list
 
 
 if __name__ == "__main__":

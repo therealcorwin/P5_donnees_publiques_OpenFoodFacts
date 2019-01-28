@@ -4,9 +4,9 @@
 
 # API CONSTANTS #
 
-CATEGORIES = [#"Plats préparé",
-              # "Plats surgelé",
-              # "Conserves",
+CATEGORIES = ["Plats préparé",
+               "Plats surgelé",
+               "Conserves",
               # Produits en commun par categories
                "Bio",
               # "Céréales",
