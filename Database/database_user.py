@@ -3,7 +3,7 @@
 
 import records as rec
 
-import Config.constants as cons
+from Config.constants import *
 
 
 class DataBaseUser:
@@ -17,12 +17,10 @@ class DataBaseUser:
 
     def connect_mysql(self):
         """ Connecting in the database """
-        self.db = rec.Database(f"mysql+mysqlconnector://{cons.USER}:{cons.PASSWORD}@localhost/"
-                               f"{cons.DATABASE}?charset=utf8mb4")
+        self.db = rec.Database(f"mysql+mysqlconnector://{USER}:{PASSWORD}@localhost/"
+                               f"{DATABASE}?charset=utf8mb4")
         return self.db
 
-# si la "liste" retournée est vide, il n'a pas de base. Il suffit de tester
-# Pour la liste des tables, tu peux utiliser la methode get_table_names()
 
     def get_databases(self):
         """ Control the database """

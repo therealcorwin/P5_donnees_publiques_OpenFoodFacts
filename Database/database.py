@@ -38,7 +38,7 @@ class DataBaseCreator:
         """  """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Stores (
-                        id MEDIUMINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+                        id INT PRIMARY KEY AUTO_INCREMENT,
                         store VARCHAR(150) UNIQUE);
                       """)
 
@@ -46,21 +46,21 @@ class DataBaseCreator:
         """ Creating the index """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS _Product_category ( 
-                        id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+                        id INT PRIMARY KEY AUTO_INCREMENT,
                         product_id BIGINT REFERENCES Products(barre_code),
-                        category_id MEDIUMINT UNSIGNED REFERENCES Category(id));
+                        category_id INT UNSIGNED REFERENCES Category(id));
                        """)
 
         self.db.query("""                                                           
                         CREATE TABLE IF NOT EXISTS _Product_store (
-                        id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+                        id INT PRIMARY KEY AUTO_INCREMENT,
                         product_id BIGINT REFERENCES Products(barre_code),
                         store_id MEDIUMINT REFERENCES Stores(id));               
                       """)
 
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS _Product_sub_category (
-                        id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+                        id INT PRIMARY KEY AUTO_INCREMENT,
                         product_id BIGINT REFERENCES Products(barre_code),
                         sub_category_id MEDIUMINT UNSIGNED REFERENCES Category(id));
                       """)
@@ -108,19 +108,19 @@ class DataBaseCreator:
                         INSERT INTO _Product_category (product_id, category_id)
                         VALUES (:barre_code,
                         (SELECT id FROM Categories WHERE name=:category_id));
-                      """, barre_code=id, category_id=Categories)
+                      """, barre_code=[id], category_id=Categories)
 
         self.db.query("""
                         INSERT INTO _Product_store (product_id, store_id)
                         VALUES (:barre_code,
                         (SELECT id FROM Stores WHERE name=:store_id));
-                      """, barre_code=id, store_id=stores)
+                      """, barre_code=[id], store_id=stores)
 
         self.db.query("""
                         INSERT INTO _Product_sub_category (product_id, sub_category_id)
                         VALUES (:barre_code,
                         (SELECT id FROM Categories WHERE name=:sub_category_id));
-                      """, barre_code=id, sub_category_id=sub_category)
+                      """, barre_code=[id], sub_category_id=sub_category)
 
         return True
 
@@ -142,7 +142,7 @@ class DataBaseCreator:
             self.insert_product(*product)
             self.insert_category(*product)
             self.insert_stores(*product)
-            self.insert_table_subkey(*product)
+            # self.insert_table_subkey(*product)
         return True
 
 

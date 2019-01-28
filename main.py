@@ -1,8 +1,8 @@
 # -*- PipEnv -*-
 # -*- coding: Utf-8 -*-
 
-
-import Config.constants as cons
+from Config.constants import *
+from Database.database_user import *
 
 
 class Main:
@@ -26,35 +26,25 @@ class Main:
     - * Pouvoir * mettre à jour les requêtes
     - * Pouvoir * ré-insérer dans la table favoris les favoris sauvegarder [code barre/produit via requête barre_code]
     - * Pouvoir *
-def print_random_sentence():
-    rand_quote = random_quote()
-    rand_character = random_character()
-    print(">>>> {} a dit : {}".format(rand_character, rand_quote))
-
-def main_loop():
-    while True:
-        print_random_sentence()
-        message = ('Voulez-vous voir une autre citation ?'
-                   'Pour sortir du programme, tapez [B].')
-        choice = input(message).upper()
-        if choice == 'B':
-            break
-"{} a dit : {}".format("PERMET DE REMPLIR", "LES PERENTHESES")
-"{character} a dit : {quote}".format(character="Babar", quote="...bla bla")
-
     """
 
     def __init__(self):
-        pass
+        self.base_user = DataBaseUser()
 
-    def step_1(self):
-        list = print(cons.CATEGORIES)
-        print("Bienvenue dans le programme de substitution 'Petit Beurre'", '\n',
-              "Choisir une categories parmit la liste entre 0 et 12, puis appuyer sur ENTREE")
-        user = input().isdigit()
-
-
-
+    def step_1(self):  # > user
+        """Category choice"""
+        deco = " ***----------------------------------------------------------***"
+        print(deco, '\n', "***Bienvenue dans le programme de substitution 'Petit Beurre'***", '\n', deco)
+        try:
+            for get in enumerate(CATEGORIES):
+                print("*", get)
+            user = input("Pour choisir une catego5rie, tapez le chiffre associé et appuyer sur ENTREE")
+            print("vous avez choisis ", CATEGORIES[int(user)])
+        except:
+            print("Vous devez choisir une categorie dans la liste!")
+            self.step_1()
+        else:
+            self.base_user.get_all_category()
 
     def step_2(self):
         pass
@@ -70,6 +60,8 @@ def main_loop():
 
 
 def main():
+    data_user = DataBaseUser()
+    connect = data_user.connect_mysql()
     init = Main()
     step1 = init.step_1()
 
