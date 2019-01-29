@@ -20,7 +20,7 @@ class DataBaseCreator:
     def create_table_product(self):
         """ Create table """
         self.db.query("""
-                        CREATE TABLE IF NOT EXISTS Products (
+                        CREATE TABLE IF NOT EXISTS products (
                         barre_code BIGINT PRIMARY KEY,
                         name_product VARCHAR(150),
                         grade CHAR(1),
@@ -30,7 +30,7 @@ class DataBaseCreator:
     def create_table_store(self):
         """  """
         self.db.query("""
-                        CREATE TABLE IF NOT EXISTS Stores (
+                        CREATE TABLE IF NOT EXISTS stores (
                         id INT PRIMARY KEY AUTO_INCREMENT,
                         store VARCHAR(150) UNIQUE);
                       """)
@@ -38,7 +38,7 @@ class DataBaseCreator:
     def create_table_category(self):
         """  """
         self.db.query("""
-                        CREATE TABLE IF NOT EXISTS Categories (
+                        CREATE TABLE IF NOT EXISTS categories (
                         id BIGINT PRIMARY KEY AUTO_INCREMENT,
                         category VARCHAR(125),
                         sub_category VARCHAR(125)); 
@@ -46,39 +46,41 @@ class DataBaseCreator:
 
     def product_category(self):
         self.db.query("""
-                        CREATE TABLE IF NOT EXISTS _Product_category ( 
-                        product_id BIGINT REFERENCES Products(barre_code) ON DELETE CASCADE,
-                        category_id INT UNSIGNED REFERENCES Categories(id) ON DELETE CASCADE,
+                        CREATE TABLE IF NOT EXISTS _product_category ( 
+                        product_id BIGINT REFERENCES products(barre_code) ON DELETE CASCADE,
+                        category_id INT UNSIGNED REFERENCES categories(id) ON DELETE CASCADE,
                         PRIMARY KEY (product_id, category_id))
                        """)
+
     def product_store(self):
         self.db.query("""                                                           
-                        CREATE TABLE IF NOT EXISTS _Product_store (
+                        CREATE TABLE IF NOT EXISTS _product_store (
                         product_id BIGINT REFERENCES Products(barre_code) ON DELETE CASCADE,
-                        store_id INT REFERENCES Stores(id) ON DELETE CASCADE,
+                        store_id INT REFERENCES stores(id) ON DELETE CASCADE,
                         PRIMARY KEY (product_id, store_id))
                       """)
+        
     def product_sub_category(self):
         self.db.query("""
-                        CREATE TABLE IF NOT EXISTS _Product_sub_category (
-                        product_id BIGINT REFERENCES Products(barre_code) ON DELETE CASCADE,
-                        sub_category_id INT UNSIGNED REFERENCES Categories(id) ON DELETE CASCADE,
+                        CREATE TABLE IF NOT EXISTS _product_sub_category (
+                        product_id BIGINT REFERENCES products(barre_code) ON DELETE CASCADE,
+                        sub_category_id INT UNSIGNED REFERENCES categories(id) ON DELETE CASCADE,
                         PRIMARY KEY (product_id, sub_category_id))
                       """)
 
     def create_favorites_table(self):
         self.db.query("""
-                        CREATE TABLE IF NOT EXISTS Products (
+                        CREATE TABLE IF NOT EXISTS products (
                         barre_code BIGINT PRIMARY KEY,
                         name_product VARCHAR(150),
                         grade CHAR(1),
                         web_site VARCHAR(255));
                        """)
 
-    def insert_product(self, id, name, grade, url, *args):
+    def insert_product(self, id, name, grade, url, categories, sub_category, stores, *args):
         """ Insert the product data in the table"""
         self.db.query("""                        
-                        INSERT INTO Products (barre_code, name_product, grade, web_site) 
+                        INSERT INTO products (barre_code, name_product, grade, web_site) 
                         VALUES 
                         (:id, :name, :grade, :url) 
                         ON DUPLICATE KEY UPDATE barre_code = :id;
@@ -88,7 +90,7 @@ class DataBaseCreator:
         """ Insert the store list data in the table"""
         for store in stores:
             self.db.query("""
-                            INSERT INTO Stores(store)
+                            INSERT INTO stores(store)
                             VALUES (:store)
                             ON DUPLICATE KEY UPDATE store=:store;
                           """, store=store)
@@ -97,42 +99,41 @@ class DataBaseCreator:
         """ Insert the category list data in the table"""
         for category in categories:
             self.db.query("""
-                            INSERT INTO Categories(category, sub_category) 
+                            INSERT INTO categories(category, sub_category) 
                             VALUES 
                             (:category, :sub_category)
                             ON DUPLICATE KEY UPDATE category=:category;                          
                           """, category=category, sub_category=sub_category)
 
-    def insert_product_category(self, id, name, grade, url, Categories, sub_category, stores, *args):
-        for category in Categories:
-            self.db.query("""
-                                INSERT INTO _Product_category (product_id, category_id)
-                                VALUES (
-
-                                (SELECT barre_code FROM Products WHERE name_product=:barre_code),
-                                (SELECT id FROM Categories WHERE category = :category  ));
-                              """, barre_code=id, category=category)
-
-    def insert_product_store(self, id, name, grade, url, Categories, sub_category, stores, *args):
+    def insert_product_store(self, id, name, grade, url, categories, sub_category, stores, *args):
         for store in stores:
             self.db.query("""
                              INSERT INTO _Product_store (product_id, store_id)
                              VALUES (
 
-                             (SELECT barre_code FROM Products WHERE name_product=:barre_code),
-                             (SELECT id FROM Stores WHERE store = :store_id  ));
+                             (SELECT barre_code FROM products WHERE name_product=:barre_code),
+                             (SELECT id FROM stores WHERE store = :store_id  ));
                            """, barre_code=id, store_id=store)
 
-    def insert_product_sub_category(self, id, name, grade, url, Categories, sub_category, stores, *args):
+    def insert_product_category(self, id, name, grade, url, categories, sub_category, stores, *args):
+        for category in categories:
+            self.db.query("""
+                                INSERT INTO _Product_category (product_id, category_id)
+                                VALUES (
+
+                                (SELECT barre_code FROM products WHERE name_product=:barre_code),
+                                (SELECT id FROM categories WHERE category = :category  ));
+                              """, barre_code=id, category=category)
+
+    def insert_product_sub_category(self, id, name, grade, url, categories, sub_category, stores, *args):
         for s_category in sub_category:
             self.db.query("""
                              INSERT INTO _Product_sub_category (product_id, sub_category_id)
                              VALUES (
 
-                             (SELECT barre_code FROM Products WHERE name_product=:barre_code),
-                             (SELECT id FROM Categories WHERE sub_category_id=:sub_category));
+                             (SELECT barre_code FROM products WHERE name_product=:barre_code),
+                             (SELECT id FROM categories WHERE sub_category_id=:sub_category));
                            """, barre_code=id, sub_category=s_category)
-        return True
 
     def insert_favory(self):
         pass
@@ -143,23 +144,23 @@ class DataBaseCreator:
         self.create_table_store()
         self.create_table_category()
 
-        self.product_category()
         self.product_store()
+        self.product_category()
         self.product_sub_category()
         # self.create_favorites_table()
-        return True
 
     def insert_rows(self, products):
         """ Completion the data row per row """
         for product in products:
             self.insert_product(*product)
             self.insert_stores(*product)
-            self.insert_category(*product)
 
-            self.insert_product_category(*product)
+            self.insert_category(*product)
             self.insert_product_store(*product)
-            self.insert_product_sub_category(*product)
-        return True
+
+            # self.insert_product_category(*product)
+            # self.insert_product_sub_category(*product)
+
 
 
 def main():
