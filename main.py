@@ -1,8 +1,10 @@
 # -*- PipEnv -*-
 # -*- coding: Utf-8 -*-
 
+import records as rec
+
 from Config.constants import *
-from Database.database_user import *
+from Database.database_user import DataBaseUser
 
 
 class Main:
@@ -28,23 +30,27 @@ class Main:
     - * Pouvoir *
     """
 
-    def __init__(self):
-        self.base_user = DataBaseUser()
+    def __init__(self, db):
+        self.db = db
+
 
     def step_1(self):  # > user
         """Category choice"""
-        deco = " ***----------------------------------------------------------***"
-        print(deco, '\n', "***Bienvenue dans le programme de substitution 'Petit Beurre'***", '\n', deco)
+        deco = "***----------------------------------------------------------***"
+        print( deco, '\n', "***Bienvenue dans le programme de substitution 'Petit Beurre'***", '\n', deco)
         try:
             for get in enumerate(CATEGORIES):
                 print("*", get)
-            user = input("Pour choisir une catego5rie, tapez le chiffre associé et appuyer sur ENTREE")
+            user = input("Pour choisir une categorie, tapez le chiffre associé et appuyer sur ENTREE")
             print("vous avez choisis ", CATEGORIES[int(user)])
-        except:
+        except ValueError:
+            print("Tapez le chiffre associé à une categorie dans la liste!")
+            self.step_1()
+        except IndexError:
             print("Vous devez choisir une categorie dans la liste!")
             self.step_1()
         else:
-            self.base_user.get_all_category()
+            self.connecting.get_all_category()
 
     def step_2(self):
         pass
@@ -60,9 +66,10 @@ class Main:
 
 
 def main():
-    data_user = DataBaseUser()
-    connect = data_user.connect_mysql()
-    init = Main()
+    db = DataBaseUser()
+    connect = db.connect_mysql()
+    init = Main(connect)
+
     step1 = init.step_1()
 
 

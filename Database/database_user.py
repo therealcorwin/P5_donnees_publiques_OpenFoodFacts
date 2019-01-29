@@ -21,7 +21,6 @@ class DataBaseUser:
                                f"{DATABASE}?charset=utf8mb4")
         return self.db
 
-
     def get_databases(self):
         """ Control the database """
         databases = self.db.query("SHOW DATABASES;")
@@ -58,15 +57,15 @@ class DataBaseUser:
 
 
 def main():
-    """ Init the class, and Connecting in the database """
+    # Init the class, and Connecting in the database
     databases = DataBaseUser()                                                                 # Load the database class
     connecting = databases.connect_mysql()                                                    # Load the MySQL connexion
 
-    """ Choose the existing databases """
+    # Choose the existing databases
 
-    """ Control the database """
-    # get_bases = databases.get_databases()                                                        # Get the database list
-    # get_tables = databases.get_tables()                                                             # Get the table list
+    # Control the database
+    # get_bases = databases.get_databases()                                                      # Get the database list
+    # get_tables = databases.get_tables()                                                           # Get the table list
     get_products = databases.get_all_category()                                                    # Get the insert list
 
 

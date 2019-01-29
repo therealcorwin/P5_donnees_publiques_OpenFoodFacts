@@ -6,7 +6,7 @@ import requests as req
 import csv
 from pprint import pprint
 
-from Config import constants as cons
+from Config.constants import *
 
 
 class ApiCollectingData:
@@ -20,7 +20,7 @@ class ApiCollectingData:
         """ Use the configuration for the connecting interface """
         all_products = []
         api = "https://fr.openfoodfacts.org/cgi/search.pl"                 # Address OpenFooFact.org the API FR locating
-        for category in cons.CATEGORIES:
+        for category in CATEGORIES:
             config = {"action": "process",                                         # This config for  for connecting API
                       "tagtype_0": "categories",                                            # Get the result by category
                       'tag_0': category,                                         # the tag represents the article search
@@ -97,12 +97,12 @@ class ApiCollectingData:
 
 
 def main():
-    """ Download the response """
+    # Download the response
     downloader = ApiCollectingData()
     connect = downloader.bring_out()
     final = downloader.format_final_response(connect)
 
-    """ Save the response in file """
+    # Save the response in file
     # save_data = downloader.save_data(final, 'Response_save.csv')
 
 

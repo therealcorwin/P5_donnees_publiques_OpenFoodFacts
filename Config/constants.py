@@ -5,21 +5,21 @@
 # API CONSTANTS #
 
 CATEGORIES = [#"Plats préparé",
-              # "Plats surgelé",
-              # "Conserves",
+              #"Plats surgelé",
+              #"Conserves",
               # Produits en commun par categories
-               "Bio",
-              "Céréales",
-              "Biscuits",
-               "Viennoiseries",
+                "Bio",
+               #"Céréales",
+               #"Biscuits",
+                #"Viennoiseries",
               # Produits en commun par categories
-              # "Desserts",
-               "Produit laitiers",
+               #"Desserts",
+                # "Produit laitiers",
                # Produits en commun par categories
-              # "Charcuteries",
+              #"Charcuteries",
               # "Viandes",
-              "Boissons"]
-
+              #"Boissons"
+]
 #  DATABASE CONSTANTS #
 
 # Profile demo
