@@ -33,7 +33,6 @@ class Main:
     def __init__(self, db):
         self.db = db
 
-
     def step_1(self):  # > user
         """Category choice"""
         deco = "***----------------------------------------------------------***"
@@ -50,7 +49,7 @@ class Main:
             print("Vous devez choisir une categorie dans la liste!")
             self.step_1()
         else:
-            self.connecting.get_all_category()
+            self.db.get_all_category()
 
     def step_2(self):
         pass
@@ -69,7 +68,6 @@ def main():
     db = DataBaseUser()
     connect = db.connect_mysql()
     init = Main(connect)
-
     step1 = init.step_1()
 
 
