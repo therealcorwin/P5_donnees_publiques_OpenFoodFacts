@@ -22,7 +22,7 @@ class DataBaseCreator:
         """ Create table """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Products (
-                        barre_code BIGINT UNIQUE PRIMARY KEY ,
+                        barre_code BIGINT UNIQUE PRIMARY KEY,
                         name_product VARCHAR(150),
                         grade CHAR(1),
                         web_site VARCHAR(255));
@@ -42,7 +42,7 @@ class DataBaseCreator:
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Stores (
                         id MEDIUMINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-                        store VARCHAR(150) UNIQUE);
+                        store UNIQUE VARCHAR(150));
                       """)
 
     def create_table_subkey(self):
@@ -51,21 +51,21 @@ class DataBaseCreator:
                         CREATE TABLE IF NOT EXISTS _Product_category ( 
                         id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
                         product_id BIGINT REFERENCES Products(barre_code),
-                        category_id MEDIUMINT UNSIGNED REFERENCES Category(id));
+                        category_id INT REFERENCES Category(id));
                        """)
 
         self.db.query("""                                                           
                         CREATE TABLE IF NOT EXISTS _Product_store (
                         id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
                         product_id BIGINT REFERENCES Products(barre_code),
-                        store_id MEDIUMINT REFERENCES Stores(id));               
+                        store_id INT REFERENCES Stores(id));               
                       """)
 
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS _Product_sub_category (
                         id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
                         product_id BIGINT REFERENCES Products(barre_code),
-                        sub_category_id MEDIUMINT UNSIGNED REFERENCES Category(id));
+                        sub_category_id MEDIUMINT REFERENCES Category(id));
                       """)
 
     def create_favorites_table(self):
@@ -83,7 +83,7 @@ class DataBaseCreator:
                         INSERT INTO Products (barre_code, name_product, grade, web_site) 
                         VALUES 
                         (:id, :name, :grade, :url) 
-                        ON DUPLICATE KEY UPDATE barre_code = :id;
+                        ON DUPLICATE KEY UPDATE barre_code=:id;
                       """, id=id, name=name, grade=grade, url=url)
 
     def insert_category(self, id, name, grade, url, categories, sub_category, stores, *args):
@@ -120,7 +120,7 @@ class DataBaseCreator:
             self.db.query("""
                             INSERT INTO _Product_store (product_id, store_id)
                             VALUES (:barre_code,
-                            (SELECT id FROM Stores WHERE store =:store_id));
+                            (SELECT id FROM Stores WHERE store=:store_id));
                           """, barre_code=id, store_id=store)
 
     def insert_favory(self):
@@ -163,4 +163,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-# C:\Users\Admin\GoogleDrive\DATA_OPEN_PROG\OPENCLASSROOMS\MyProjectOC\PROJET_05\MySQL\bin

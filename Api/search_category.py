@@ -20,6 +20,8 @@ class ApiCollectingData:
         """ Use the configuration for the connecting interface """
         all_products = []
         api = "https://fr.openfoodfacts.org/cgi/search.pl"                 # Address OpenFooFact.org the API FR locating
+        # Search barre_code products
+        # https://fr.openfoodfacts.org/produit/
         for category in CATEGORIES:
             config = {"action": "process",                                         # This config for  for connecting API
                       "tagtype_0": "categories",                                            # Get the result by category
