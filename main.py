@@ -30,18 +30,21 @@ class Main:
     - * Pouvoir *
     """
 
-    def __init__(self, db):
-        self.db = db
+    def __init__(self):
+        """ Connect to Mysql database from the class DataBaseUser() """
+        self.database = DataBaseUser()
+        self.db = self.database.connect_mysql()
 
     def step_1(self):  # > user
         """Category choice"""
         deco = "***----------------------------------------------------------***"
-        print( deco, '\n', "***Bienvenue dans le programme de substitution 'Petit Beurre'***", '\n', deco)
+        print(deco, '\n', "***Bienvenue dans le programme de substitution 'Petit Beurre'***", '\n', deco)
         try:
             for get in enumerate(CATEGORIES):
                 print("*", get)
             user = input("Pour choisir une categorie, tapez le chiffre associé et appuyer sur ENTREE")
-            print("vous avez choisis ", CATEGORIES[int(user)])
+            user = CATEGORIES[int(user)]
+            print("vous avez choisis ", user.upper())
         except ValueError:
             print("Tapez le chiffre associé à une categorie dans la liste!")
             self.step_1()
@@ -49,7 +52,7 @@ class Main:
             print("Vous devez choisir une categorie dans la liste!")
             self.step_1()
         else:
-            self.db.get_all_category()
+            self.database.get_all_products_per_category(str(user))
 
     def step_2(self):
         pass
@@ -65,9 +68,7 @@ class Main:
 
 
 def main():
-    db = DataBaseUser()
-    connect = db.connect_mysql()
-    init = Main(connect)
+    init = Main()
     step1 = init.step_1()
 
 

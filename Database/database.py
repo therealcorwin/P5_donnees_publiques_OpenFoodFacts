@@ -2,7 +2,6 @@
 # -*- coding: Utf-8 -*-
 
 # C:\Users\Admin\GoogleDrive\DATA_OPEN_PROG\OPENCLASSROOMS\MyProjectOC\PROJET_05\MySQL\bin
-# DROP TABLE `demo`.`_product_category`, `demo`.`_product_store`, `demo`.`_product_sub_category`, `demo`.`categories`, `demo`.`products`, `demo`.`stores`;
 
 
 from Database.database_user import DataBaseUser
@@ -23,9 +22,9 @@ class DataBaseCreator:
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Products (
                         barre_code BIGINT UNIQUE PRIMARY KEY,
-                        name_product VARCHAR(150),
+                        name_product VARCHAR UNIQUE(150),
                         grade CHAR(1),
-                        web_site VARCHAR(255));
+                        web_site VARCHAR(255) UNIQUE);
                        """)
 
     def create_table_category(self):
