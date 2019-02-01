@@ -4,20 +4,33 @@
       <w>affiche</w>
       <w>bienvenue</w>
       <w>boissons</w>
+      <w>categorie</w>
+      <w>charcuteries</w>
       <w>commun</w>
       <w>comparer</w>
+      <w>céréales</w>
       <w>disponnible</w>
       <w>fromages</w>
+      <w>gazeuses</w>
+      <w>gâteaux</w>
       <w>insérer</w>
+      <w>lactées</w>
+      <w>laitiers</w>
       <w>mettre</w>
       <w>parmis</w>
       <w>pouvoir</w>
       <w>produit</w>
+      <w>produits</w>
       <w>préparé</w>
+      <w>préparés</w>
       <w>savegarder</w>
       <w>selectionne</w>
       <w>selectionnè</w>
+      <w>surgelés</w>
       <w>séléctionner</w>
+      <w>viandes</w>
+      <w>végétales</w>
+      <w>yaourts</w>
     </words>
   </dictionary>
 </component>

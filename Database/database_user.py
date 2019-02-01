@@ -39,11 +39,11 @@ class DataBaseUser:
         return True
 
     def use_database(self, use):
-        use = self.db.query("USE '{}';").format(use)
+        using = self.db.query("USE '{}';").format(use)
         return True
 
     def drop_database(self, drop):
-        drop = self.db.query("DROP DATABASES '{}';").format(drop)
+        droping = self.db.query("DROP DATABASES '{}';").format(drop)
         return True
 
     def get_tables(self):
@@ -61,18 +61,25 @@ class DataBaseUser:
 
     def get_all_products_per_category(self, user):
         """ Control in the tables """
+        # user = "conserves"
         cat = self.db.query(""" 
-                        SELECT product.name_product FROM Products AS product    			
+                        SELECT product.barre_code, product.name_product FROM Products AS product    			
                         JOIN _product_category AS pc ON pc.product_id = product.barre_code  
                         JOIN Categories AS c ON pc.category_id = c.id						
                         WHERE c.category = '{}';	
                         """.format(user), fetchall=True).as_dict()
         for get_cat in enumerate(cat):
             print(get_cat)
-    # SELECT product.name_product FROM Products AS product
-    # JOIN _product_category AS pc ON pc.product_id = product.barre_code
-    # JOIN Categories AS c ON pc.category_id = c.id
-    # WHERE c.category = 'Fromages';
+        return True
+
+    def get_product_in_category(self):
+        print("In data user class")
+        user = "cons"
+        prod = self.db.query("""SELECT product.barre_code, product.name_product FROM Products AS product  
+                                WHERE name_product LIKE '%{}%';
+                            """.format(user), fetchall=True).as_dict()
+        for get_prod in enumerate(prod):
+            print(get_prod)
 
 
 def main():
@@ -88,6 +95,7 @@ def main():
     # get_bases = databases.get_databases()                                                      # Get the database list
     # get_tables = databases.get_tables()                                                           # Get the table list
     # get_products = databases.get_all_products_per_category()                                     # Get the insert list
+    # get_products = databases.get_product_in_category()                                     # Get the insert list
 
 
 if __name__ == "__main__":
