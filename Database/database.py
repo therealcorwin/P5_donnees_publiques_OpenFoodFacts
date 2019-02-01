@@ -32,8 +32,13 @@ class DataBaseCreator:
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Categories (
                         id BIGINT PRIMARY KEY AUTO_INCREMENT,
-                        category VARCHAR(125) UNIQUE,
-                        sub_category VARCHAR(125)); 
+                        category VARCHAR(125) UNIQUE);
+                      """)
+
+        self.db.query("""
+                        CREATE TABLE IF NOT EXISTS Categories_custom (
+                        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                        c_category VARCHAR(125) UNIQUE); 
                       """)
 
     def create_table_store(self):
@@ -53,18 +58,18 @@ class DataBaseCreator:
                         category_id INT REFERENCES Category(id));
                        """)
 
+        self.db.query("""
+                        CREATE TABLE IF NOT EXISTS _Product_sub_category (
+                        id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+                        product_id BIGINT REFERENCES Products(barre_code),
+                        c_category_id INT REFERENCES Categories_custom(id));
+                      """)
+
         self.db.query("""                                                           
                         CREATE TABLE IF NOT EXISTS _Product_store (
                         id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
                         product_id BIGINT REFERENCES Products(barre_code),
                         store_id INT REFERENCES Stores(id));               
-                      """)
-
-        self.db.query("""
-                        CREATE TABLE IF NOT EXISTS _Product_sub_category (
-                        id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
-                        product_id BIGINT REFERENCES Products(barre_code),
-                        sub_category_id MEDIUMINT REFERENCES Category(id));
                       """)
 
     def create_favorites_table(self):
@@ -89,11 +94,18 @@ class DataBaseCreator:
         """ Insert the category list data in the table"""
         for category in categories:
             self.db.query("""
-                            INSERT INTO Categories(category, sub_category) 
+                            INSERT INTO Categories(category) 
                             VALUES 
-                            (:category, :sub_category)
+                            (:category)
                             ON DUPLICATE KEY UPDATE category=:category;                          
-                          """, category=category, sub_category=sub_category)
+                          """, category=category)
+
+            self.db.query("""
+                            INSERT INTO Categories_custom(c_category) 
+                            VALUES 
+                            (:c_category)
+                            ON DUPLICATE KEY UPDATE c_category=:c_category;                          
+                          """, c_category=sub_category)
 
             self.db.query("""
                             INSERT INTO _Product_category (product_id, category_id)
@@ -102,10 +114,10 @@ class DataBaseCreator:
                           """, barre_code=id, category_id=category)
 
             self.db.query("""
-                            INSERT INTO _Product_sub_category (product_id, sub_category_id)
+                            INSERT INTO _Product_sub_category (product_id, c_category_id)
                             VALUES (:barre_code,
-                            (SELECT id FROM Categories WHERE category=:sub_category_id));
-                          """, barre_code=id, sub_category_id=sub_category)
+                            (SELECT id FROM Categories_custom WHERE c_category=:category_id));
+                          """, barre_code=id, category_id=sub_category)
 
     def insert_stores(self, id, name, grade, url, categories, sub_category, stores, *args):
         """ Insert the store list data in the table"""
@@ -115,12 +127,12 @@ class DataBaseCreator:
                             VALUES (:store)
                             ON DUPLICATE KEY UPDATE store=:store;
                           """, store=store)
+
             self.db.query("""
                             INSERT INTO _Product_store (product_id, store_id)
                             VALUES (:barre_code,
                             (SELECT id FROM Stores WHERE store=:store_id));
                           """, barre_code=id, store_id=store)
-
     def insert_favory(self):
         pass
 
