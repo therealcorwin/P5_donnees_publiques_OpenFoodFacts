@@ -61,7 +61,6 @@ class DataBaseUser:
 
     def get_all_products_per_category(self, user):
         """ Control in the tables """
-        # user = "conserves"
         cat = self.db.query(""" 
                         SELECT product.barre_code, product.name_product FROM Products AS product    			
                         JOIN _product_category AS pc ON pc.product_id = product.barre_code  

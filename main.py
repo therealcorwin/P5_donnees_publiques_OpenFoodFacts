@@ -65,7 +65,8 @@ class Main:
         """Product choice"""
         deco = "***----------------------------------------------------------***"
         print(deco, '\n', "**STEP_2**Vous pouvez choisir un produit dans la liste**STEP_2**", '\n', deco)
-        self.database.get_product_in_category()
+        # self.database.get_product_in_category()
+
         #         try:
         #
         #             user = input("Pour choisir un produit, tapez le chiffre associé et appuyer sur ENTREE")
