@@ -22,7 +22,7 @@ class DataBaseCreator:
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Products (
                         barre_code BIGINT UNIQUE PRIMARY KEY,
-                        name_product VARCHAR UNIQUE(150),
+                        name_product VARCHAR(150),
                         grade CHAR(1),
                         web_site VARCHAR(255) UNIQUE);
                        """)
@@ -41,7 +41,7 @@ class DataBaseCreator:
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Stores (
                         id MEDIUMINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-                        store UNIQUE VARCHAR(150));
+                        store VARCHAR(150) UNIQUE);
                       """)
 
     def create_table_subkey(self):
@@ -115,7 +115,6 @@ class DataBaseCreator:
                             VALUES (:store)
                             ON DUPLICATE KEY UPDATE store=:store;
                           """, store=store)
-
             self.db.query("""
                             INSERT INTO _Product_store (product_id, store_id)
                             VALUES (:barre_code,
@@ -161,4 +160,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

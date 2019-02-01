@@ -25,15 +25,25 @@ class DataBaseUser:
                                f"{DATABASE}?charset=utf8mb4")
         return self.db
 
-    def test_call_fun(self):
-        print('Function loading is succesfully')
-
-
     def get_databases(self):
         """ Control the database """
         databases = self.db.query("SHOW DATABASES;")
         for row in databases:
             print(row['Database'])
+        return True
+
+    def create_database(self, choose):
+        create = self.db("""
+        "CREATE DATABASE '{}';
+                        """).format(choose)
+        return True
+
+    def use_database(self, use):
+        use = self.db.query("USE '{}';").format(use)
+        return True
+
+    def drop_database(self, drop):
+        drop = self.db.query("DROP DATABASES '{}';").format(drop)
         return True
 
     def get_tables(self):
@@ -51,7 +61,6 @@ class DataBaseUser:
 
     def get_all_products_per_category(self, user):
         """ Control in the tables """
-        # user = 'Boissons'
         cat = self.db.query(""" 
                         SELECT product.name_product FROM Products AS product    			
                         JOIN _product_category AS pc ON pc.product_id = product.barre_code  
@@ -60,13 +69,10 @@ class DataBaseUser:
                         """.format(user), fetchall=True).as_dict()
         for get_cat in enumerate(cat):
             print(get_cat)
-
-    def use_database(self):
-        """  """
-        self.db.query("""
-                          USE f"{%s};
-                      """,)
-        pass
+    # SELECT product.name_product FROM Products AS product
+    # JOIN _product_category AS pc ON pc.product_id = product.barre_code
+    # JOIN Categories AS c ON pc.category_id = c.id
+    # WHERE c.category = 'Fromages';
 
 
 def main():
@@ -74,12 +80,14 @@ def main():
     databases = DataBaseUser()                                                                 # Load the database class
     connecting = databases.connect_mysql()                                                    # Load the MySQL connexion
 
-    # Choose the existing databases
-
     # Control the database
+    # c_data = databases.create_database(SEASON_DATABASES['Winter'])
+    # use = databases.use_database(SEASON_DATABASES['Winter'])
+    # drop = databases.drop_database(SEASON_DATABASES['Winter'])
+
     # get_bases = databases.get_databases()                                                      # Get the database list
     # get_tables = databases.get_tables()                                                           # Get the table list
-    get_products = databases.get_all_products_per_category()                                                    # Get the insert list
+    # get_products = databases.get_all_products_per_category()                                     # Get the insert list
 
 
 if __name__ == "__main__":
