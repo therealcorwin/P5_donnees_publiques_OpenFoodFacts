@@ -4,31 +4,31 @@
 
 # API CONSTANTS #
 
-CATEGORIES = ["plats préparés",                                                                                 # 853
-              "plats surgelés",                                                                                 # 814
-              "conserves",                                                                                      # 846
-              "produits bio",                                                                                   # 5
-              "yaourts bio",                                                                                    # 2
-              "fromages bio",                                                                                   # 8
+CATEGORIES = ["plats préparés",
+              "plats surgelés",
+              "conserves",
+              "yaourts bio",
+              "fromages bio",
               # Produits en commun par categorie
-              "céréales",                                                                                       # 775
-              "gâteaux",                                                                                        # 618
+              "céréales",
+              "gâteaux",
               # Produits en commun par categorie
-              "produits laitiers",                                                                              # 781
-              "fromages",                                                                                       # 784
-              "desserts",                                                                                       # 806
-              "yaourts",                                                                                        # 720
+              "produits laitiers",
+              "fromages",
+              "desserts",
+              "yaourts",
               # Produits en commun par categorie
-              "viandes",                                                                                        # 771
-              "charcuteries",                                                                                   # 807
+              "viandes",
+              "charcuteries",
               # Produits en commun par categorie
-              "boissons",                                                                                       # 455
-              "boissons lactées",                                                                               # 282
-              "boissons gazeuses",                                                                              # 466
-              "boissons aux fruits",                                                                            # 720
-              "boissons végétales",                                                                             # 320
-              "boissons aux légumes"]                                                                           # 77
-#                                                                                                               # 10905
+              "boissons",
+              "boissons lactées",
+              "boissons gazeuses",
+              "boissons aux fruits",
+              "boissons végétales",
+              "boissons aux légumes"]
+
+
 #  DATABASE CONSTANTS #
 
 # Profile demo
@@ -45,4 +45,5 @@ NEW_USER = ' '
 NEW_PASSWORD = ' '
 NEW_DATABASE = 'Demo_Tc'
 
+DECO = '***------------------------------------------------***'
 

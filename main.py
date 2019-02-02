@@ -32,6 +32,32 @@ class Main:
         self.database = DataBaseUser()
         self.db = self.database.connect_mysql()
 
+    def home_menu(self):
+        print('\n', DECO, '\n', "***  Bonjour et bienvenue au °Substitute Factory° ***", '\n', DECO)
+        print("Apppyer sur :", '\n', "'G' pour consulter les bases de donnèes disponnible", '\n',
+              "'C' pour choisir une bases de donnèes existantes", '\n',
+              "'D' pour supprimer une bases de donnèes", '\n',
+              "'N' pour crèer une nouvelle bases de donnèes", '\n',
+              "'Q' pour quiter ", '\n',)
+        user = input("")
+        if user == 'G':
+            self.database.get_databases()
+            self.home_menu()
+        if user == 'C':
+            self.database.get_databases()
+            self.database.use_database(user)
+            self.home_menu()
+        if user == 'D':
+            self.database.drop_database(user)
+            self.home_menu()
+        if user == 'N':
+            for base in enumerate(SEASON_DATABASES):
+                print(base)
+            self.database.create_database(user)
+            self.home_menu()
+        if user == 'Q':
+            quit()
+
     def choose_database(self):  # get and choose
         pass
 
@@ -43,8 +69,7 @@ class Main:
 
     def step_1(self):  # > user
         """Category choice"""
-        deco = "***----------------------------------------------------------***"
-        print(deco, '\n', "***Bienvenue dans le programme de substitution 'Petit Beurre'***", '\n', deco)
+        print('\n', DECO, '\n', "*Bienvenue au programme de substitution 'Petit Beurre'*", '\n', DECO)
         try:
             for get in enumerate(CATEGORIES):
                 print("*", get)
@@ -58,15 +83,16 @@ class Main:
             print("Vous devez choisir une categorie dans la liste!")
             self.step_1()
         else:
-            self.database.get_all_products_per_category(str(user))
             self.step_2()
+            self.database.get_all_products_per_category(str(user))
 
-    def step_2(self, ):  # > user
+    def step_2(self ):  # > user
         """Product choice"""
         deco = "***----------------------------------------------------------***"
-        print(deco, '\n', "**STEP_2**Vous pouvez choisir un produit dans la liste**STEP_2**", '\n', deco)
-        # self.database.get_product_in_category()
+        print('\n', DECO, '\n', " *** Vous pouvez choisir un produit dans la liste *** ", '\n', DECO)
+        # -> locate the list choose of 'product in categories'
 
+        # self.database.get_product_in_category()
         #         try:
         #
         #             user = input("Pour choisir un produit, tapez le chiffre associé et appuyer sur ENTREE")
@@ -91,6 +117,7 @@ class Main:
 def main():
     init = Main()
     step1 = init.step_1()
+    # init.home_menu()
 
 
 if __name__ == "__main__":

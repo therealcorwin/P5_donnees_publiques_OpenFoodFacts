@@ -22,7 +22,7 @@ class DataBaseUser:
     def connect_mysql(self):
         """ Connecting in the database """
         self.db = rec.Database(f"mysql+mysqlconnector://{USER}:{PASSWORD}@localhost/"
-                               f"{DATABASE}?charset=utf8mb4")
+                               f"{NEW_DATABASE}?charset=utf8mb4")
         return self.db
 
     def get_databases(self):
@@ -33,17 +33,17 @@ class DataBaseUser:
         return True
 
     def create_database(self, choose):
-        create = self.db("""
-        "CREATE DATABASE '{}';
-                        """).format(choose)
+        creating = self.db("""
+                            CREATE DATABASE :choose;
+                           """, choose=choose)
         return True
 
     def use_database(self, use):
-        using = self.db.query("USE '{}';").format(use)
+        using = self.db.query("USE :use;", use=use)
         return True
 
     def drop_database(self, drop):
-        droping = self.db.query("DROP DATABASES '{}';").format(drop)
+        droping = self.db.query("DROP DATABASES :drop;", drop=drop)
         return True
 
     def get_tables(self):
@@ -61,22 +61,23 @@ class DataBaseUser:
 
     def get_all_products_per_category(self, user):
         """ Control in the tables """
+        # user = "plats surgelés"
         cat = self.db.query(""" 
-                        SELECT product.barre_code, product.name_product FROM Products AS product    			
-                        JOIN _product_category AS pc ON pc.product_id = product.barre_code  
-                        JOIN Categories AS c ON pc.category_id = c.id						
-                        WHERE c.category = '{}';	
-                        """.format(user), fetchall=True).as_dict()
+                                SELECT product.name_product FROM Products AS product      
+                                JOIN products_categories_summary_key AS pc ON pc.product_id = product.barre_code  
+                                JOIN Categories_summary AS c ON pc.c_category_id = c.id							
+                                WHERE c.c_category = :user;	
+                            """, user=user, fetchall=True).as_dict()
         for get_cat in enumerate(cat):
             print(get_cat)
-        return True
 
-    def get_product_in_category(self):
+    def get_product_in_category(self, user):
         print("In data user class")
-        user = "cons"
-        prod = self.db.query("""SELECT product.barre_code, product.name_product FROM Products AS product  
-                                WHERE name_product LIKE '%{}%';
-                            """.format(user), fetchall=True).as_dict()
+        # user = "cons"
+        prod = self.db.query("""
+                                SELECT product.name_product FROM Products AS product  
+                                WHERE name_product LIKE ':user;	
+                             """, user=user,  fetchall=True).as_dict()
         for get_prod in enumerate(prod):
             print(get_prod)
 
@@ -93,7 +94,7 @@ def main():
 
     # get_bases = databases.get_databases()                                                      # Get the database list
     # get_tables = databases.get_tables()                                                           # Get the table list
-    # get_products = databases.get_all_products_per_category()                                     # Get the insert list
+    get_products = databases.get_all_products_per_category()                                     # Get the insert list
     # get_products = databases.get_product_in_category()                                     # Get the insert list
 
 
