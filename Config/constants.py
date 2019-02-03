@@ -34,7 +34,7 @@ CATEGORIES = ["plats préparés",
 # Profile demo
 USER = 'OPFF'
 PASSWORD = 'OCP5'
-DATABASE = 'demo'
+DATABASE = 'PetitBeurre'
 
 #  Season database  #
 SEASON_DATABASES = ['Spring', 'Summer', 'Autumn', 'Winter']

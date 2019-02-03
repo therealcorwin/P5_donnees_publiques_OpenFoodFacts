@@ -3,7 +3,7 @@
 
 # C:\Users\Admin\GoogleDrive\DATA_OPEN_PROG\OPENCLASSROOMS\MyProjectOC\PROJET_05\MySQL\bin
 
-
+from Config.constants import *
 from Database.database_user import DataBaseUser
 from Api.search_category import ApiCollectingData
 
@@ -151,7 +151,7 @@ class DataBaseCreator:
         self.create_table_category()
         self.create_table_store()
         self.create_table_subkey()
-        print("Creating table success")
+        print('\n', DECO, '\n', "    **** Creating table success ****    ")
         # self.create_favorites_table()
         return True
 
@@ -161,7 +161,7 @@ class DataBaseCreator:
             self.insert_product(*product)
             self.insert_category(*product)
             self.insert_stores(*product)
-        print("Insert data, success")
+        print('\n', DECO, '\n', "    **** Insert data, success *****     ", '\n', DECO, '\n', )
         return True
 
 

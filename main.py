@@ -1,6 +1,7 @@
 # -*- PipEnv -*-
 # -*- coding: Utf-8 -*-
 
+from time import sleep
 
 from Config.constants import *
 from Database.database_user import DataBaseUser
@@ -34,23 +35,30 @@ class Main:
 
     def home_menu(self):
         print('\n', DECO, '\n', "***  Bonjour et bienvenue au °Substitute Factory° ***", '\n', DECO)
-        print("Apppyer sur :", '\n', "'G' pour consulter les bases de donnèes disponnible", '\n',
+        print("Apppyer sur :", '\n', "'R' pour effectuer une recherche", '\n',
+              "'G' pour consulter les bases de donnèes disponnible"
               "'C' pour choisir une bases de donnèes existantes", '\n',
               "'D' pour supprimer une bases de donnèes", '\n',
               "'N' pour crèer une nouvelle bases de donnèes", '\n',
-              "'Q' pour quiter ", '\n',)
+              "'Q' pour quiter ", '\n')
         user = input("")
+        if user == 'R':
+            self.step_1()
         if user == 'G':
+            user = input("")
             self.database.get_databases()
             self.home_menu()
         if user == 'C':
+            user = input("")
             self.database.get_databases()
             self.database.use_database(user)
             self.home_menu()
         if user == 'D':
+            user = input("")
             self.database.drop_database(user)
             self.home_menu()
         if user == 'N':
+            user = input("")
             for base in enumerate(SEASON_DATABASES):
                 print(base)
             self.database.create_database(user)
@@ -67,45 +75,31 @@ class Main:
     def drop_database(self):  # get, drop
         pass
 
-    def step_1(self):  # > user
-        """Category choice"""
-        print('\n', DECO, '\n', "*Bienvenue au programme de substitution 'Petit Beurre'*", '\n', DECO)
+    def step_1(self):
+        """ Choice Category """
         try:
             for get in enumerate(CATEGORIES):
                 print("*", get)
-            user = input("Pour choisir une categorie, tapez le chiffre associé et appuyer sur ENTREE")
+            user = input(" |*** Pour choisir une categorie, tapez le chiffre associé et appuyer sur ENTREE ***| ")
             user = CATEGORIES[int(user)]
-            print("vous avez choisis ", user.capitalize())
+            print(" |*** vous avez choisis ***| :  ", user.capitalize())
+            sleep(1.5)
         except ValueError:
-            print("Tapez le chiffre associé à une categorie dans la liste!")
+            print(" |*** /!\ Tapez le chiffre associé à une categorie dans la liste /!\ ***|")
             self.step_1()
         except IndexError:
-            print("Vous devez choisir une categorie dans la liste!")
+            print(" |*** /!\  Vous devez choisir une categorie dans la liste /!\ ***|")
             self.step_1()
         else:
-            self.step_2()
             self.database.get_all_products_per_category(str(user))
+            self.step_2()
 
-    def step_2(self ):  # > user
+    def step_2(self):
         """Product choice"""
-        deco = "***----------------------------------------------------------***"
-        print('\n', DECO, '\n', " *** Vous pouvez choisir un produit dans la liste *** ", '\n', DECO)
-        # -> locate the list choose of 'product in categories'
+        user = input(" |*** Vous pouvez choisir un produit dans la liste ***| ")
+        user = self.database.get_product_in_category(int(user))
+        print(" |*** vous avez choisis ***| : ", str(user))
 
-        # self.database.get_product_in_category()
-        #         try:
-        #
-        #             user = input("Pour choisir un produit, tapez le chiffre associé et appuyer sur ENTREE")
-        #             user = self.database.get_product_in_category(user)
-        #             print("vous avez choisis ", str(user))
-        #
-        #         except ValueError:
-        #             print("Tapez le chiffre associé à un produit dans la liste!")
-        #             self.step_2()
-        #         except IndexError:
-        #             print("Vous devez choisir un produit dans la liste!")
-        #             self.step_2()
-        #         else:            pass  # self.database.get_product_in_category(str(user))
 
     def save_favorite_substitute_product(self):  # save in database favorites table and save barre_code in csv file
         pass
@@ -116,8 +110,8 @@ class Main:
 
 def main():
     init = Main()
-    step1 = init.step_1()
-    # init.home_menu()
+    # step1 = init.step_1()
+    init.home_menu()
 
 
 if __name__ == "__main__":
