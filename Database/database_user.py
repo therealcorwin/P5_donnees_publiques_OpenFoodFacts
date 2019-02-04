@@ -2,18 +2,10 @@
 # -*- coding: Utf-8 -*-
 
 import records as rec
-
 from Config.constants import *
 
 
 class DataBaseUser:
-    """
-    # Recherche Products -> sub_category
-    # SELECT product.name_product FROM Products AS product
-    # JOIN _product_category AS pc ON pc.product_id = product.barre_code
-    # JOIN Categories AS c ON pc.category_id = c.id
-    # WHERE c.category = 'conserves';
-    """
 
     def __init__(self):
         """  """
@@ -29,8 +21,7 @@ class DataBaseUser:
         """ Control the database """
         databases = self.db.query("SHOW DATABASES;")
         for row in databases:
-            print(enumerate(row['Database']))
-        return True
+            print(row['Database'])
 
     def create_database(self, choose):
         self.db("""
@@ -40,9 +31,9 @@ class DataBaseUser:
 
     def use_database(self, use):
         using = self.db.query("USE :use;", use=use)
-        return True
 
     def drop_database(self, drop):
+        """ Drop the database """
         self.db.query("DROP DATABASES :drop;", drop=drop)
         return True
 
@@ -60,32 +51,26 @@ class DataBaseUser:
                                 SELECT * FROM demo.Products;
                              """,  fetchall=True).as_dict()
 
-    def get_all_products_per_category(self, user):
+    def get_all_products_per_category(self, select_1):
         """ Control in the tables """
-        print("SEEK PRODUCT IN CATEGORY")
-
-        # user = "plats surgelés"
         cat = self.db.query(""" 
                                 SELECT product.name_product FROM Products AS product      
                                 JOIN products_categories_summary_key AS pc ON pc.product_id = product.barre_code  
                                 JOIN Categories_summary AS c ON pc.c_category_id = c.id							
                                 WHERE c.c_category = :user;	
-                            """, user=user, fetchall=True).as_dict()
+                            """, user=select_1, fetchall=True).as_dict()
 
-        for get_cat in enumerate(cat):
-            print(get_cat)
+        products = [p['name_product'] for p in cat]
+        for i, product in enumerate(products):
+            CACHE.append(product)
 
-    def get_product_in_category(self, user):
-        print("SEEK PRODUCT IN ALL PRODUCTS")
-        # user = "cons"
-        if int(user) >= 0:
-            user = str(user)
-            prod = self.db.query("""
-                                    SELECT product.name_product FROM Products AS product  
-                                    WHERE name_product LIKE :user;	
-                                 """, user=user,  fetchall=True).as_dict()
-            for get_prod in enumerate(prod):
-                print(get_prod)
+    def get_product_in_category(self, select_2):
+        prod = self.db.query("""
+                                 SELECT product.name_product, product.grade FROM Products AS product  
+                                 WHERE name_product LIKE :user;	
+                             """, user=select_2,  fetchall=True).as_dict()
+        for get_prod in enumerate(prod):
+            print(get_prod)
 
 
 def main():

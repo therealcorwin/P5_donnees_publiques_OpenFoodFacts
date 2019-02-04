@@ -8,25 +8,6 @@ from Database.database_user import DataBaseUser
 
 
 class Main:
-    """
-            - SCENARIO -
-    - Affiche les databases disponnible
-    - Selectionne la database
-    - Affiche des tables disponnible
-    - Selectionne une table
-    - Affiche le contenu de la table selectionner
-
-    - Affichage des résultats: requêtes, insertions,
-
-    - Selection de la table Categories
-    - Selection d'un produits dans la categories séléctionner
-    - Comparer le produits séléctionner parmis la table Products grade '<'
-    - Mettre les nouveaux substitue dans la table des favoris Substitute
-
-    - * Pouvoir * savegarder la table des favoris
-    - * Pouvoir * mettre à jour les requêtes
-    - * Pouvoir * ré-insérer dans la table favoris les favoris sauvegarder [code barre/produit via requête barre_code]
-    - * Pouvoir * """
 
     def __init__(self):
         """ Connect to Mysql database from the class DataBaseUser() """
@@ -36,44 +17,31 @@ class Main:
     def home_menu(self):
         print('\n', DECO, '\n', "***  Bonjour et bienvenue au °Substitute Factory° ***", '\n', DECO)
         print("Apppyer sur :", '\n', "'R' pour effectuer une recherche", '\n',
-              "'G' pour consulter les bases de donnèes disponnible"
-              "'C' pour choisir une bases de donnèes existantes", '\n',
-              "'D' pour supprimer une bases de donnèes", '\n',
-              "'N' pour crèer une nouvelle bases de donnèes", '\n',
+              "'G' pour consulter les bases de donnèes disponnible", '\n',
+              "'C' pour choisir une base de donnèes existante", '\n',
+              "'D' pour supprimer une base de donnèes existante", '\n',
+              "'N' pour crèer une nouvelle base de donnèes", '\n',
               "'Q' pour quiter ", '\n')
         user = input("")
         if user == 'R':
             self.step_1()
         if user == 'G':
-            user = input("")
             self.database.get_databases()
-            self.home_menu()
-        if user == 'C':
             user = input("")
-            self.database.get_databases()
-            self.database.use_database(user)
-            self.home_menu()
-        if user == 'D':
-            user = input("")
-            self.database.drop_database(user)
-            self.home_menu()
-        if user == 'N':
-            user = input("")
-            for base in enumerate(SEASON_DATABASES):
-                print(base)
-            self.database.create_database(user)
-            self.home_menu()
+
+        #             self.home_menu()
+        #         if user == 'C':
+        #             self.choose_database()
+        #         if user == 'D':
+        #             user = input("")
+        #             self.home_menu()
+        #         if user == 'N':
+        #             user = input("")
+        #             for base in enumerate(SEASON_DATABASES):
+        #                 print(base)
+        #             self.home_menu()
         if user == 'Q':
             quit()
-
-    def choose_database(self):  # get and choose
-        pass
-
-    def create_database(self):  # get, choose, create
-        pass
-
-    def drop_database(self):  # get, drop
-        pass
 
     def step_1(self):
         """ Choice Category """
@@ -81,8 +49,8 @@ class Main:
             for get in enumerate(CATEGORIES):
                 print("*", get)
             user = input(" |*** Pour choisir une categorie, tapez le chiffre associé et appuyer sur ENTREE ***| ")
-            user = CATEGORIES[int(user)]
-            print(" |*** vous avez choisis ***| :  ", user.capitalize())
+            select_1 = CATEGORIES[int(user)]
+            print(" |*** vous avez choisis ***| :  ", select_1.capitalize())
             sleep(1.5)
         except ValueError:
             print(" |*** /!\ Tapez le chiffre associé à une categorie dans la liste /!\ ***|")
@@ -91,27 +59,38 @@ class Main:
             print(" |*** /!\  Vous devez choisir une categorie dans la liste /!\ ***|")
             self.step_1()
         else:
-            self.database.get_all_products_per_category(str(user))
-            self.step_2()
+            self.step_2(select_1)
 
-    def step_2(self):
+    def step_2(self, select_1):
         """Product choice"""
-        user = input(" |*** Vous pouvez choisir un produit dans la liste ***| ")
-        user = self.database.get_product_in_category(int(user))
-        print(" |*** vous avez choisis ***| : ", str(user))
+        self.database.get_all_products_per_category(str(select_1))
+        try:
+            print("MAIN() - STEP_2/SELECT_2")
+            for select in enumerate(CACHE):
+                print("*", select)
+            user = input(" |*** Pour choisir un produit, tapez le chiffre associé et appuyer sur ENTREE ***| ")
+            select_2 = CACHE[int(user)]
+            print(" |*** vous avez choisis ***| :  ", select_2.capitalize())
+            sleep(1.5)
+        except ValueError:
+            print(" |*** /!\ Tapez le chiffre associé à un produit dans la liste /!\ ***|")
+            sleep(1)
+            self.step_2(select_1=None)
+        except IndexError:
+            print(" |*** /!\  Vous devez choisir un produit dans la liste /!\ ***|")
+            sleep(1)
+            self.step_2(select_1=None)
+        else:
+            self.step_3(select_2)
 
-
-    def save_favorite_substitute_product(self):  # save in database favorites table and save barre_code in csv file
+    def step_3(self, select_2):
+        self.database.get_product_in_category(str(select_2))
         pass
-
-    def update_database(self):  # drop existing table, lunch update api request,
-        pass                    # load and request the barre_code in csv file
-
 
 def main():
     init = Main()
+    ini = init.home_menu()
     # step1 = init.step_1()
-    init.home_menu()
 
 
 if __name__ == "__main__":

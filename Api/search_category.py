@@ -27,7 +27,7 @@ class ApiCollectingData:
                       "tagtype_0": "categories",                                            # Get the result by category
                       'tag_0': category,                                         # the tag represents the article search
                       "tag_contains_0": "contains",
-                      "page_size": 1000,                                                    # Number of articles per page
+                      "page_size": 5,                                                    # Number of articles per page
                       "json": 1}                                                              # The API response in JSON
 
             response = req.get(api, params=config)                           # Uses the configuration for the connection

@@ -30,6 +30,7 @@ CATEGORIES = ["plats préparés",
 
 
 #  DATABASE CONSTANTS #
+CACHE = []
 
 # Profile demo
 USER = 'OPFF'
@@ -40,7 +41,7 @@ DATABASE = 'PetitBeurre'
 SEASON_DATABASES = ['Spring', 'Summer', 'Autumn', 'Winter']
 
 # New profile
-
+NONE = ''
 NEW_USER = ' '
 NEW_PASSWORD = ' '
 NEW_DATABASE = 'Demo_Tc'
