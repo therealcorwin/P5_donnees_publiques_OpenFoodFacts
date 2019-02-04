@@ -17,10 +17,10 @@ class Main:
     def home_menu(self):
         print('\n', DECO, '\n', "***  Bonjour et bienvenue au °Substitute Factory° ***", '\n', DECO)
         print("Apppyer sur :", '\n', "'R' pour effectuer une recherche", '\n',
-              "'G' pour consulter les bases de donnèes disponnible", '\n',
-              "'C' pour choisir une base de donnèes existante", '\n',
-              "'D' pour supprimer une base de donnèes existante", '\n',
-              "'N' pour crèer une nouvelle base de donnèes", '\n',
+              # "'G' pour consulter les bases de donnèes disponnible", '\n',
+              # "'C' pour choisir une base de donnèes existante", '\n',
+              # "'D' pour supprimer une base de donnèes existante", '\n',
+              # "'N' pour crèer une nouvelle base de donnèes", '\n',
               "'Q' pour quiter ", '\n')
         user = input("")
         if user == 'R':
