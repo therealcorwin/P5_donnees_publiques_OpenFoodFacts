@@ -25,10 +25,9 @@ class Main:
         user = input("")
         if user == 'R':
             self.step_1()
-        if user == 'G':
-            self.database.get_databases()
-            user = input("")
-
+        #         if user == 'G':
+        #             self.database.get_databases()
+        #             user = input("")
         #             self.home_menu()
         #         if user == 'C':
         #             self.choose_database()
