@@ -83,13 +83,15 @@ class Main:
             self.step_3(select_2)
 
     def step_3(self, select_2):
-        self.database.get_product_in_category(str(select_2))
+        # self.database.get_product_in_category(str(select_2))
+        print(select_2[0])
+
         pass
 
 def main():
     init = Main()
-    ini = init.home_menu()
-    # step1 = init.step_1()
+    # ini = init.home_menu()
+    # step1 = init.step_3()
 
 
 if __name__ == "__main__":

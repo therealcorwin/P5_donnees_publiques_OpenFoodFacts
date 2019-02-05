@@ -66,13 +66,19 @@ class DataBaseUser:
 
     def get_product_in_category(self, select_2):
         prod = self.db.query("""
-                                 SELECT product.name_product, product.grade FROM Products AS product  
-                                 WHERE name_product LIKE :user;	
+                              SELECT product.name_product, product.grade FROM Products AS product
+                              WHERE name_product LIKE :user;
                              """, user=select_2,  fetchall=True).as_dict()
         for get_prod in enumerate(prod):
             print(get_prod)
 
+#                                  WHERE ta_colonne REGEXP 'Tomates|pelées|entières|au|jus'
 
+#                                  SELECT product.name_product, product.grade FROM Products AS product
+#                                  WHERE name_product REGEXP :user;
+
+#                                  SELECT product.name_product, product.grade FROM Products AS product
+#                                  WHERE name_product LIKE :user;
 def main():
     # Init the class, and Connecting in the database
     databases = DataBaseUser()                                                                 # Load the database class

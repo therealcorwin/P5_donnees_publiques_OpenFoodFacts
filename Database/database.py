@@ -17,6 +17,17 @@ class DataBaseCreator:
         self.database = DataBaseUser()
         self.db = self.database.connect_mysql()
 
+    def drop_tables(self):
+        self.db.query(""" DROP TABLE  
+                          `categories`, 
+                          `categories_summary`, 
+                          `products`, 
+                          `products_categories_key`, 
+                          `products_categories_summary_key`, 
+                          `products_stores`, 
+                          `stores`;
+                        """)
+
     def create_table_product(self):
         """ Create table """
         self.db.query("""
