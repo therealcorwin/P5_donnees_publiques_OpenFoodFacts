@@ -53,8 +53,9 @@ class DataBaseUser:
 
     def get_all_products_per_category(self, select_1):
         """ Control in the tables """
+        print("FUNCTION 1  / DatabaseUser()")
         cat = self.db.query(""" 
-                                SELECT product.name_product FROM Products AS product      
+                                SELECT product.name_product, product.grade, product.barre_code FROM Products AS product      
                                 JOIN products_categories_summary_key AS pc ON pc.product_id = product.barre_code  
                                 JOIN Categories_summary AS c ON pc.c_category_id = c.id							
                                 WHERE c.c_category = :user;	
@@ -65,10 +66,13 @@ class DataBaseUser:
             CACHE.append(product)
 
     def get_product_in_category(self, select_2):
+        print("FUNCTION 2  / DatabaseUser()")
+
         prod = self.db.query("""
                               SELECT product.name_product, product.grade FROM Products AS product
                               WHERE name_product LIKE :user;
                              """, user=select_2,  fetchall=True).as_dict()
+
         for get_prod in enumerate(prod):
             print(get_prod)
 
@@ -79,6 +83,23 @@ class DataBaseUser:
 
 #                                  SELECT product.name_product, product.grade FROM Products AS product
 #                                  WHERE name_product LIKE :user;
+#                                  WHERE ta_colonne REGEXP 'Tomates|pelées|entières|au|jus'
+
+#                                  SELECT product.name_product, product.grade FROM Products AS product
+#                                  WHERE name_product REGEXP :user;
+
+#                                  SELECT product.name_product, product.grade FROM Products AS product
+#                                  WHERE name_product LIKE :user;
+
+# OR et AND
+# ( || et && )
+#         prod = [p['name_product'] for p in cat]
+#         grade = [g['grade'] for g in cat]
+#         id = [c['barre_code'] for c in cat]
+#         products = (prod, grade, id)
+#         for product in products:
+#             CACHE.append(product)
+
 def main():
     # Init the class, and Connecting in the database
     databases = DataBaseUser()                                                                 # Load the database class
