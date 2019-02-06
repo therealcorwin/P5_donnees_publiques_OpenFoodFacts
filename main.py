@@ -14,18 +14,16 @@ class Main:
         self.database = DataBaseUser()
         self.db = self.database.connect_mysql()
 
-    def value_error(self, select_2=None, select_3=None):
+    def value_error(self, select_function, *args):
         """ Control the ValueError """
         try:
-            self.step_1() and self.step_3(select_2) and self.step_3(select_3)
+            return select_function(*args)
         except ValueError:
             print(" |*** /!\ Tapez le chiffre associé à votre choix dans la liste /!\ ***|")
-            self.step_1() and self.step_3(select_2) and self.step_3(select_3)
+            return self.value_error(select_function, *args)
         except IndexError:
             print(" |*** /!\ Tapez le chiffre associé à votre choix dans la liste /!\ ***|")
-            self.step_1() and self.step_3(select_2) and self.step_3(select_3)
-        else:
-            pass
+            return self.value_error(select_function, *args)
 
     def home_menu(self):
         print('\n', DECO, '\n', "***  Bonjour et bienvenue au °Substitute Factory° ***", '\n', DECO)
@@ -58,41 +56,57 @@ class Main:
     def step_1(self):
         """ Choice Category """
         print("FUNCTION 1 / main()")
-        try:
-            for get in enumerate(CATEGORIES):
-                print("*", get)
-            user = input(" |*** Pour choisir une categorie, tapez le chiffre associé et appuyer sur ENTREE ***| ")
-            select_1 = CATEGORIES[int(user)]
-            print(" |*** vous avez choisis ***| :  ", select_1.capitalize())
-            sleep(1)
-        except ValueError:
-            print(" |*** /!\ Tapez le chiffre associé à une categorie dans la liste /!\ ***|")
-            self.step_1()
-        except IndexError:
-            print(" |*** /!\  Vous devez choisir une categorie dans la liste /!\ ***|")
-            self.step_1()
-        else:
-            self.database.get_all_products_per_category(str(select_1))
-            self.step_2()
+        select_1 = self.value_error(self.step_1_action)
+        print(" |*** vous avez choisis ***| :  ", select_1.capitalize())
+        sleep(1)
+        self.step_2(select_1)
 
-    def step_2(self):
+    def step_1_action(self):
+        for get in enumerate(CATEGORIES):
+            print("*", get)
+        user = input(" |*** Pour choisir une categorie, tapez le chiffre associé et appuyer sur ENTREE ***| ")
+        return CATEGORIES[int(user)]
+
+
+    #     def step_1_(self):
+    #         """ Choice Category """
+    #         print("FUNCTION 1 / main()")
+    #         try:
+    #             for get in enumerate(CATEGORIES):
+    #                 print("*", get)
+    #             user = input(" |*** Pour choisir une categorie, tapez le chiffre associé et appuyer sur ENTREE ***| ")
+    #             select_1 = CATEGORIES[int(user)]
+    #             print(" |*** vous avez choisis ***| :  ", select_1.capitalize())
+    #             sleep(1)
+    #         except ValueError:
+    #             print(" |*** /!\ Tapez le chiffre associé à une categorie dans la liste /!\ ***|")
+    #             self.step_1()
+    #         except IndexError:
+    #             print(" |*** /!\  Vous devez choisir une categorie dans la liste /!\ ***|")
+    #             self.step_1()
+    #         else:
+    #             self.step_2(select_1)
+
+    def step_2(self, select_1):
         """Product choice"""
+        CACHE = self.database.get_all_products_per_category(str(select_1))
+
         print("FUNCTION 2 / main()")
         try:
-            for select in enumerate(CACHE):
+            for select in CACHE:
                 print("*", select)
             user = input(" |*** Pour choisir un produit, tapez le chiffre associé et appuyer sur ENTREE ***| ")
             select_2 = CACHE[int(user)]
-            print(" |*** vous avez choisis ***| :  ", select_2.capitalize())
+            print(" |*** vous avez choisis ***| :  ", select_2[1].capitalize())
             sleep(1)
         except ValueError:
             print(" |*** /!\ Tapez le chiffre associé à un produit dans la liste /!\ ***|")
             sleep(1)
-            self.step_2()
+            self.step_2(select_1)
         except IndexError:
             print(" |*** /!\  Vous devez choisir un produit dans la liste /!\ ***|")
             sleep(1)
-            self.step_2()
+            self.step_2(select_1)
         else:
             self.step_3(select_2)
 
@@ -113,7 +127,6 @@ class Main:
             print(compare)
         if user == "S":
             self.step_3(select_2)
-        pass
 
 
 def main():
