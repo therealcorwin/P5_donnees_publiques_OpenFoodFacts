@@ -2,6 +2,8 @@
 # -*- coding: Utf-8 -*-
 
 import records as rec
+from time import sleep
+
 from Config.constants import *
 
 
@@ -53,6 +55,7 @@ class DataBaseUser:
 
     def get_all_products_per_category(self, select_1):
         """ Control in the tables """
+        print("FUNCTION GET PRODUCT/CATEGORIE (select_1)/ datauser()")
         cat = self.db.query(""" 
                                 SELECT product.name_product FROM Products AS product      
                                 JOIN products_categories_summary_key AS pc ON pc.product_id = product.barre_code  
@@ -61,32 +64,24 @@ class DataBaseUser:
                             """, user=select_1, fetchall=True).as_dict()
 
         return [(i, p['name_product']) for i, p in enumerate(cat)]
-    #         for i, product in enumerate(products):
-    #             CACHE.append(product)
 
     def get_product_in_category(self, select_2):
+        print("FUNCTION GET PRODUCT IN CATEGORIE (select_2)/ datauser()")
         prod = self.db.query("""
-                              SELECT product.barre_code, product.product_name, product.grade FROM Products AS product
-                              WHERE name_product LIKE :user;
-                             """, user=select_2,  fetchall=True).as_dict()
+                                SELECT product.name_product, product.grade, product.barre_code FROM Products AS product
+                                WHERE name_product LIKE :user;
+                             """, user=select_2, fetchall=True).as_dict()
 
-        for get_prod in enumerate(prod):
-            print(get_prod)
+        return [(i, p['name_product'], p['grade'], p['barre_code']) for i, p in enumerate(prod)]
 
-#                                  WHERE ta_colonne REGEXP 'Tomates|pelées|entières|au|jus'
-
-#                                  SELECT product.name_product, product.grade FROM Products AS product
-#                                  WHERE name_product REGEXP :user;
-
+#    def get_product_in_category(self, select_2):
+#         prod = self.db.query("""
 #                                  SELECT product.name_product, product.grade FROM Products AS product
 #                                  WHERE name_product LIKE :user;
-#                                  WHERE ta_colonne REGEXP 'Tomates|pelées|entières|au|jus'
+#                              """, user=select_2,  fetchall=True).as_dict()
+#         for get_prod in enumerate(prod):
+#             print(get_prod)
 
-#                                  SELECT product.name_product, product.grade FROM Products AS product
-#                                  WHERE name_product REGEXP :user;
-
-#                                  SELECT product.name_product, product.grade FROM Products AS product
-#                                  WHERE name_product LIKE :user;
 
 # OR et AND
 # ( || et && )
@@ -110,8 +105,7 @@ def main():
     # get_bases = databases.get_databases()                                                      # Get the database list
     # get_tables = databases.get_tables()                                                           # Get the table list
     # get_products = databases.get_all_products_per_category()                                     # Get the insert list
-    # get_products = databases.get_product_in_category()                                           # Get the insert list
-
+    # get_products = databases.get_product_in_category()                                         # Get the insert list
 
 if __name__ == "__main__":
     main()
