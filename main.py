@@ -13,8 +13,6 @@ class Main:
         """ Connect to Mysql database from the class DataBaseUser() """
         self.database = DataBaseUser()
         self.db = self.database.connect_mysql()
-        self.favorite = []
-
 
     def value_error(self, select_function, *args):
         """ Control the ValueError """
@@ -57,7 +55,6 @@ class Main:
 
     def step_1(self):
         """ Choice Category """
-        print("FUNCTION 1 / main()")
         select_1 = self.value_error(self.step_1_action)
         print(" |*** vous avez choisis ***| :  ", select_1.capitalize())
         sleep(0.5)
@@ -78,7 +75,6 @@ class Main:
     def step_2(self, select_1):
         """ Product choice """
         CACHE = self.database.get_all_products_per_category(str(select_1))
-        print("FUNCTION 2 / main()")
         try:
             for select in CACHE:
                 print("*", select)
@@ -97,32 +93,49 @@ class Main:
         else:
             self.step_3(select_2[1])
 
+    def char_test(self, user):
+        if user.isdigit():
+           user = int(user)
+           print('Chiffre !')
+        else:
+           user = str(user)
+           print('Pas chiffre !')
+
     def step_3(self, select_2):
         """ Substitute research"""
-        print("FUNCTION 3  / main()")
         compare = self.database.get_product_in_category(str(select_2))
         for select in compare:
             print(select)
-        menu = True
-        user = input(" |*** Vous pouvez choisir un produits" '\n' 
-                     "tapez le chiffre associé et appuyer sur ENTREE ***|")
-        select_3 = compare[int(user)]
-        print(" |*** vous avez choisis ***| :  ", select_3, '\n',
-              "Souhaitez-vous sauvegarder ce produit?", '\n',)
-        user = input("tapez 'O' ou 'N', valider avec ENTREE")
+        user = input("Vous pouvez choisir un produits" '\n' "tapez le chiffre associé et appuyer sur ENTREE" '\n' "'Q' pour Quitter")
+        if user.isdigit() == True:
+            select_3 = compare[int(user)]
+            print("vous avez choisis: ", select_3, '\n' "Souhaitez-vous sauvegarder ce produit?")
+            self.final_use(select_2, select_3)
+        else:
+            if user == 'C':
+                self.step_3(select_2)
+            elif user == 'Q':
+                quit()
+
+    def final_use(self, select_2, select_3):
+        favorite = []
+        user = input("tapez 'O': pour oui ou 'N': pour non" '\n' 
+                     "'C': pour choisir un nouveau produit" '\n' 
+                     "'F': pour consulter les favoris" '\n'
+                     "'R': pour effectuer une nouvelle recherche" '\n' 
+                     "'Q': pour Quitter, valider avec ENTREE")
         if user == 'O':
-            self.favorite.append(select_3)
+            favorite.extend(select_3)
             print("Ajout du produits:", select_3, "successful")
             self.step_3(select_2)
-        if user == 'N':
+        elif user == 'C':
             self.step_3(select_2)
-
-        if user == 'G':
-            print("Voici votre liste de favoris:", '\n', self.favorite)
-        if user == 'M':
+        elif user == 'N':
+            self.step_3(select_2)
+        elif user == 'F':
+            print(favorite)
+        elif user == 'R':
             self.home_menu()
-        if user == 'Q':
-            quit()
 
 
 def main():
