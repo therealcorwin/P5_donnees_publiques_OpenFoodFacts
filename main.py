@@ -92,11 +92,11 @@ class Main:
             print(" |*** vous avez choisis ***| :  ", select_2[1].capitalize())
             sleep(0.5)
         except ValueError:
-            print(" |*** /!\ Tapez le chiffre associé à un produit dans la liste /!\ ***|")
+            print("ValueError - |*** /!\ Tapez le chiffre associé à un produit dans la liste /!\ ***|")
             sleep(0.5)
             self.step_2(select_1)
         except IndexError:
-            print(" |*** /!\  Vous devez choisir un produit dans la liste /!\ ***|")
+            print("IndexError - |*** /!\  Vous devez choisir un produit dans la liste /!\ ***|")
             sleep(0.5)
             self.step_2(select_1)
         else:
@@ -111,6 +111,11 @@ class Main:
         user = input("Vous pouvez choisir un produits" '\n' "tapez le chiffre associé et appuyer sur ENTREE" '\n' 
                      "'Q' pour Quitter" '\n'
                      "'H' retour au Menu")
+
+        start = select[0]
+        for choice in range(start):
+            print(choice)
+
         if user.isdigit():
             select_3 = compare[int(user)]
             print("Vous avez choisis: ", select_3, '\n' "Souhaitez-vous sauvegarder ce produit?")
@@ -119,7 +124,7 @@ class Main:
             key_list = ["C", "H", "Q"]
             if user not in key_list:
                 self.step_3(select_2)
-            if user == 'C':
+            elif user == 'C':
                 self.step_3(select_2)
             elif user == 'H':
                 self.home_menu()
@@ -162,10 +167,10 @@ class Main:
         try:
             return select_function(*args)
         except ValueError:
-            print(" |*** /!\ Tapez le chiffre associé à votre choix dans la liste /!\ ***|")
+            print("ValueError - |*** /!\ Tapez le chiffre associé à votre choix dans la liste /!\ ***|")
             return self.value_error(select_function, *args)
         except IndexError:
-            print(" |*** /!\ Tapez le chiffre associé à votre choix dans la liste /!\ ***|")
+            print("IndexError - |*** /!\ Tapez le chiffre associé à votre choix dans la liste /!\ ***|")
             return self.value_error(select_function, *args)
 
     def save_data(self, outlist, filename):
@@ -182,6 +187,7 @@ def main():
     ini = init.home_menu()
     # step1 = init.step_3()
     # init.step_2_action()
+
 
 if __name__ == "__main__":
     main()
