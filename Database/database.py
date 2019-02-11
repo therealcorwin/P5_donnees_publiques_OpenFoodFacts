@@ -89,10 +89,11 @@ class DataBaseCreator:
 
     def create_favorites_table(self):
         self.db.query("""
-                        CREATE TABLE IF NOT EXISTS Products (
+                        CREATE TABLE IF NOT EXISTS Favorites (
                         barre_code BIGINT PRIMARY KEY,
                         name_product VARCHAR(150),
                         grade CHAR(1),
+                        store VARCHAR(150),
                         web_site VARCHAR(255));
                        """)
         return True
@@ -154,7 +155,23 @@ class DataBaseCreator:
         return True
 
     def insert_favory(self):
-        pass
+        self.db.query("""
+                        INSERT INTO Favorites(
+                        barre_code,
+                            (REF)
+                        name_product,
+                            (REF)
+                        grade,
+                            (REF)
+                        store,
+                            (REF)
+                        web_site,
+                            (REF)
+                        )
+                        VALUES (:store)
+                        ON DUPLICATE KEY UPDATE store=:store;
+                      """, # store=)
+                      )
 
     def create_tables(self):
         """ Execute the creating table """
@@ -162,8 +179,8 @@ class DataBaseCreator:
         self.create_table_category()
         self.create_table_store()
         self.create_table_subkey()
-        print('\n', DECO, '\n', "    **** Creating table success ****    ")
         # self.create_favorites_table()
+        print('\n', DECO, '\n', "    **** Creating table success ****    ")
         return True
 
     def insert_rows(self, products):

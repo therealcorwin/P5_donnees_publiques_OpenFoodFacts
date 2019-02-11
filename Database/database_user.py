@@ -2,7 +2,6 @@
 # -*- coding: Utf-8 -*-
 
 import records as rec
-from time import sleep
 
 from Config.constants import *
 
@@ -72,6 +71,13 @@ class DataBaseUser:
 
         return [(i, p['name_product'], p['grade'], p['barre_code']) for i, p in enumerate(prod)]
 
+
+#        prod = self.db.query("""
+#                                SELECT product.name_product, product.grade, product.barre_code FROM Products AS product
+#                                WHERE name_product LIKE :user;
+#                             """, user=select_2, fetchall=True).as_dict()
+#
+#        return [(i, p['name_product'], p['grade'], p['barre_code']) for i, p in enumerate(prod)]
 
 def main():
     # Init the class, and Connecting in the database

@@ -1,9 +1,10 @@
 # -*- PipEnv -*-
 # -*- coding: Utf-8 -*-
 
+# https://fr.openfoodfacts.org/api/v0/produit/'barre_code'.json
+
 
 import requests as req
-import csv
 from pprint import pprint
 
 from Config.constants import *
@@ -14,20 +15,20 @@ class ApiCollectingData:
 
     def __init__(self):
         """ The constructor is not used here """
-        pass
 
     def bring_out(self):
         """ Use the configuration for the connecting interface """
         all_products = []
-        api = "https://fr.openfoodfacts.org/cgi/search.pl"                 # Address OpenFooFact.org the API FR locating
-        # Search barre_code products
-        # https://fr.openfoodfacts.org/api/v0/produit/'barre_code'.json
+        barre_code = ''
+        pl = "cgi/search.pl"
+        api = "https://fr.openfoodfacts.org/" + pl                         # Address OpenFooFact.org the API FR locating
+        bc_search = api + "api/v0/produit/" + barre_code + ".json"                    # Address only barre_code research
         for category in CATEGORIES:
             config = {"action": "process",                                         # This config for  for connecting API
                       "tagtype_0": "categories",                                            # Get the result by category
                       'tag_0': category,                                         # the tag represents the article search
                       "tag_contains_0": "contains",
-                      "page_size": 1000,                                                   # Number of articles per page
+                      "page_size": 5,                                                   # Number of articles per page
                       "json": 1}                                                              # The API response in JSON
 
             response = req.get(api, params=config)                           # Uses the configuration for the connection
@@ -90,22 +91,17 @@ class ApiCollectingData:
 
         return product_final
 
-    def save_data(self, product_final, filename):
-        with open(filename, 'w', encoding='utf-8') as file:
-            writer = csv.writer(file, delimiter=';')                                           # Import the data in file
-            for e in product_final:
-                writer.writerow(e)
-        return filename
-
 
 def main():
     # Download the response
+
     downloader = ApiCollectingData()
     connect = downloader.bring_out()
     final = downloader.format_final_response(connect)
 
     # Save the response in file
-    # save_data = downloader.save_data(final, 'Response_save.csv')
+
+    # save_date = save.save_data(final, 'Response_save.csv')
 
 
 if __name__ == "__main__":
