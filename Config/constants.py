@@ -31,10 +31,10 @@ DATABASE = 'PetitBeurre'
 SEASON_DATABASES = ['Spring', 'Summer', 'Autumn', 'Winter']
 
 # New profile
-NONE = ''
+NONE = ' '
 NEW_USER = ' '
 NEW_PASSWORD = ' '
-NEW_DATABASE = 'Demo_Tc'
+NEW_DATABASE = 'test'
 
 DECO = "***------------------------------------------------***"
 SPACE_ADJUST = "            "

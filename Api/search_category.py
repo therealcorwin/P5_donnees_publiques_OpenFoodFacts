@@ -1,7 +1,6 @@
 # -*- PipEnv -*-
 # -*- coding: Utf-8 -*-
 
-# https://fr.openfoodfacts.org/api/v0/produit/'barre_code'.json
 
 
 import requests as req
@@ -19,16 +18,13 @@ class ApiCollectingData:
     def bring_out(self):
         """ Use the configuration for the connecting interface """
         all_products = []
-        barre_code = ''
-        pl = "cgi/search.pl"
-        api = "https://fr.openfoodfacts.org/" + pl                         # Address OpenFooFact.org the API FR locating
-        bc_search = api + "api/v0/produit/" + barre_code + ".json"                    # Address only barre_code research
+        api = "https://fr.openfoodfacts.org/cgi/search.pl"                      # Address OpenFooFact.org the API FR locating
         for category in CATEGORIES:
             config = {"action": "process",                                         # This config for  for connecting API
                       "tagtype_0": "categories",                                            # Get the result by category
                       'tag_0': category,                                         # the tag represents the article search
                       "tag_contains_0": "contains",
-                      "page_size": 5,                                                   # Number of articles per page
+                      "page_size": 100,                                                   # Number of articles per page
                       "json": 1}                                                              # The API response in JSON
 
             response = req.get(api, params=config)                           # Uses the configuration for the connection
@@ -46,7 +42,6 @@ class ApiCollectingData:
         # pprint(all_products)
 
         """##########################"""
-
         return all_products
 
     def validate_the_data(self, keys, products_section):
@@ -93,16 +88,14 @@ class ApiCollectingData:
 
 
 def main():
+    """  """
     # Download the response
 
     downloader = ApiCollectingData()
     connect = downloader.bring_out()
     final = downloader.format_final_response(connect)
 
-    # Save the response in file
-
-    # save_date = save.save_data(final, 'Response_save.csv')
-
+    pprint(final)
 
 if __name__ == "__main__":
     main()

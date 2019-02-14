@@ -18,6 +18,7 @@ class DataBaseCreator:
         self.db = self.database.connect_mysql()
 
     def drop_tables(self):
+        """  """
         self.db.query(""" DROP TABLE  
                           `categories`, 
                           `categories_summary`, 
@@ -88,13 +89,14 @@ class DataBaseCreator:
         return True
 
     def create_favorites_table(self):
+        """  """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Favorites (
-                        barre_code BIGINT PRIMARY KEY,
-                        name_product VARCHAR(150),
-                        grade CHAR(1),
-                        store VARCHAR(150),
-                        web_site VARCHAR(255));
+                        barre_code BIGINT PRIMARY KEY REFERENCES Products(barre_code),
+                        name_product VARCHAR(150) REFERENCES Products(name_product),
+                        grade CHAR(1) REFERENCES Products(grade),
+                        store VARCHAR(150) REFERENCES Stores(id),
+                        web_site VARCHAR(255)) REFERENCES Products(web_site);
                        """)
         return True
 
@@ -154,24 +156,6 @@ class DataBaseCreator:
                           """, barre_code=id, store_id=store)
         return True
 
-    def insert_favory(self):
-        self.db.query("""
-                        INSERT INTO Favorites(
-                        barre_code,
-                            (REF)
-                        name_product,
-                            (REF)
-                        grade,
-                            (REF)
-                        store,
-                            (REF)
-                        web_site,
-                            (REF)
-                        )
-                        VALUES (:store)
-                        ON DUPLICATE KEY UPDATE store=:store;
-                      """, # store=)
-                      )
 
     def create_tables(self):
         """ Execute the creating table """
@@ -197,15 +181,15 @@ def main():
     """ Init the class """
     creating = DataBaseCreator()
 
-    """ Connecting in the API """
+    # Connecting in the API
     downloader = ApiCollectingData()                                                                # Load the API class
     connect = downloader.bring_out()                                                            # Load the API connexion
     final_products = downloader.format_final_response(connect)                                  # Harvest OPFF's request
 
-    """ Create table """
+    # Create table
     create_table = creating.create_tables()                                              # Creating the necessary tables
 
-    """ Insert data """
+    # Insert data
     insert_data = creating.insert_rows(final_products)
 
 
