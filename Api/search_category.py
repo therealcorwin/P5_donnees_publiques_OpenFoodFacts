@@ -2,7 +2,6 @@
 # -*- coding: Utf-8 -*-
 
 
-
 import requests as req
 from pprint import pprint
 
@@ -10,21 +9,25 @@ from Config.constants import *
 
 
 class ApiCollectingData:
-    """ Call the Api Open Food Fact """
+    """
+        This class has the responsibility of collecting a certain number of products, in selected categories,
+        thus to give a valid structure for the insertion in the database
+    """
 
     def __init__(self):
         """ The constructor is not used here """
+        pass
 
-    def bring_out(self):
+    def connect_and_harvest(self):
         """ Use the configuration for the connecting interface """
         all_products = []
-        api = "https://fr.openfoodfacts.org/cgi/search.pl"                      # Address OpenFooFact.org the API FR locating
+        api = "https://fr.openfoodfacts.org/cgi/search.pl"                 # Address OpenFooFact.org the API FR locating
         for category in CATEGORIES:
             config = {"action": "process",                                         # This config for  for connecting API
                       "tagtype_0": "categories",                                            # Get the result by category
                       'tag_0': category,                                         # the tag represents the article search
                       "tag_contains_0": "contains",
-                      "page_size": 100,                                                   # Number of articles per page
+                      "page_size": 10,                                                     # Number of articles per page
                       "json": 1}                                                              # The API response in JSON
 
             response = req.get(api, params=config)                           # Uses the configuration for the connection
@@ -44,13 +47,6 @@ class ApiCollectingData:
         """##########################"""
         return all_products
 
-    def validate_the_data(self, keys, products_section):
-        """ Validate the complete fields """
-        for key in keys:
-            if key not in products_section or not products_section[key]:
-                return False
-        return True
-
     def format_final_response(self, all_products):
         """ Formatted the response just harvest the categories selected """
         product_final = []
@@ -67,35 +63,45 @@ class ApiCollectingData:
                 sub_category = product['main_category'].upper()
                 stores = product['stores'].upper().split(',')
                 # Respect of the order of the criteria insert in a tuple and simple format in database insert
-                key = (barre_code, name, grade, website, categories, sub_category,  stores)
+                key = (barre_code, name, grade, website, categories, sub_category, stores)
                 formatting = key
                 product_final.append(formatting)
 
                 ###############################
                 """ PRINT RESULTS FUNCTION """
                 ###############################
+                """ Print type results final form """
+
+                pprint(product_final)
+
                 """ Print type results the stores and category count """
+
                 print('produit: ', name.upper())
                 print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
                 print('présent dans', [sub_category], [len(categories)], 'categorie(s): = ', categories, '\n')
-                """ Pprint final result the API response formatted """
-                # pprint(product_final)
                 print(f"Nous avons récupéré {len(product_final)} produits")
 
                 """##########################"""
 
         return product_final
 
+    def validate_the_data(self, keys, products_section):
+        """ Validate the complete fields """
+        for key in keys:
+            if key not in products_section or not products_section[key]:
+                return False
+        return True
+
 
 def main():
-    """  """
+    """ Initialize the data collect """
+
     # Download the response
 
     downloader = ApiCollectingData()
-    connect = downloader.bring_out()
-    final = downloader.format_final_response(connect)
+    connect = downloader.connect_and_harvest()
+    downloader.format_final_response(connect)
 
-    pprint(final)
 
 if __name__ == "__main__":
     main()

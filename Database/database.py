@@ -10,6 +10,7 @@ from Api.search_category import ApiCollectingData
 
 class DataBaseCreator:
     """
+        This class has the responsibility of structuring the database, and inserting the data collection of the API
     """
 
     def __init__(self):
@@ -18,7 +19,7 @@ class DataBaseCreator:
         self.db = self.database.connect_mysql()
 
     def drop_tables(self):
-        """  """
+        """ Delete existing tables, to collect new data  """
         self.db.query(""" DROP TABLE  
                           `categories`, 
                           `categories_summary`, 
@@ -30,7 +31,7 @@ class DataBaseCreator:
                         """)
 
     def create_table_product(self):
-        """ Create table """
+        """ Create table Products """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Products (
                         barre_code BIGINT UNIQUE PRIMARY KEY,
@@ -38,10 +39,9 @@ class DataBaseCreator:
                         grade CHAR(1),
                         web_site VARCHAR(255));
                        """)
-        return True
 
     def create_table_category(self):
-        """  """
+        """ Create table category """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Categories (
                         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -53,19 +53,17 @@ class DataBaseCreator:
                         id BIGINT PRIMARY KEY AUTO_INCREMENT,
                         c_category VARCHAR(125) UNIQUE); 
                       """)
-        return True
 
     def create_table_store(self):
-        """  """
+        """ Create table stores """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Stores (
                         id MEDIUMINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
                         store VARCHAR(150) UNIQUE);
                       """)
-        return True
 
     def create_table_subkey(self):
-        """ Creating the index """
+        """ Creating to the associate index table """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Products_categories_key ( 
                         id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
@@ -86,10 +84,9 @@ class DataBaseCreator:
                         product_id BIGINT REFERENCES Products(barre_code),
                         store_id MEDIUMINT REFERENCES Stores(id));               
                       """)
-        return True
 
     def create_favorites_table(self):
-        """  """
+        """ Create the favorites table """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Favorites (
                         barre_code BIGINT PRIMARY KEY REFERENCES Products(barre_code),
@@ -98,7 +95,6 @@ class DataBaseCreator:
                         store VARCHAR(150) REFERENCES Stores(id),
                         web_site VARCHAR(255)) REFERENCES Products(web_site);
                        """)
-        return True
 
     def insert_product(self, id, name, grade, url, *args):
         """ Insert the product data in the table"""
@@ -108,7 +104,6 @@ class DataBaseCreator:
                         (:id, :name, :grade, :url) 
                         ON DUPLICATE KEY UPDATE barre_code=:id;
                       """, id=id, name=name, grade=grade, url=url)
-        return True
 
     def insert_category(self, id, name, grade, url, categories, sub_category, stores, *args):
         """ Insert the category list data in the table"""
@@ -138,7 +133,6 @@ class DataBaseCreator:
                             VALUES (:barre_code,
                             (SELECT id FROM Categories_summary WHERE c_category=:category_id));
                           """, barre_code=id, category_id=sub_category)
-            return True
 
     def insert_stores(self, id, name, grade, url, categories, sub_category, stores, *args):
         """ Insert the store list data in the table"""
@@ -154,8 +148,6 @@ class DataBaseCreator:
                             VALUES (:barre_code,
                             (SELECT id FROM Stores WHERE store=:store_id));
                           """, barre_code=id, store_id=store)
-        return True
-
 
     def create_tables(self):
         """ Execute the creating table """
@@ -163,8 +155,8 @@ class DataBaseCreator:
         self.create_table_category()
         self.create_table_store()
         self.create_table_subkey()
-        # self.create_favorites_table()
-        print('\n', DECO, '\n', "    **** Creating table success ****    ")
+        self.create_favorites_table()
+        print('\n', DECO, '\n', "    **** Creating table success ****    ", '\n', DECO, '\n')
         return True
 
     def insert_rows(self, products):
@@ -173,24 +165,25 @@ class DataBaseCreator:
             self.insert_product(*product)
             self.insert_category(*product)
             self.insert_stores(*product)
-        print('\n', DECO, '\n', "    **** Insert data, success *****     ", '\n', DECO, '\n', )
+        print('\n', DECO, '\n', "    **** Insert data, success *****     ", '\n', DECO, '\n')
         return True
 
 
 def main():
-    """ Init the class """
+    """ Initialize the database """
+
     creating = DataBaseCreator()
 
     # Connecting in the API
     downloader = ApiCollectingData()                                                                # Load the API class
-    connect = downloader.bring_out()                                                            # Load the API connexion
+    connect = downloader.connect_and_harvest()                                                  # Load the API connexion
     final_products = downloader.format_final_response(connect)                                  # Harvest OPFF's request
 
     # Create table
-    create_table = creating.create_tables()                                              # Creating the necessary tables
+    creating.create_tables()                                                             # Creating the necessary tables
 
     # Insert data
-    insert_data = creating.insert_rows(final_products)
+    creating.insert_rows(final_products)
 
 
 if __name__ == "__main__":
