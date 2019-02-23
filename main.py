@@ -1,6 +1,7 @@
 # -*- PipEnv -*-
 # -*- coding: Utf-8 -*-
 
+import records as rec
 
 from Config.constants import *
 from Database.database_user import DataBaseUser
@@ -14,32 +15,28 @@ class Main:
     def __init__(self):
         """ Connect to Mysql database from the class DataBaseUser() """
         self.favorites = []
-        self.database = DataBaseUser()
-        self.db = self.database.connect_mysql()
+        self.db = self.connect_mysql()
+        self.database = DataBaseUser(self.db)
+
 
     def home_menu(self):
         """ This function allows to direct the user """
-        print('\n', DECO, '\n', "***  Bonjour et bienvenue au °Substitute Factory° ***", '\n', DECO, '\n')
+        print('\n', DECO, '\n', "*** Bonjour et bienvenue au ° Substitute Factory ° ***", '\n', DECO, '\n')
         print("tapez:", '\n',
-              " |-'R': pour effectuer une Recherche" '\n',
-              " |-'F': pour consulter les Favoris" '\n',
-              '\n', DECO, '\n', SPACE_ADJUST, "*** °DATABASE CONTROL° ***", '\n', DECO, '\n',
-              " |-'G' pour Consulter les bases de données disponible", '\n',
-              " |-'Q' pour Quiter", '\n')
+              " |-'1': Quel aliment souhaitez-vous remplacer ?" '\n',
+              " |-'2': Retrouver mes aliments substitués" '\n',
+              " |-'Q' pour Quitter", '\n')
         user = input()
-        key_list = ["R", "F", "G", "Q"]
+        key_list = ["1", "2", "Q"]
         if user not in key_list:
             print('\n', "IndexError - |*** /!\ Tapez le chiffre associé à votre choix dans la liste /!\ ***|", '\n')
             self.home_menu()
         else:
-            if user == 'R':
+            if user == '1':
                 self.choice_category()
-            elif user == 'F':
+            elif user == '2':
                 pass
                 # self.database.get_favorites(user)
-            elif user == 'G':
-                pass
-                # self.get_databases()
             if user == 'Q':
                 quit()
 
@@ -64,7 +61,6 @@ class Main:
 
     def choice_product_action(self, select_category):
         """ This function is linked with choice_product to control the user input """
-        print("choice_product_action")
         products = self.database.get_all_products_per_category(str(select_category))
         for i, select in enumerate(products):
             print(f"* ({i+1}, {select['name_product']})")
@@ -81,8 +77,9 @@ class Main:
     def choice_substitute_action(self, select_category, select_product):
         """ This function is linked with choice_substitute to control the user input """
         substitutes = self.database.choose_products_from_the_category(select_category, select_product)
+        print("     | Code barre |,    | Nom Produits |,    | NutriScore |", '\n')
         for i, select in enumerate(substitutes):
-            print(f"* ({i + 1}, {select['barre_code']}, {select['name_product']}, {select['grade']})")
+            print(f"* ({i + 1}, {select['barcode']}, {select['name_product']}, {select['grade']})")
         user = input('\n' " | Vous pouvez choisir un produits" '\n'
                      " |-tapez le chiffre associé et appuyer sur ENTREE" '\n'
                      " |-'Q' pour Quitter" '\n'
@@ -102,6 +99,8 @@ class Main:
                 self.home_menu()
             elif user == 'Q':
                 quit()
+        return substitutes[int(user) - 1]
+
 
     def choose_favorite_final(self, select_category, select_product, select_substitute):
         """ Choose de products final substitue and save in the data base """
@@ -143,12 +142,17 @@ class Main:
             print('\n', "IndexError - |*** /!\ Tapez le chiffre associé à votre choix dans la liste /!\ ***|", '\n')
             return self.value_error(select_function, *args)
 
+    def connect_mysql(self):
+        """ Connecting in the database """
+        self.db = rec.Database(f"mysql+mysqlconnector://{USER}:{PASSWORD}@localhost/"
+                               f"{DATABASE}?charset=utf8mb4")
+        return self.db
 
 def main():
     """ Initialize the main class """
 
     init = Main()
-    home = init.home_menu()
+    init.home_menu()
 
 
 if __name__ == "__main__":

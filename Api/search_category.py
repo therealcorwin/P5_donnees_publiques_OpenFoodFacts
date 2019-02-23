@@ -27,7 +27,7 @@ class ApiCollectingData:
                       "tagtype_0": "categories",                                            # Get the result by category
                       'tag_0': category,                                         # the tag represents the article search
                       "tag_contains_0": "contains",
-                      "page_size": 10,                                                     # Number of articles per page
+                      "page_size": 50,                                                    # Number of articles per page
                       "json": 1}                                                              # The API response in JSON
 
             response = req.get(api, params=config)                           # Uses the configuration for the connection
@@ -55,7 +55,7 @@ class ApiCollectingData:
         for product in all_products:
             if self.validate_the_data(keys, product):
 
-                barre_code = product['id']
+                barcode = product['id']
                 name = product['product_name_fr']
                 grade = product['nutrition_grade_fr']
                 website = product['url']
@@ -63,23 +63,23 @@ class ApiCollectingData:
                 sub_category = product['main_category'].upper()
                 stores = product['stores'].upper().split(',')
                 # Respect of the order of the criteria insert in a tuple and simple format in database insert
-                key = (barre_code, name, grade, website, categories, sub_category, stores)
+                key = (barcode, name, grade, website, categories, sub_category, stores)
                 formatting = key
                 product_final.append(formatting)
 
                 ###############################
                 """ PRINT RESULTS FUNCTION """
                 ###############################
-                """ Print type results final form """
-
-                pprint(product_final)
-
                 """ Print type results the stores and category count """
 
                 print('produit: ', name.upper())
                 print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
                 print('présent dans', [sub_category], [len(categories)], 'categorie(s): = ', categories, '\n')
                 print(f"Nous avons récupéré {len(product_final)} produits")
+
+                """ Print type results final form """
+
+                # pprint(product_final)
 
                 """##########################"""
 

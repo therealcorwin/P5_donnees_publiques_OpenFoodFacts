@@ -2,6 +2,7 @@
 # -*- coding: Utf-8 -*-
 
 # C:\Users\Admin\GoogleDrive\DATA_OPEN_PROG\OPENCLASSROOMS\MyProjectOC\PROJET_05\MySQL\bin
+import records as rec
 
 from Config.constants import *
 from Database.database_user import DataBaseUser
@@ -13,10 +14,10 @@ class DataBaseCreator:
         This class has the responsibility of structuring the database, and inserting the data collection of the API
     """
 
-    def __init__(self):
+    def __init__(self, db):
         """ Connect to Mysql database from the class DataBaseUser() """
-        self.database = DataBaseUser()
-        self.db = self.database.connect_mysql()
+        self.db = db
+        self.database = DataBaseUser(self.db)
 
     def drop_tables(self):
         """ Delete existing tables, to collect new data  """
@@ -34,7 +35,7 @@ class DataBaseCreator:
         """ Create table Products """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Products (
-                        barre_code BIGINT UNIQUE PRIMARY KEY,
+                        barcode BIGINT UNIQUE PRIMARY KEY,
                         name_product VARCHAR(150),
                         grade CHAR(1),
                         web_site VARCHAR(255));
@@ -67,21 +68,21 @@ class DataBaseCreator:
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Products_categories_key ( 
                         id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
-                        product_id BIGINT REFERENCES Products(barre_code),
+                        product_id BIGINT REFERENCES Products(barcode),
                         category_id MEDIUMINT REFERENCES Category(id));
                        """)
 
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Products_categories_summary_key (
                         id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
-                        product_id BIGINT REFERENCES Products(barre_code),
+                        product_id BIGINT REFERENCES Products(barcode),
                         c_category_id MEDIUMINT REFERENCES Categories_summary(id));
                       """)
 
         self.db.query("""                                                           
                         CREATE TABLE IF NOT EXISTS Products_stores (
                         id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
-                        product_id BIGINT REFERENCES Products(barre_code),
+                        product_id BIGINT REFERENCES Products(barcode),
                         store_id MEDIUMINT REFERENCES Stores(id));               
                       """)
 
@@ -89,20 +90,19 @@ class DataBaseCreator:
         """ Create the favorites table """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Favorites (
-                        barre_code BIGINT PRIMARY KEY REFERENCES Products(barre_code),
+                        category VARCHAR(125) REFERENCES Categories_summary(c_category),
+                        barcode BIGINT PRIMARY KEY REFERENCES Products(barcode),
                         name_product VARCHAR(150) REFERENCES Products(name_product),
-                        grade CHAR(1) REFERENCES Products(grade),
-                        store VARCHAR(150) REFERENCES Stores(id),
-                        web_site VARCHAR(255)) REFERENCES Products(web_site);
+                        web_site VARCHAR(255) REFERENCES Products(web_site));
                        """)
 
     def insert_product(self, id, name, grade, url, *args):
         """ Insert the product data in the table"""
         self.db.query("""                        
-                        INSERT INTO Products (barre_code, name_product, grade, web_site) 
+                        INSERT INTO Products (barcode, name_product, grade, web_site) 
                         VALUES 
                         (:id, :name, :grade, :url) 
-                        ON DUPLICATE KEY UPDATE barre_code=:id;
+                        ON DUPLICATE KEY UPDATE barcode=:id;
                       """, id=id, name=name, grade=grade, url=url)
 
     def insert_category(self, id, name, grade, url, categories, sub_category, stores, *args):
@@ -124,15 +124,15 @@ class DataBaseCreator:
 
             self.db.query("""
                             INSERT INTO Products_categories_key (product_id, category_id)
-                            VALUES (:barre_code,
+                            VALUES (:barcode,
                             (SELECT id FROM Categories WHERE category=:category_id));
-                          """, barre_code=id, category_id=category)
+                          """, barcode=id, category_id=category)
 
             self.db.query("""
                             INSERT INTO Products_categories_summary_key (product_id, c_category_id)
-                            VALUES (:barre_code,
+                            VALUES (:barcode,
                             (SELECT id FROM Categories_summary WHERE c_category=:category_id));
-                          """, barre_code=id, category_id=sub_category)
+                          """, barcode=id, category_id=sub_category)
 
     def insert_stores(self, id, name, grade, url, categories, sub_category, stores, *args):
         """ Insert the store list data in the table"""
@@ -145,9 +145,9 @@ class DataBaseCreator:
 
             self.db.query("""
                             INSERT INTO Products_stores (product_id, store_id)
-                            VALUES (:barre_code,
+                            VALUES (:barcode,
                             (SELECT id FROM Stores WHERE store=:store_id));
-                          """, barre_code=id, store_id=store)
+                          """, barcode=id, store_id=store)
 
     def create_tables(self):
         """ Execute the creating table """
@@ -155,8 +155,8 @@ class DataBaseCreator:
         self.create_table_category()
         self.create_table_store()
         self.create_table_subkey()
-        self.create_favorites_table()
-        print('\n', DECO, '\n', "    **** Creating table success ****    ", '\n', DECO, '\n')
+        # self.create_favorites_table()
+        print('\n', DECO, '\n', SPACE_ADJUST, "**** Creating table success ****", '\n', DECO, '\n')
         return True
 
     def insert_rows(self, products):
@@ -165,14 +165,16 @@ class DataBaseCreator:
             self.insert_product(*product)
             self.insert_category(*product)
             self.insert_stores(*product)
-        print('\n', DECO, '\n', "    **** Insert data, success *****     ", '\n', DECO, '\n')
+        print('\n', DECO, '\n', SPACE_ADJUST, "**** Insert data success *****", '\n', DECO, '\n')
         return True
 
 
 def main():
     """ Initialize the database """
+    db = rec.Database(f"mysql+mysqlconnector://{USER}:{PASSWORD}@localhost/"
+                           f"{DATABASE}?charset=utf8mb4")
 
-    creating = DataBaseCreator()
+    creating = DataBaseCreator(db)
 
     # Connecting in the API
     downloader = ApiCollectingData()                                                                # Load the API class
