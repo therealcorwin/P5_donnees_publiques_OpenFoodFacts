@@ -2,9 +2,10 @@
 # -*- coding: Utf-8 -*-
 
 # C:\Users\Admin\GoogleDrive\DATA_OPEN_PROG\OPENCLASSROOMS\MyProjectOC\PROJET_05\MySQL\bin
+
 import records as rec
 
-from Config.constants import *
+from Config import constants as conf
 from Database.database_user import DataBaseUser
 from Api.search_category import ApiCollectingData
 
@@ -21,15 +22,16 @@ class DataBaseCreator:
 
     def drop_tables(self):
         """ Delete existing tables, to collect new data  """
-        self.db.query(""" DROP TABLE  
-                          `categories`, 
-                          `categories_summary`, 
-                          `products`, 
-                          `products_categories_key`, 
-                          `products_categories_summary_key`, 
-                          `products_stores`, 
-                          `stores`;
-                        """)
+        self.db.query(""" 
+                        DROP TABLE 
+                        purbeurre.categories, 
+                        purbeurre.categories_summary, 
+                        purbeurre.products,
+                        purbeurre.products_categories_key,
+                        purbeurre.products_categories_summary_key,
+                        purbeurre.products_stores,
+                        purbeurre.stores;
+                      """)
 
     def create_table_product(self):
         """ Create table Products """
@@ -90,11 +92,10 @@ class DataBaseCreator:
         """ Create the favorites table """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Favorites (
-                        category VARCHAR(125) REFERENCES Categories_summary(c_category),
-                        barcode BIGINT PRIMARY KEY REFERENCES Products(barcode),
-                        name_product VARCHAR(150) REFERENCES Products(name_product),
-                        web_site VARCHAR(255) REFERENCES Products(web_site));
-                       """)
+                        product_id BIGINT REFERENCES Products(barcode), 
+                        substitute_id BIGINT REFERENCES Products(barcode),
+                        PRIMARY KEY(product_id, substitute_id));                       
+                      """)
 
     def insert_product(self, id, name, grade, url, *args):
         """ Insert the product data in the table"""
@@ -151,12 +152,14 @@ class DataBaseCreator:
 
     def create_tables(self):
         """ Execute the creating table """
+        self.drop_tables()
+        print('\n', conf.DECO, '\n', conf.SPACE_ADJUST, "**** Deleting tables success ****", '\n', conf.DECO, '\n')
         self.create_table_product()
         self.create_table_category()
         self.create_table_store()
         self.create_table_subkey()
         # self.create_favorites_table()
-        print('\n', DECO, '\n', SPACE_ADJUST, "**** Creating table success ****", '\n', DECO, '\n')
+        print('\n', conf.DECO, '\n', conf.SPACE_ADJUST, "**** Creating table success ****", '\n', conf.DECO, '\n')
         return True
 
     def insert_rows(self, products):
@@ -165,15 +168,14 @@ class DataBaseCreator:
             self.insert_product(*product)
             self.insert_category(*product)
             self.insert_stores(*product)
-        print('\n', DECO, '\n', SPACE_ADJUST, "**** Insert data success *****", '\n', DECO, '\n')
+        print('\n', conf.DECO, '\n', conf.SPACE_ADJUST, "**** Insert data success *****", '\n', conf.DECO, '\n')
         return True
 
 
 def main():
-    """ Initialize the database """
-    db = rec.Database(f"mysql+mysqlconnector://{USER}:{PASSWORD}@localhost/"
-                           f"{DATABASE}?charset=utf8mb4")
-
+    """ Initialize the connection """
+    db = rec.Database(f"mysql+mysqlconnector://{conf.USER}:{conf.PASSWORD}@localhost/"
+                      f"{conf.DATABASE}?charset=utf8mb4")
     creating = DataBaseCreator(db)
 
     # Connecting in the API

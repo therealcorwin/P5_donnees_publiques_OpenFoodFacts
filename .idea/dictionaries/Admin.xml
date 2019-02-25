@@ -2,10 +2,15 @@
   <dictionary name="Admin">
     <words>
       <w>affiche</w>
+      <w>ajout</w>
+      <w>associé</w>
+      <w>beurre</w>
       <w>bienvenue</w>
       <w>boissons</w>
       <w>categorie</w>
       <w>charcuteries</w>
+      <w>chiffre</w>
+      <w>choix</w>
       <w>commun</w>
       <w>comparer</w>
       <w>céréales</w>
@@ -18,6 +23,7 @@
       <w>insérer</w>
       <w>lactées</w>
       <w>laitiers</w>
+      <w>liste</w>
       <w>mettre</w>
       <w>parmis</w>
       <w>pouvoir</w>
@@ -30,7 +36,10 @@
       <w>selectionnè</w>
       <w>surgelés</w>
       <w>séléctionner</w>
+      <w>tapez</w>
+      <w>valeur</w>
       <w>viandes</w>
+      <w>votre</w>
       <w>végétales</w>
       <w>yaourts</w>
     </words>

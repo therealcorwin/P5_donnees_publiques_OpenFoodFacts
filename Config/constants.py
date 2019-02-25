@@ -11,7 +11,6 @@ CATEGORIES = ["Plats préparés",
               "Produits laitiers",
               "Fromages",
               "Desserts",
-              "Yaourts",
               "Viandes",
               "Charcuteries",
               "Boissons",
@@ -25,7 +24,7 @@ USER = 'OPFF'
 PASSWORD = 'OCP5'
 DATABASE = 'PurBeurre'
 
-DECO = "***------------------------------------------------***"
-SPACE_ADJUST = "            "
-
-
+DECO = "***-------------------------------------------------***"
+SPACE_ADJUST = "          "
+INDEX_ERROR = "IndexError - |*** /!\ Tapez le chiffre associé à votre choix dans la liste /!\ ***|"
+VALUE_ERROR = "ValueError - |*** /!\ Tapez la valeur associé à votre choix dans la liste /!\ ***|"

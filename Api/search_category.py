@@ -5,7 +5,7 @@
 import requests as req
 from pprint import pprint
 
-from Config.constants import *
+from Config import constants as conf
 
 
 class ApiCollectingData:
@@ -22,12 +22,12 @@ class ApiCollectingData:
         """ Use the configuration for the connecting interface """
         all_products = []
         api = "https://fr.openfoodfacts.org/cgi/search.pl"                 # Address OpenFooFact.org the API FR locating
-        for category in CATEGORIES:
+        for category in conf.CATEGORIES:
             config = {"action": "process",                                         # This config for  for connecting API
                       "tagtype_0": "categories",                                            # Get the result by category
                       'tag_0': category,                                         # the tag represents the article search
                       "tag_contains_0": "contains",
-                      "page_size": 50,                                                    # Number of articles per page
+                      "page_size": 150,                                                    # Number of articles per page
                       "json": 1}                                                              # The API response in JSON
 
             response = req.get(api, params=config)                           # Uses the configuration for the connection
