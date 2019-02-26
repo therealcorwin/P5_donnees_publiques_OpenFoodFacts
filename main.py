@@ -56,8 +56,9 @@ class Main:
         select_product = self.value_error(self.choice_product_action, select_category)
         print('\n', conf.SPACE_ADJUST, "|*** Vous avez choisis ***| : ",
               select_product['name_product'].capitalize(), '\n')
-        to_substitute = {select_product['barcode']}
-        self.favorites.extend(to_substitute)                           # Temporarily saves the product to be substituted
+
+        to_substitute = {'product_id': select_product['barcode']}
+        self.favorites.append(to_substitute)                          # Temporarily saves the product to be substituted
         self.choice_substitute(select_category, select_product)
 
     def choice_product_action(self, select_category):
@@ -119,18 +120,23 @@ class Main:
             if user not in key_list:
                 print('\n', conf.SPACE_ADJUST, conf.VALUE_ERROR, '\n')
                 self.choose_favorite_final(select_category, select_product, select_substitute)
+
             elif user == 'O':
-                substitute = select_substitute['barcode']
+                substitute = {'substitute_id': select_substitute['barcode']}
                 self.favorites.append(substitute)            # Temporarily add to the list for insertion in the database
                 print(conf.SPACE_ADJUST, " |*** Ajout du produit ***| ", '\n', conf.SPACE_ADJUST,
                       "|-Nom:", select_substitute['name_product'], '\n', conf.SPACE_ADJUST,
                       "|-Code barre:", substitute, '\n', conf.SPACE_ADJUST,
                       "|-Grade:", select_substitute['grade'], '\n', conf.SPACE_ADJUST,
                       "|-Site internet:", select_substitute['web_site'], '\n', conf.SPACE_ADJUST,
-                      "|*** Successful ***|", '\n')
+                      "|*** Successful ***|", '\n', '\n',
+                      "|Contenu du casier favoris: ", '\n', '\n', self.favorites, '\n', '\n')
                 self.choice_substitute_action(select_category, select_product)
+
             elif user == 'N':
+                print("|Contenu du casier favoris: ", '\n', '\n', self.favorites, '\n', '\n')
                 self.choice_substitute_action(select_category, select_product)
+
             elif user == 'C':
                 self.choice_substitute_action(select_category, select_product)
             elif user == 'H':
