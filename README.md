@@ -1,82 +1,82 @@
-#### Utilisez les données publiques de l'OpenFoodFacts
+# Utilisez les données publiques de l'OpenFoodFacts
 
-### Start-up *Pur Beurre*
+#### Start-up *Pur Beurre*
 
-# Type de base de donnèes:
+## Type de base de donnèes:
 -MySQL 8.0
 
-# Environnement virtuel:
+## Environnement virtuel:
 -PipEnv
 
-# Modèle physique de données: 
+## Modèle physique de données: 
 https://www.draw.io/#G1LCIp-60WcjpTEOj6mQDMlY9s1ntMLTEo
 
-# Tableau Trello:
+## Tableau Trello:
 https://trello.com/b/SxIbE5ym/project5-openfoodfact
 
-# Langue d'écriture, variables, commentaires, fonctions: 
+## Langue d'écriture, variables, commentaires, fonctions: 
 -Anglais
 
-# Installation [Python 3.7]
+## Installation [Python 3.7]
 https://www.python.org/ftp/python/3.7.2/python-3.7.2.exe
 
-## Téléchargement:
+##### Téléchargement:
 
-# Télécharger le fichier: 
+## Télécharger le fichier: 
 https://github.com/Lyss74/P5_donnees_publiques_OpenFoodFacts/archive/master.zip
 
-# Ou cloner le repository:
+## Ou cloner le repository:
 https://github.com/Lyss74/P5_donnees_publiques_OpenFoodFacts.git
 
-## Installation:
+#### Installation:
 Rendez-vous dans le répertoire du projet avec l'invité de commande
 
-# Exemple de positionnement: 
+## Exemple de positionnement: 
     "C:UsersAdminDesktopP5_donnees_publiques_OpenFoodFacts"
 
-# Installez pipenv: 
+## Installez pipenv: 
     pip install pipenv
 
 une fois fait, après quelques minutes:
 
-# Tapez: 
+## Tapez: 
     pipenv install requests 
   [L'un des packages necessaires au fonctionnement]
 
-## Lancez un serveur SQL afin dutiliser la base de donnèes.
+### Lancez un serveur SQL afin dutiliser la base de donnèes.
 
-# La connexion à la base se fera sous ces identifiant: 
+## La connexion à la base se fera sous ces identifiant: 
     DATABASE = 'PurBeurre'
     USER = 'OPFF' 
     PASSWORD = 'OCP5' 
 
-## Exécuter le fichier main.py:
+### Exécuter le fichier main.py:
 
 Rendez-vous dans le répertoire du projet avec l'invité de commande
 
-# Exemple de positionnement: 
+## Exemple de positionnement: 
     "C:UsersAdminDesktopP5_donnees_publiques_OpenFoodFacts"
 
-# Tapez: 
+## Tapez: 
     pipenv run python main.py
 
 
-### fonctionnalités:
+# Fonctionnalités:
 
-## 1 - Quel aliment souhaitez-vous remplacer ? 
+#### 1 - Quel aliment souhaitez-vous remplacer ? 
 
-# Treize categories proposer:
+## Treize categories proposer:
     -Le choix pour les catégories sont définies de façon à pouvoir proposer un grand nombre de produits référencé, mais aussi de pouvoir recueillir un maximum de produits, plutôt qu'utiliser les catégories renseignèes par tous et pour tous.
 
-# Sélectionnez l'aliment:
+## Sélectionnez l'aliment:
     -Après avoir choisi une catégorie, le programme saura vous proposer tous ces produits. 
     -Parmit la liste de produit proposer, le programme saura vous proposer une liste contenant des 
      produits de substitut Tous les grades supérieurs au grade "D" sera automatiquement rejetè. 
     -La derniére étapes qui proposent une liste de produit de substitut, vous proposeras également de 
      sauvegarder un ou plusieurs produits par rapport un produit substituè.
 
-## 2 - Retrouver mes aliments substitués.
+#### 2 - Retrouver mes aliments substitués.
 
-#  Sauvegarde des produits:
+##  Sauvegarde des produits:
     -Après avoir fait le choix de produit de substitut, il est possible de les sauvegarder dans 
      une base de données et de pouvoir les consulter à chaque moment.
