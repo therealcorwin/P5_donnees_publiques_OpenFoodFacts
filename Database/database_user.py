@@ -16,7 +16,7 @@ class DataBaseUser:
         favorites = self.db.query("""
                                 SELECT * FROM PurBeurre.Favorites;
                              """,  fetchall=True).as_dict()
-        if favorites == 0:
+        if favorites is None:
             print("Aucun produit trouvè")
         return favorites
 
@@ -31,7 +31,6 @@ class DataBaseUser:
                                 AND product.grade IN ('b', 'c', 'd', 'e')
                                 GROUP BY product.barcode;
                             """,  user=category, fetchall=True).as_dict()
-
         return cat
 
     def choose_products_from_the_category(self, category, product):
@@ -45,26 +44,16 @@ class DataBaseUser:
                                 GROUP BY product.barcode;
                              """, grade=product['grade'], category=category, fetchall=True).as_dict()
         #         return [(i, p['name_product'], p['grade'], p['barcode']) for i, p in enumerate(prod)]
-
         return prod
 
-    def insert_product(self, object_1, object_2):
-        """ Inserts the selected product (s) into the favorites table in the database """
+    # -tc- pour l'insertion d'un favori
+    def add_into_favorites(self, product, substitute):
+        """Inserts the selected product and substitute into the Favorites table in the database."""
         product_favorite = self.db.query("""
-                        INSERT INTO Favorites (
-                        (c_category, product_id) 
-                        VALUES
-                        (:category, :select_product)
-                             """, object_1=object_1, object_2=object_2, fetchall=True).as_dict()
+                                            INSERT INTO Favorites (
+                                            (product_id, substitute_id) 
+                                            VALUES
+                                            (:product_id, :substitute_id)
+                                         """,  product_id=product['barcode'], substitute_id=substitute['barcode'],
+                                         fetchall=True).as_dict()
         return product_favorite
-
-    def insert_substitute(self):
-        """ Inserts the selected product (s) into the favorites table in the database """
-        product_substitute = self.db.query("""
-                        INSERT INTO Favorites (
-                        (c_category, substitute_id) 
-                        VALUES
-                        (:category, :substitute)
-                        """)
-        # grade=product['grade'], category=category, fetchall=True).as_dict()
-        return product_substitute

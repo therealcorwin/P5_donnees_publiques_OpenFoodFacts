@@ -23,21 +23,21 @@ class DataBaseCreator:
     def drop_tables(self):
         """ Delete existing tables, to collect new data  """
         self.db.query(""" 
-                        DROP TABLE 
-                        purbeurre.categories, 
-                        purbeurre.categories_summary, 
-                        purbeurre.products,
-                        purbeurre.products_categories_key,
-                        purbeurre.products_categories_summary_key,
-                        purbeurre.products_stores,
-                        purbeurre.stores;
+                        DROP TABLE IF EXISTS
+                        categories, 
+                        categories_summary, 
+                        products,
+                        products_categories_key,
+                        products_categories_summary_key,
+                        products_stores,
+                        stores;
                       """)
 
     def create_table_product(self):
         """ Create table Products """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Products (
-                        barcode BIGINT UNIQUE PRIMARY KEY,
+                        barcode BIGINT UNSIGNED UNIQUE PRIMARY KEY,
                         name_product VARCHAR(150),
                         grade CHAR(1),
                         web_site VARCHAR(255));
@@ -47,13 +47,13 @@ class DataBaseCreator:
         """ Create table category """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Categories (
-                        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                        id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
                         category VARCHAR(125) UNIQUE);
                       """)
 
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Categories_summary (
-                        id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                        id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
                         c_category VARCHAR(125) UNIQUE); 
                       """)
 
@@ -69,21 +69,21 @@ class DataBaseCreator:
         """ Creating to the associate index table """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Products_categories_key ( 
-                        id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+                        id MEDIUMINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
                         product_id BIGINT REFERENCES Products(barcode),
                         category_id MEDIUMINT REFERENCES Category(id));
                        """)
 
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Products_categories_summary_key (
-                        id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+                        id MEDIUMINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
                         product_id BIGINT REFERENCES Products(barcode),
                         c_category_id MEDIUMINT REFERENCES Categories_summary(id));
                       """)
 
         self.db.query("""                                                           
                         CREATE TABLE IF NOT EXISTS Products_stores (
-                        id MEDIUMINT PRIMARY KEY AUTO_INCREMENT,
+                        id MEDIUMINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
                         product_id BIGINT REFERENCES Products(barcode),
                         store_id MEDIUMINT REFERENCES Stores(id));               
                       """)

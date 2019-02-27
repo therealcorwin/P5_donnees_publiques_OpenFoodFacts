@@ -33,7 +33,6 @@ class ApiCollectingData:
             response = req.get(api, params=config)                           # Uses the configuration for the connection
             results = response.json()                                                      # Return the response in JSON
             products_section = results['products']                                               # Finally result of API
-
             for product in products_section:
                 product['main_category'] = category                             # Convert the categories -> sub_category
             all_products.extend(products_section)
@@ -41,10 +40,9 @@ class ApiCollectingData:
         ###############################
         """ PRINT RESULTS FUNCTION """
         ###############################
-        """ Pprint the first result the API response """
+        # Pprint the first result the API response
         # pprint(all_products)
-
-        """##########################"""
+        ###############################
         return all_products
 
     def format_final_response(self, all_products):
@@ -70,19 +68,14 @@ class ApiCollectingData:
                 ###############################
                 """ PRINT RESULTS FUNCTION """
                 ###############################
-                """ Print type results the stores and category count """
-
+                #Print type results the stores and category count
                 print('produit: ', name.upper())
                 print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
                 print('présent dans', [sub_category], [len(categories)], 'categorie(s): = ', categories, '\n')
                 print(f"Nous avons récupéré {len(product_final)} produits")
-
-                """ Print type results final form """
-
+                #Print type results final form
                 # pprint(product_final)
-
-                """##########################"""
-
+                ###############################
         return product_final
 
     def validate_the_data(self, keys, products_section):
