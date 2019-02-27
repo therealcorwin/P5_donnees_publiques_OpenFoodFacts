@@ -1,6 +1,6 @@
-###### Utilisez les données publiques de l'OpenFoodFacts
+#### Utilisez les données publiques de l'OpenFoodFacts
 
-#### Start-up *Pur Beurre*
+### Start-up *Pur Beurre*
 
 # Type de base de donnèes:
 -MySQL 8.0
@@ -20,7 +20,7 @@ https://trello.com/b/SxIbE5ym/project5-openfoodfact
 # Installation [Python 3.7]
 https://www.python.org/ftp/python/3.7.2/python-3.7.2.exe
 
-### Téléchargement:
+## Téléchargement:
 
 # Télécharger le fichier: 
 https://github.com/Lyss74/P5_donnees_publiques_OpenFoodFacts/archive/master.zip

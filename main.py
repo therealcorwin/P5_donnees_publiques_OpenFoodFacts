@@ -106,9 +106,9 @@ class Main:
     def choose_favorite_final(self, select_category, select_product, select_substitute):
         """ Choose de products final substitue and save in the data base """
         user = input(" | tapez:" '\n' 
-                     " |-'O': pour Oui" '\n'
-                     " |-'N': pour Non" '\n' 
-                     " |-'C': pour Choisir un nouveau produit" '\n' 
+                     " |-'O': pour oui" '\n'
+                     " |-'N': pour non" '\n' 
+                     " |-'C': pour choisir un nouveau produit" '\n' 
                      " |-'H': retour au Menu" '\n'
                      " |-'Q': pour quitter, valider avec ENTREE" '\n')
         if user.isdigit():
