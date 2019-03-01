@@ -20,17 +20,25 @@ class DataBaseUser:
             print("Aucun produit trouvè")
         return favorites
 
+# SELECT * FROM Products AS product
+    # JOIN products_categories_summary_key AS pc ON pc.product_id = product.barcode
+    # JOIN Categories_summary AS c ON pc.c_category_id = c.id
+    #
+    # NATURAL JOIN Favorites;
+
+    # # c_category, favorites.product_id, substitute_id, name_product, grade, web_site
+
     def get_all_products_per_category(self, category):
         """ Control in the tables """
         cat = self.db.query("""
-                                SELECT c.c_category, product.barcode, product.name_product, 
+                                SELECT c_category, product.barcode, product.name_product, 
                                 product.grade, product.web_site FROM Products AS product
                                 JOIN products_categories_summary_key AS pc ON pc.product_id = product.barcode  
                                 JOIN Categories_summary AS c ON pc.c_category_id = c.id    
                                 WHERE c.c_category = :user
                                 AND product.grade IN ('b', 'c', 'd', 'e')
                                 GROUP BY product.barcode;
-                            """,  user=category, fetchall=True).as_dict()
+                            """, user=category, fetchall=True).as_dict()
         return cat
 
     def choose_products_from_the_category(self, category, product):
@@ -43,17 +51,14 @@ class DataBaseUser:
                                 WHERE product.grade < :grade AND cs.c_category = :category
                                 GROUP BY product.barcode;
                              """, grade=product['grade'], category=category, fetchall=True).as_dict()
-        #         return [(i, p['name_product'], p['grade'], p['barcode']) for i, p in enumerate(prod)]
         return prod
 
-    # -tc- pour l'insertion d'un favori
     def add_into_favorites(self, product, substitute):
         """Inserts the selected product and substitute into the Favorites table in the database."""
         product_favorite = self.db.query("""
-                                            INSERT INTO Favorites (
-                                            (product_id, substitute_id) 
+                                            INSERT INTO Favorites 
+                                            (id_product, id_substitute) 
                                             VALUES
-                                            (:product_id, :substitute_id)
-                                         """,  product_id=product['barcode'], substitute_id=substitute['barcode'],
-                                         fetchall=True).as_dict()
+                                            (:id_product, :id_substitute);
+                                         """, id_product=product, id_substitute=substitute)
         return product_favorite

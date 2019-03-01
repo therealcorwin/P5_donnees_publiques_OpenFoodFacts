@@ -32,7 +32,7 @@ https://github.com/Lyss74/P5_donnees_publiques_OpenFoodFacts.git
 Rendez-vous dans le répertoire du projet avec l'invité de commande
 
 ## Exemple de positionnement: 
-    "C:UsersAdminDesktopP5_donnees_publiques_OpenFoodFacts"
+    "C:Users\Admin\Desktop\P5_donnees_publiques_OpenFoodFacts"
 
 ## Installez pipenv: 
     pip install pipenv
@@ -45,7 +45,7 @@ une fois fait, après quelques minutes:
 
 ### Lancez un serveur SQL afin dutiliser la base de donnèes.
 
-## La connexion à la base se fera sous ces identifiant: 
+## La connexion à la base se fera sous ces identifiants: 
     DATABASE = 'PurBeurre'
     USER = 'OPFF' 
     PASSWORD = 'OCP5' 
@@ -55,7 +55,7 @@ une fois fait, après quelques minutes:
 Rendez-vous dans le répertoire du projet avec l'invité de commande
 
 ## Exemple de positionnement: 
-    "C:UsersAdminDesktopP5_donnees_publiques_OpenFoodFacts"
+    "C:Users\Admin\Desktop\P5_donnees_publiques_OpenFoodFacts"
 
 ## Tapez: 
     pipenv run python main.py
@@ -71,7 +71,7 @@ Rendez-vous dans le répertoire du projet avec l'invité de commande
 ## Sélectionnez l'aliment:
     -Après avoir choisi une catégorie, le programme saura vous proposer tous ces produits. 
     -Parmit la liste de produit proposer, le programme saura vous proposer une liste contenant des 
-     produits de substitut Tous les grades supérieurs au grade "D" sera automatiquement rejetè. 
+     produits de substitut, tous les grades supérieurs au grade "D" sera automatiquement rejetè. 
     -La derniére étapes qui proposent une liste de produit de substitut, vous proposeras également de 
      sauvegarder un ou plusieurs produits par rapport un produit substituè.
 

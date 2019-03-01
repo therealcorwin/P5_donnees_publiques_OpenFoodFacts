@@ -24,13 +24,14 @@ class DataBaseCreator:
         """ Delete existing tables, to collect new data  """
         self.db.query(""" 
                         DROP TABLE IF EXISTS
-                        categories, 
-                        categories_summary, 
-                        products,
-                        products_categories_key,
-                        products_categories_summary_key,
-                        products_stores,
-                        stores;
+                        Categories, 
+                        Categories_summary, 
+                        Products,
+                        Products_categories_key,
+                        Products_categories_summary_key,
+                        Products_stores,
+                        Stores,
+                        Favorites;
                       """)
 
     def create_table_product(self):
@@ -92,18 +93,18 @@ class DataBaseCreator:
         """ Create the favorites table """
         self.db.query("""
                         CREATE TABLE IF NOT EXISTS Favorites (
-                        product_id BIGINT REFERENCES Products(barcode), 
-                        substitute_id BIGINT REFERENCES Products(barcode),
-                        PRIMARY KEY(product_id, substitute_id));                       
+                        id_product BIGINT REFERENCES Products(barcode), 
+                        id_substitute BIGINT REFERENCES Products(barcode),
+                        PRIMARY KEY (id_product, id_substitute));                       
                       """)
 
     def insert_product(self, id, name, grade, url, *args):
         """ Insert the product data in the table"""
         self.db.query("""                        
-                        INSERT INTO Products (barcode, name_product, grade, web_site) 
+                        INSERT INTO Products(barcode, name_product, grade, web_site) 
                         VALUES 
                         (:id, :name, :grade, :url) 
-                        ON DUPLICATE KEY UPDATE barcode=:id;
+                        ON DUPLICATE KEY UPDATE barcode= :id;
                       """, id=id, name=name, grade=grade, url=url)
 
     def insert_category(self, id, name, grade, url, categories, sub_category, stores, *args):
@@ -113,26 +114,26 @@ class DataBaseCreator:
                             INSERT INTO Categories(category) 
                             VALUES 
                             (:category)
-                            ON DUPLICATE KEY UPDATE category=:category;                          
+                            ON DUPLICATE KEY UPDATE category= :category;                          
                           """, category=category)
 
             self.db.query("""
                             INSERT INTO Categories_summary(c_category) 
                             VALUES 
                             (:c_category)
-                            ON DUPLICATE KEY UPDATE c_category=:c_category;                          
+                            ON DUPLICATE KEY UPDATE c_category= :c_category;                          
                           """, c_category=sub_category)
 
             self.db.query("""
-                            INSERT INTO Products_categories_key (product_id, category_id)
+                            INSERT INTO Products_categories_key(product_id, category_id)
                             VALUES (:barcode,
-                            (SELECT id FROM Categories WHERE category=:category_id));
+                            (SELECT id FROM Categories WHERE category= :category_id));
                           """, barcode=id, category_id=category)
 
             self.db.query("""
-                            INSERT INTO Products_categories_summary_key (product_id, c_category_id)
+                            INSERT INTO Products_categories_summary_key(product_id, c_category_id)
                             VALUES (:barcode,
-                            (SELECT id FROM Categories_summary WHERE c_category=:category_id));
+                            (SELECT id FROM Categories_summary WHERE c_category= :category_id));
                           """, barcode=id, category_id=sub_category)
 
     def insert_stores(self, id, name, grade, url, categories, sub_category, stores, *args):
@@ -145,9 +146,9 @@ class DataBaseCreator:
                           """, store=store)
 
             self.db.query("""
-                            INSERT INTO Products_stores (product_id, store_id)
+                            INSERT INTO Products_stores(product_id, store_id)
                             VALUES (:barcode,
-                            (SELECT id FROM Stores WHERE store=:store_id));
+                            (SELECT id FROM Stores WHERE store= :store_id));
                           """, barcode=id, store_id=store)
 
     def create_tables(self):
@@ -158,7 +159,7 @@ class DataBaseCreator:
         self.create_table_category()
         self.create_table_store()
         self.create_table_subkey()
-        # self.create_favorites_table()
+        self.create_favorites_table()
         print('\n', conf.DECO, '\n', conf.SPACE_ADJUST, "**** Creating table success ****", '\n', conf.DECO, '\n')
         return True
 

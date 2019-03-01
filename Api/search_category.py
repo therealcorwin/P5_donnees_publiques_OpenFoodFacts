@@ -27,9 +27,8 @@ class ApiCollectingData:
                       "tagtype_0": "categories",                                            # Get the result by category
                       'tag_0': category,                                         # the tag represents the article search
                       "tag_contains_0": "contains",
-                      "page_size": 150,                                                    # Number of articles per page
+                      "page_size": 50,                                                    # Number of articles per page
                       "json": 1}                                                              # The API response in JSON
-
             response = req.get(api, params=config)                           # Uses the configuration for the connection
             results = response.json()                                                      # Return the response in JSON
             products_section = results['products']                                               # Finally result of API
@@ -52,7 +51,6 @@ class ApiCollectingData:
         print(len(all_products))
         for product in all_products:
             if self.validate_the_data(keys, product):
-
                 barcode = product['id']
                 name = product['product_name_fr']
                 grade = product['nutrition_grade_fr']
@@ -64,17 +62,16 @@ class ApiCollectingData:
                 key = (barcode, name, grade, website, categories, sub_category, stores)
                 formatting = key
                 product_final.append(formatting)
-
                 ###############################
                 """ PRINT RESULTS FUNCTION """
                 ###############################
-                #Print type results the stores and category count
+                # Print type results the stores and category count
                 print('produit: ', name.upper())
                 print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
                 print('présent dans', [sub_category], [len(categories)], 'categorie(s): = ', categories, '\n')
                 print(f"Nous avons récupéré {len(product_final)} produits")
-                #Print type results final form
-                # pprint(product_final)
+                # Print type results final form
+                pprint(product_final)
                 ###############################
         return product_final
 
@@ -90,7 +87,6 @@ def main():
     """ Initialize the data collect """
 
     # Download the response
-
     downloader = ApiCollectingData()
     connect = downloader.connect_and_harvest()
     downloader.format_final_response(connect)
