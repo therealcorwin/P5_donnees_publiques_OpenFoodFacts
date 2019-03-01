@@ -14,19 +14,28 @@ class DataBaseUser:
     def get_favorite_table(self):
         """ Control in the tables """
         favorites = self.db.query("""
-                                SELECT * FROM PurBeurre.Favorites;
-                             """,  fetchall=True).as_dict()
+                                    SELECT products.name_product, substitutes.name_product AS name_substitute, 
+                                    substitutes.grade FROM Favorites 
+                                    JOIN products ON products.barcode = Favorites.id_product
+                                    JOIN products AS substitutes ON substitutes.barcode = favorites.id_substitute;                             
+                                    """, fetchall=True).as_dict()
         if favorites is None:
             print("Aucun produit trouvè")
         return favorites
 
-# SELECT * FROM Products AS product
+    # SELECT * FROM Products AS product
     # JOIN products_categories_summary_key AS pc ON pc.product_id = product.barcode
     # JOIN Categories_summary AS c ON pc.c_category_id = c.id
     #
     # NATURAL JOIN Favorites;
 
     # # c_category, favorites.product_id, substitute_id, name_product, grade, web_site
+
+    def get_store(self):
+        stores = self.db.query("""
+                               """, fetchall=True).as_dict()
+        return stores
+
 
     def get_all_products_per_category(self, category):
         """ Control in the tables """
@@ -36,7 +45,7 @@ class DataBaseUser:
                                 JOIN products_categories_summary_key AS pc ON pc.product_id = product.barcode  
                                 JOIN Categories_summary AS c ON pc.c_category_id = c.id    
                                 WHERE c.c_category = :user
-                                AND product.grade IN ('b', 'c', 'd', 'e')
+                                AND product.grade IN ('c', 'd', 'e')
                                 GROUP BY product.barcode;
                             """, user=category, fetchall=True).as_dict()
         return cat

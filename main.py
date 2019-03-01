@@ -34,7 +34,7 @@ class Main:
             if user == '1':
                 self.choice_category()
             elif user == '2':
-                self.database.get_favorite_table()
+                self.product_store()
             if user == 'Q':
                 self.exit()
 
@@ -57,7 +57,7 @@ class Main:
         print('\n', conf.SPACE_ADJUST, "|*** Vous avez choisis ***| : ",
               select_product['name_product'].capitalize(), '\n')
         to_substitute = select_product['barcode']
-        self.favorites.append(to_substitute)                        # Temporarily saves the product to be substituted
+        self.favorites.append(to_substitute)                           # Temporarily saves the product to be substituted
         self.choice_substitute(select_category, select_product)
 
     def choice_product_action(self, select_category):
@@ -120,7 +120,7 @@ class Main:
                 print('\n', conf.SPACE_ADJUST, conf.VALUE_ERROR, '\n')
                 self.choose_favorite_final(select_category, select_product, select_substitute)
             elif user == 'O':
-                id_product = self.favorites[0]
+                id_product = select_product['barcode']
                 id_substitute = select_substitute['barcode']
                 key = (id_product, id_substitute)
                 self.database.add_into_favorites(key[0], key[1])
@@ -142,6 +142,13 @@ class Main:
                 self.home_menu()
             if user == 'Q':
                 self.exit()
+
+    def product_store(self):
+        products = self.database.get_favorite_table()
+        for i, select in enumerate(products):
+            print(f"* ({i+1}, {select['name_product']})")
+        input('\n' " |*** Pour connaître les points de ventes de votre produits, "
+              "tapez le chiffre associé et appuyer sur ENTREE ***| " '\n')
 
     def value_error(self, select_function, *args):
         """ This function will control the user's input """
