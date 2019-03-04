@@ -10,8 +10,9 @@ from Config import constants as conf
 
 class ApiCollectingData:
     """
-        This class has the responsibility of collecting a certain number of products, in selected categories,
-        thus to give a valid structure for the insertion in the database
+        This class has the responsibility of collecting a certain number
+        of products, in selected categories, thus to give a valid
+        structure for the insertion in the database
     """
 
     def __init__(self):
@@ -21,22 +22,30 @@ class ApiCollectingData:
     def connect_and_harvest(self):
         """ Use the configuration for the connecting interface """
         all_products = []
-        api = "https://fr.openfoodfacts.org/cgi/search.pl"                 # Address OpenFooFact.org the API FR locating
+        # Address OpenFooFact.org the API FR locating
+        api = "https://fr.openfoodfacts.org/cgi/search.pl"
         for category in conf.CATEGORIES:
-            config = {"action": "process",                                         # This config for  for connecting API
-                      "tagtype_0": "categories",                                            # Get the result by category
-                      'tag_0': category,                                         # the tag represents the article search
+            # This config for  for connecting API
+            config = {"action": "process",
+                      # Get the result by category
+                      "tagtype_0": "categories",
+                      # the tag represents the article search
+                      'tag_0': category,
                       "tag_contains_0": "contains",
+                      # Number of articles per page
                       # Min content 20, Max content 1000
-                      "page_size": 50,                                                    # Number of articles per page
-                      "json": 1}                                                              # The API response in JSON
-            response = req.get(api, params=config)                           # Uses the configuration for the connection
-            results = response.json()                                                      # Return the response in JSON
-            products_section = results['products']                                               # Finally result of API
+                      "page_size": 50,
+                      # The API response in JSON
+                      "json": 1}
+            # Uses the configuration for the connection
+            response = req.get(api, params=config)
+            # Return the response in JSON
+            results = response.json()
+            # Finally result of API
+            products_section = results['products']
             for product in products_section:
-                product['main_category'] = category                             # Convert the categories -> sub_category
+                product['main_category'] = category
             all_products.extend(products_section)
-
         ###############################
         """ PRINT RESULTS FUNCTION """
         ###############################
@@ -48,7 +57,8 @@ class ApiCollectingData:
     def format_final_response(self, all_products):
         """ Formatted the response just harvest the categories selected """
         product_final = []
-        keys = ['id', 'product_name_fr', 'nutrition_grade_fr', 'url', 'categories', 'main_category', 'stores']
+        keys = ['id', 'product_name_fr', 'nutrition_grade_fr',
+                'url', 'categories', 'main_category', 'stores']
         print(len(all_products))
         for product in all_products:
             if self.validate_the_data(keys, product):
@@ -59,18 +69,22 @@ class ApiCollectingData:
                 categories = product['categories'].upper().split(',')
                 sub_category = product['main_category'].upper()
                 stores = product['stores'].upper().split(',')
-                # Respect of the order of the criteria insert in a tuple and simple format in database insert
-                key = (barcode, name, grade, website, categories, sub_category, stores)
+                # Respect of the order of the criteria insert in a tuple
+                # and simple format in database insert
+                key = (barcode, name, grade, website,
+                       categories, sub_category, stores)
                 formatting = key
                 product_final.append(formatting)
                 ###############################
                 """ PRINT RESULTS FUNCTION """
                 ###############################
                 # Print type results the stores and category count
-                print('produit: ', name.upper())
-                print('disponnible dans', [len(stores)], 'magasin(s): = ', stores)
-                print('présent dans', [sub_category], [len(categories)], 'categorie(s): = ', categories, '\n')
-                print(f"Nous avons récupéré {len(product_final)} produits")
+                print('produit: ', name.upper(), '\n'*2,
+                      'disponnible dans', [len(stores)],
+                      'magasin(s): = ', stores,
+                      'présent dans', [sub_category], [len(categories)],
+                      'categorie(s): = ', categories, '\n',
+                      f"Nous avons récupéré {len(product_final)} produits")
                 # Print type results final form
                 pprint(product_final)
                 ###############################

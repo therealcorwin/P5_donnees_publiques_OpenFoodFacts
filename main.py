@@ -20,7 +20,9 @@ class Main:
 
     def home_menu(self):
         """ This function allows to direct the user """
-        print('\n', conf.DECO, '\n', "***  Bonjour et bienvenue au ° Substitute Factory ° ***", '\n', conf.DECO, '\n')
+        print('\n', conf.DECO, '\n',
+              "***  Bonjour et bienvenue au ° Substitute Factory ° ***",
+              '\n', conf.DECO, '\n')
         print("Tapez:", '\n',
               " |-'1': Quel aliment souhaitez-vous remplacer ?" '\n',
               " |-'2': Retrouver mes aliments substitués" '\n',
@@ -40,70 +42,97 @@ class Main:
 
     def choice_category(self):
         """ Choice Category """
-        select_category = self.value_error(self.choice_category_action)
-        print('\n', conf.SPACE_ADJUST, "|*** vous avez choisis ***| : ", select_category.capitalize(), '\n')
-        self.choice_product(select_category)
+        category = \
+            self.value_error(self.choice_category_action)
+        print('\n', conf.SPACE_ADJUST,
+              "|*** vous avez choisis ***| : ",
+              category.capitalize(), '\n')
+        self.choice_product(category)
 
     def choice_category_action(self):
-        """ This function is linked with choice_category to control the user input """
+        """
+        This function is linked with
+        choice_category to control the user input
+        """
         for i, get in enumerate(conf.CATEGORIES):
             print("*", i+1, get)
-        user = input('\n' " |*** Pour choisir une catégorie, tapez le chiffre associé et appuyer sur ENTREE ***| " '\n')
+        user = input('\n' 
+                     " |*** Pour choisir une catégorie, "
+                     "tapez le chiffre associé et appuyer sur ENTREE ***| "
+                     '\n')
         return conf.CATEGORIES[int(user)-1]
 
-    def choice_product(self, select_category):
+    def choice_product(self, category):
         """ Choice product """
-        select_product = self.value_error(self.choice_product_action, select_category)
-        print('\n', conf.SPACE_ADJUST, "|*** Vous avez choisis ***| : ",
-              select_product['name_product'].capitalize(), '\n')
-        to_substitute = select_product['barcode']
-        self.favorites.append(to_substitute)                           # Temporarily saves the product to be substituted
-        self.choice_substitute(select_category, select_product)
+        product = \
+            self.value_error(self.choice_product_action, category)
+        print('\n', conf.SPACE_ADJUST,
+              "|*** Vous avez choisis ***| : ",
+              product['name_product'].capitalize(), '\n')
+        to_substitute = product['barcode']
+        # Temporarily saves the product to be substituted
+        self.favorites.append(to_substitute)
+        self.choice_substitute(category, product)
 
-    def choice_product_action(self, select_category):
-        """ This function is linked with choice_product to control the user input """
-        products = self.database.get_all_products_per_category(str(select_category))
+    def choice_product_action(self, category):
+        """
+        This function is linked with
+        choice_product to control the user input
+        """
+        products = \
+            self.database.get_all_products_per_category(str(category))
         for i, select in enumerate(products):
             print(f"* ({i+1}, {select['name_product']})")
-        user = input('\n' " |*** Pour choisir un produit, tapez le chiffre associé et appuyer sur ENTREE ***| " '\n')
-        if '0' in user:
-            raise IndexError()
+        user = input('\n' 
+                     " |*** Pour choisir un produit, "
+                     "tapez le chiffre associé et appuyer sur ENTREE ***| "
+                     '\n')
         return products[int(user)-1]
 
-    def choice_substitute(self, select_category, select_product):
+    def choice_substitute(self, category, product):
         """ Choice the substitute """
-        select_substitute = self.value_error(self.choice_substitute_action, select_category, select_product)
-        self.choose_favorite_final(select_category, select_product, select_substitute)
+        substitute = \
+            self.value_error(self.choice_substitute_action, category, product)
+        self.choose_favorite_final(category, product, substitute)
 
-    def choice_substitute_action(self, select_category, select_product):
-        """ This function is linked with choice_substitute to control the user input """
-        substitutes = self.database.choose_products_from_the_category(select_category, select_product)
-        print("     | Code barre |,    | Nom Produits |,    | NutriScore |", '\n')
+    def choice_substitute_action(self, category, product):
+        """
+        This function is linked with
+        choice_substitute to control the user input
+        """
+        substitutes = \
+            self.database.choose_products_from_the_category(category, product)
+        print("     "
+              "| Code barre |,    | Nom Produits |,    "
+              "| NutriScore |", '\n')
         for i, select in enumerate(substitutes):
-            print(f"* ({i+1}, {select['barcode']}, {select['name_product']}, {select['grade']})")
+            print(f"* ({i+1}, {select['barcode']}, "
+                  f"{select['name_product']}, {select['grade']})")
         user = input('\n' " | Vous pouvez choisir un produits" '\n'
                      " |-tapez le chiffre associé et appuyer sur ENTREE" '\n'
                      " |-'Q' pour quitter" '\n'
                      " |-'H' retour au Menu" '\n')
         if user.isdigit():
-            select_substitute = substitutes[int(user)-1]
-            print('\n', conf.SPACE_ADJUST, "|*** Vous avez choisis ***|",
-                  select_substitute['name_product']+",", "de grade : ", select_substitute['grade'], '\n'*2,
+            substitute = substitutes[int(user)-1]
+            print('\n', conf.SPACE_ADJUST,
+                  "|*** Vous avez choisis ***|",
+                  substitute['name_product']+",",
+                  "de grade : ", substitute['grade'], '\n'*2,
                   "|*** Souhaitez-vous sauvegarder ce produit ? ***|", '\n')
-            self.choose_favorite_final(select_category, select_product, select_substitute)
+            self.choose_favorite_final(category, product, substitute)
         else:
             key_list = ["C", "H", "Q"]
             if user not in key_list:
-                self.choice_substitute_action(select_category, select_product)
+                self.choice_substitute_action(category, product)
             elif user == 'C':
-                self.choice_substitute_action(select_category, select_product)
+                self.choice_substitute_action(category, product)
             elif user == 'H':
                 self.home_menu()
             if user == 'Q':
                 self.exit()
         return substitutes[int(user)]
 
-    def choose_favorite_final(self, select_category, select_product, select_substitute):
+    def choose_favorite_final(self, category, product, substitute):
         """ Choose de products final substitute and save in the data base """
         user = input(" | tapez:" '\n' 
                      " |-'O': pour oui" '\n'
@@ -113,62 +142,73 @@ class Main:
                      " |-'Q': pour quitter, valider avec ENTREE" '\n')
         if user.isdigit():
             print('\n', conf.SPACE_ADJUST,  conf.INDEX_ERROR, '\n')
-            self.choose_favorite_final(select_category, select_product, select_substitute)
+            self.choose_favorite_final(category, product, substitute)
         else:
             key_list = ["O", "N", "C", "H", "Q"]
             if user not in key_list:
                 print('\n', conf.SPACE_ADJUST, conf.VALUE_ERROR, '\n')
-                self.choose_favorite_final(select_category, select_product, select_substitute)
+                self.choose_favorite_final(category, product, substitute)
             elif user == 'O':
-                id_product = select_product['barcode']
-                id_substitute = select_substitute['barcode']
+                id_product = product['barcode']
+                id_substitute = substitute['barcode']
                 key = (id_product, id_substitute)
+                self.favorites.append(id_substitute)
                 self.database.add_into_favorites(key[0], key[1])
-                print(conf.SPACE_ADJUST, " |*** Ajout du produit ***| ", '\n'*2, conf.SPACE_ADJUST,
-                      "|-Nom:", select_substitute['name_product'], '\n', conf.SPACE_ADJUST,
-                      "|-Code barre:", id_substitute, '\n', conf.SPACE_ADJUST,
-                      "|-Grade:", select_substitute['grade'], '\n', conf.SPACE_ADJUST,
-                      "|-Site internet:", select_substitute['web_site'], '\n'*2, conf.SPACE_ADJUST,
+                print(conf.SPACE_ADJUST,
+                      " |*** Ajout du produit ***| ",
+                      '\n'*2, conf.SPACE_ADJUST,
+                      "|-Nom:", substitute['name_product'],
+                      '\n', conf.SPACE_ADJUST,
+                      "|-Code barre:", id_substitute,
+                      '\n', conf.SPACE_ADJUST,
+                      "|-Grade:", substitute['grade'],
+                      '\n', conf.SPACE_ADJUST,
+                      "|-Site internet:", substitute['web_site'],
+                      '\n'*2, conf.SPACE_ADJUST,
                       "|*** Successful ***|", '\n'*2,
-                      "|-Contenu du casier favoris: ", '\n'*2, self.favorites, '\n'*2)
-                self.choice_substitute(select_category, select_product)
+                      "|-Contenu du casier favoris: ",
+                      '\n'*2, self.favorites, '\n'*2)
+                self.choice_substitute(category, product)
             elif user == 'N':
-                print("|Contenu du casier favoris: ", '\n'*2, self.favorites, '\n'*2)
-                self.choice_substitute(select_category, select_product)
+                print("|Contenu du casier favoris: ",
+                      '\n'*2, self.favorites, '\n'*2)
+                self.choice_substitute(category, product)
             elif user == 'C':
-                self.choice_substitute(select_category, select_product)
+                self.choice_substitute(category, product)
             elif user == 'H':
-                self.favorites = self.favorites.pop([0])
                 self.home_menu()
-            if user == 'Q':
+            elif user == 'Q':
                 self.exit()
 
     def product_store(self):
         products = self.database.get_favorite_table()
         for i, select in enumerate(products):
             print(f"* ({i+1}, {select['name_product']})")
-        input('\n' " |*** Pour connaître les points de ventes de votre produits, "
+        input('\n' " |*** Pour connaître les points de ventes de votre produit, "
               "tapez le chiffre associé et appuyer sur ENTREE ***| " '\n')
 
-    def value_error(self, select_function, *args):
+    def value_error(self, function, *args):
         """ This function will control the user's input """
         try:
-            return select_function(*args)
+            return function(*args)
         except ValueError:
             print('\n', conf.SPACE_ADJUST, conf.VALUE_ERROR, '\n')
-            return self.value_error(select_function, *args)
+            return self.value_error(function, *args)
         except IndexError:
             print('\n', conf.SPACE_ADJUST,  conf.INDEX_ERROR, '\n')
-            return self.value_error(select_function, *args)
+            return self.value_error(function, *args)
 
     def connect_mysql(self):
         """ Connecting in the database """
-        self.db = rec.Database(f"mysql+mysqlconnector://{conf.USER}:{conf.PASSWORD}@localhost/"
-                               f"{conf.DATABASE}?charset=utf8mb4")
+        self.db = rec.Database(
+                  f"mysql+mysqlconnector://{conf.USER}:{conf.PASSWORD}@localhost/"
+                  f"{conf.DATABASE}?charset=utf8mb4")
         return self.db
 
     def exit(self):
-        print('\n', conf.DECO, '\n', conf.SPACE_ADJUST, "*** ° Au revoir et à bientot ° ***", '\n', conf.DECO, '\n')
+        print('\n', conf.DECO, '\n', conf.SPACE_ADJUST,
+              "*** ° Au revoir et à bientot ° ***",
+              '\n', conf.DECO, '\n')
         quit()
 
 
