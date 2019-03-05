@@ -1,7 +1,6 @@
 # -*- PipEnv -*-
 # -*- coding: Utf-8 -*-
 
-# C:\Users\Admin\GoogleDrive\DATA_OPEN_PROG\OPENCLASSROOMS\MyProjectOC\PROJET_05\MySQL\bin
 
 import records as rec
 

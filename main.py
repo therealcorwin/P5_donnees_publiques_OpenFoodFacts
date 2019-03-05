@@ -160,18 +160,13 @@ class Main:
                       '\n', conf.SPACE_ADJUST,
                       "|-Site internet:", substitute['web_site'],
                       '\n'*2, conf.SPACE_ADJUST,
-                      "|*** Successful ***|", '\n'*2,
-                      "|-Contenu du casier favoris: ",
-                      '\n'*2,  '\n'*2)
+                      "|*** Successful ***|", '\n'*2)
                 self.choice_substitute(category, product)
             elif user == 'N':
-                print("|Contenu du casier favoris: ",
-                      '\n'*2,  '\n'*2)
                 self.choice_substitute(category, product)
             elif user == 'C':
                 self.choice_substitute(category, product)
             elif user == 'H':
-                # self.favorites.pop(key)
                 self.home_menu()
             elif user == 'Q':
                 self.exit()
@@ -180,9 +175,18 @@ class Main:
         products = self.database.get_favorite_table()
         if len(products) > 0:
             for i, select in enumerate(products):
-                print(f"* ({i+1}, {select['name_product']}, {select['stores']})")
-            # input("H" : Pour retourner au menu)
-            # self.home_menu()
+                print(f"* ({i+1}, {select['name_substitute']}, "
+                      f"{select['grade']}, {select['web_site']}, "
+                      f"{select['stores']})")
+            user = input(" | tapez:" '\n' " |-'H': retour au Menu")
+            key_list = ["O", "N", "C", "H", "Q"]
+            if user not in key_list:
+                print('\n', conf.SPACE_ADJUST, conf.VALUE_ERROR, '\n')
+                self.home_menu()
+            elif user == 'H':
+                self.home_menu()
+            elif user == 'Q':
+                self.exit()
         else:
             print("Il n'y as aucun produits")
             self.home_menu()

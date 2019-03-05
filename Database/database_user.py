@@ -13,35 +13,34 @@ class DataBaseUser:
 
     def get_all_products_per_category(self, category):
         """ Control in the tables """
-        cat = self.db.query(""" SELECT c_category, product.barcode, 
-                                product.name_product, 
-                                product.grade, product.web_site 
-                                FROM Products AS product
-                                JOIN products_categories_summary_key 
-                                AS pc ON pc.product_id = product.barcode  
-                                JOIN Categories_summary 
-                                AS c ON pc.c_category_id = c.id    
-                                WHERE c.c_category = :user
-                                AND product.grade IN ('c', 'd', 'e')
-                                GROUP BY product.barcode; """,
-                            user=category, fetchall=True).as_dict()
+        cat = self.db.query(""" 
+            SELECT c_category, product.barcode, product.name_product, 
+            product.grade, product.web_site 
+            FROM Products AS product
+            JOIN products_categories_summary_key AS pc 
+            ON pc.product_id = product.barcode  
+            JOIN Categories_summary AS c 
+            ON pc.c_category_id = c.id    
+            WHERE c.c_category = :user
+            AND product.grade IN ('c', 'd', 'e')
+            GROUP BY product.barcode; """,
+            user=category, fetchall=True).as_dict()
         return cat
 
     def choose_products_from_the_category(self, category, product):
         """ Offers a list of products with a holiest grade """
-        prod = self.db.query(""" SELECT c_category, product.barcode, 
-                                 product.name_product, 
-                                 product.grade, product.web_site 
-                                 FROM Products AS product
-                                 jOIN Products_categories_summary_key 
-                                 AS pcsk ON pcsk.product_id = product.barcode
-                                 JOIN Categories_summary 
-                                 AS cs ON cs.id = pcsk.c_category_id
-                                 WHERE product.grade < :grade 
-                                 AND cs.c_category = :category
-                                 GROUP BY product.barcode;""",
-                             grade=product['grade'], category=category,
-                             fetchall=True).as_dict()
+        prod = self.db.query(""" 
+            SELECT c_category, product.barcode, product.name_product, 
+            product.grade, product.web_site 
+            FROM Products AS product
+            jOIN Products_categories_summary_key AS pcsk 
+            ON pcsk.product_id = product.barcode
+            JOIN Categories_summary AS cs 
+            ON cs.id = pcsk.c_category_id
+            WHERE product.grade < :grade AND cs.c_category = :category
+            GROUP BY product.barcode;""",
+            grade=product['grade'], category=category,
+            fetchall=True).as_dict()
         return prod
 
     def add_into_favorites(self, product, substitute):
@@ -49,14 +48,14 @@ class DataBaseUser:
         Inserts the selected product and substitute
         into the Favorites table in the database.
         """
-        product_favorite = self.db.query(""" INSERT INTO Favorites 
-                                             (id_product, id_substitute) 
-                                             
-                                             VALUES
-                                             (:id_product, :id_substitute)
-                                             ON DUPLICATE KEY UPDATE
-                                             id_product=:id_product; """,
-                                         id_product=product, id_substitute=substitute)
+        product_favorite = self.db.query(""" 
+            INSERT INTO Favorites 
+            (id_product, id_substitute) 
+            VALUES
+            (:id_product, :id_substitute)
+            ON DUPLICATE KEY UPDATE
+            id_product=:id_product; """,
+            id_product=product, id_substitute=substitute)
         return product_favorite
 
     def get_favorite_table(self):
@@ -67,9 +66,9 @@ class DataBaseUser:
             GROUP_CONCAT(DISTINCT stores.store SEPARATOR ",  ") AS stores FROM Favorites 
             JOIN products ON products.barcode = Favorites.id_product
             JOIN products AS substitutes ON substitutes.barcode = favorites.id_substitute
-            join products_stores ON substitutes.barcode = products_stores.product_id
-            join stores ON products_stores.store_id = stores.id
+            JOIN products_stores ON substitutes.barcode = products_stores.product_id
+            JOIN stores ON products_stores.store_id = stores.id
             GROUP BY products.name_product, substitutes.name_product, 
-            name_substitute, substitutes.grade, products.web_site """,
+            name_substitute, substitutes.grade, products.web_site; """,
             fetchall=True).as_dict()
         return favorites
