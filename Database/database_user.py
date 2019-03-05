@@ -2,7 +2,6 @@
 # -*- coding: Utf-8 -*-
 
 
-
 class DataBaseUser:
     """
         This class has the responsibility to control the database of the user
@@ -11,9 +10,6 @@ class DataBaseUser:
     def __init__(self, db):
         """ Just share the connection for MySQL """
         self.db = db
-
-        # self.main = Main()
-        # self.home = self.main.home_menu()
 
     def get_all_products_per_category(self, category):
         """ Control in the tables """
@@ -29,7 +25,6 @@ class DataBaseUser:
                                 AND product.grade IN ('c', 'd', 'e')
                                 GROUP BY product.barcode; """,
                             user=category, fetchall=True).as_dict()
-        self.rows_control(cat)
         return cat
 
     def choose_products_from_the_category(self, category, product):
@@ -47,7 +42,6 @@ class DataBaseUser:
                                  GROUP BY product.barcode;""",
                              grade=product['grade'], category=category,
                              fetchall=True).as_dict()
-        self.rows_control(prod)
         return prod
 
     def add_into_favorites(self, product, substitute):
@@ -57,41 +51,25 @@ class DataBaseUser:
         """
         product_favorite = self.db.query(""" INSERT INTO Favorites 
                                              (id_product, id_substitute) 
+                                             
                                              VALUES
-                                             (:id_product, :id_substitute); """,
+                                             (:id_product, :id_substitute)
+                                             ON DUPLICATE KEY UPDATE
+                                             id_product=:id_product; """,
                                          id_product=product, id_substitute=substitute)
-        self.rows_control(product_favorite)
         return product_favorite
 
     def get_favorite_table(self):
         """ Control in the tables """
-        favorites = self.db.query(""" SELECT  products.name_product, 
-                                      substitutes.name_product 
-                                      AS name_substitute, substitutes.grade, 
-                                      products.web_site FROM Favorites 
-                                      JOIN products 
-                                      ON products.barcode = Favorites.id_product
-                                      JOIN products AS substitutes 
-                                      ON substitutes.barcode = favorites.id_substitute """,
-                                  fetchall=True).as_dict()
-        self.rows_control(favorites)
+        favorites = self.db.query(""" 
+            SELECT products.name_product, substitutes.name_product 
+            AS name_substitute, substitutes.grade, products.web_site, 
+            GROUP_CONCAT(DISTINCT stores.store SEPARATOR ",  ") AS stores FROM Favorites 
+            JOIN products ON products.barcode = Favorites.id_product
+            JOIN products AS substitutes ON substitutes.barcode = favorites.id_substitute
+            join products_stores ON substitutes.barcode = products_stores.product_id
+            join stores ON products_stores.store_id = stores.id
+            GROUP BY products.name_product, substitutes.name_product, 
+            name_substitute, substitutes.grade, products.web_site """,
+            fetchall=True).as_dict()
         return favorites
-
-    def get_store(self):
-        stores = self.db.query("""
-                                SELECT product.name_product 
-                                FROM Products AS product
-                                JOIN products_stores AS ps 
-                                ON ps.store_id = product.barcode  
-                                
-                                JOIN stores AS s ON ps.store_id = s.id    
-                                # WHERE c.store = :user; """,
-                               fetchall=True).as_dict()
-        self.rows_control(stores)
-        return stores
-
-    def rows_control(self, row):
-        if len(row) == 0:
-            print("Aucun produit trouvè")
-            # self.home.home_menu()
-        return None

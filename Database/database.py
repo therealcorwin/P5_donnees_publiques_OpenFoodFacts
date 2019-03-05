@@ -126,7 +126,7 @@ class DataBaseCreator:
                           """, barcode=id, category_id=sub_category)
 
     def insert_stores(self, id, name, grade, url,
-                      categories, sub_category, stores, *args):
+                      ategories, sub_category, stores, *args):
         """ Insert the store list data in the table"""
         for store in stores:
             self.db.query(""" INSERT INTO Stores(store)

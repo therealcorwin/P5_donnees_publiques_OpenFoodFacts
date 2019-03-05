@@ -16,7 +16,6 @@ class Main:
         """ Connect to Mysql database from the class DataBaseUser() """
         self.db = self.connect_mysql()
         self.database = DataBaseUser(self.db)
-        self.favorites = []
 
     def home_menu(self):
         """ This function allows to direct the user """
@@ -37,6 +36,7 @@ class Main:
                 self.choice_category()
             elif user == '2':
                 self.product_store()
+
             if user == 'Q':
                 self.exit()
 
@@ -69,9 +69,6 @@ class Main:
         print('\n', conf.SPACE_ADJUST,
               "|*** Vous avez choisis ***| : ",
               product['name_product'].capitalize(), '\n')
-        to_substitute = product['barcode']
-        # Temporarily saves the product to be substituted
-        # self.favorites.append(to_substitute)
         self.choice_substitute(category, product)
 
     def choice_product_action(self, category):
@@ -87,9 +84,6 @@ class Main:
                      " |*** Pour choisir un produit, "
                      "tapez le chiffre associé et appuyer sur ENTREE ***| "
                      '\n')
-
-        # if '0' in user:
-            # raise IndexError()
         return products[int(user) - 1]
 
     def choice_substitute(self, category, product):
@@ -154,9 +148,7 @@ class Main:
             elif user == 'O':
                 id_product = product['barcode']
                 id_substitute = substitute['barcode']
-                key = (id_product, id_substitute)
-                self.favorites.append(key)
-                self.database.add_into_favorites(key[0], key[1])
+                self.database.add_into_favorites(id_product, id_substitute)
                 print(conf.SPACE_ADJUST,
                       " |*** Ajout du produit ***| ",
                       '\n'*2, conf.SPACE_ADJUST,
@@ -170,26 +162,30 @@ class Main:
                       '\n'*2, conf.SPACE_ADJUST,
                       "|*** Successful ***|", '\n'*2,
                       "|-Contenu du casier favoris: ",
-                      '\n'*2, self.favorites, '\n'*2)
+                      '\n'*2,  '\n'*2)
                 self.choice_substitute(category, product)
             elif user == 'N':
                 print("|Contenu du casier favoris: ",
-                      '\n'*2, self.favorites, '\n'*2)
+                      '\n'*2,  '\n'*2)
                 self.choice_substitute(category, product)
             elif user == 'C':
                 self.choice_substitute(category, product)
-            if user == 'H':
-                self.favorites.pop(key)
+            elif user == 'H':
+                # self.favorites.pop(key)
                 self.home_menu()
             elif user == 'Q':
                 self.exit()
 
     def product_store(self):
         products = self.database.get_favorite_table()
-        for i, select in enumerate(products):
-            print(f"* ({i+1}, {select['name_product']})")
-        input('\n' " |*** Pour connaître les points de ventes de votre produit, "
-              "tapez le chiffre associé et appuyer sur ENTREE ***| " '\n')
+        if len(products) > 0:
+            for i, select in enumerate(products):
+                print(f"* ({i+1}, {select['name_product']}, {select['stores']})")
+            # input("H" : Pour retourner au menu)
+            # self.home_menu()
+        else:
+            print("Il n'y as aucun produits")
+            self.home_menu()
 
     def value_error(self, function, *args):
         """ This function will control the user's input """
