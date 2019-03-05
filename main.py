@@ -71,7 +71,7 @@ class Main:
               product['name_product'].capitalize(), '\n')
         to_substitute = product['barcode']
         # Temporarily saves the product to be substituted
-        self.favorites.append(to_substitute)
+        # self.favorites.append(to_substitute)
         self.choice_substitute(category, product)
 
     def choice_product_action(self, category):
@@ -87,7 +87,10 @@ class Main:
                      " |*** Pour choisir un produit, "
                      "tapez le chiffre associé et appuyer sur ENTREE ***| "
                      '\n')
-        return products[int(user)-1]
+
+        # if '0' in user:
+            # raise IndexError()
+        return products[int(user) - 1]
 
     def choice_substitute(self, category, product):
         """ Choice the substitute """
@@ -152,7 +155,7 @@ class Main:
                 id_product = product['barcode']
                 id_substitute = substitute['barcode']
                 key = (id_product, id_substitute)
-                self.favorites.append(id_substitute)
+                self.favorites.append(key)
                 self.database.add_into_favorites(key[0], key[1])
                 print(conf.SPACE_ADJUST,
                       " |*** Ajout du produit ***| ",
@@ -175,7 +178,8 @@ class Main:
                 self.choice_substitute(category, product)
             elif user == 'C':
                 self.choice_substitute(category, product)
-            elif user == 'H':
+            if user == 'H':
+                self.favorites.pop(key)
                 self.home_menu()
             elif user == 'Q':
                 self.exit()

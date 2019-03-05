@@ -2,6 +2,7 @@
 # -*- coding: Utf-8 -*-
 
 
+
 class DataBaseUser:
     """
         This class has the responsibility to control the database of the user
@@ -10,6 +11,9 @@ class DataBaseUser:
     def __init__(self, db):
         """ Just share the connection for MySQL """
         self.db = db
+
+        # self.main = Main()
+        # self.home = self.main.home_menu()
 
     def get_all_products_per_category(self, category):
         """ Control in the tables """
@@ -25,6 +29,7 @@ class DataBaseUser:
                                 AND product.grade IN ('c', 'd', 'e')
                                 GROUP BY product.barcode; """,
                             user=category, fetchall=True).as_dict()
+        self.rows_control(cat)
         return cat
 
     def choose_products_from_the_category(self, category, product):
@@ -42,6 +47,7 @@ class DataBaseUser:
                                  GROUP BY product.barcode;""",
                              grade=product['grade'], category=category,
                              fetchall=True).as_dict()
+        self.rows_control(prod)
         return prod
 
     def add_into_favorites(self, product, substitute):
@@ -54,6 +60,7 @@ class DataBaseUser:
                                              VALUES
                                              (:id_product, :id_substitute); """,
                                          id_product=product, id_substitute=substitute)
+        self.rows_control(product_favorite)
         return product_favorite
 
     def get_favorite_table(self):
@@ -67,8 +74,7 @@ class DataBaseUser:
                                       JOIN products AS substitutes 
                                       ON substitutes.barcode = favorites.id_substitute """,
                                   fetchall=True).as_dict()
-        if favorites is None:
-            print("Aucun produit trouvè")
+        self.rows_control(favorites)
         return favorites
 
     def get_store(self):
@@ -81,4 +87,11 @@ class DataBaseUser:
                                 JOIN stores AS s ON ps.store_id = s.id    
                                 # WHERE c.store = :user; """,
                                fetchall=True).as_dict()
+        self.rows_control(stores)
         return stores
+
+    def rows_control(self, row):
+        if len(row) == 0:
+            print("Aucun produit trouvè")
+            # self.home.home_menu()
+        return None
