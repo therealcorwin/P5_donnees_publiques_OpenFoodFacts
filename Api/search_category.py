@@ -34,7 +34,7 @@ class ApiCollectingData:
                       "tag_contains_0": "contains",
                       # Number of articles per page
                       # Min content 20, Max content 1000
-                      "page_size": 50,
+                      "page_size": 100,
                       # The API response in JSON
                       "json": 1}
             # Uses the configuration for the connection

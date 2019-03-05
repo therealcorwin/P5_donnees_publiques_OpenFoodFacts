@@ -91,9 +91,10 @@ class DataBaseCreator:
     def insert_product(self, id, name, grade, url, *args):
         """ Insert the product data in the table"""
         self.db.query(""" INSERT INTO Products
-                          (barcode, name_product,   grade, web_site) VALUES 
-                          (:id, :name, :grade, :ur  l) 
-                          ON DUPLICATE KEY UPDATE barcode= :id;
+                          (barcode, name_product, grade, web_site) 
+                          VALUES 
+                          (:id, :name, :grade, :url) 
+                          ON DUPLICATE KEY UPDATE barcode=:id;
                       """, id=id, name=name, grade=grade, url=url)
 
     def insert_category(self, id, name, grade, url,
@@ -103,25 +104,25 @@ class DataBaseCreator:
             self.db.query(""" INSERT INTO Categories(category) 
                               VALUES 
                               (:category)
-                              ON DUPLICATE KEY UPDATE category= :category;                          
+                              ON DUPLICATE KEY UPDATE category=:category;                          
                           """, category=category)
 
             self.db.query(""" INSERT INTO Categories_summary(c_category) 
                               VALUES 
                               (:c_category)
-                              ON DUPLICATE KEY UPDATE c_category= :c_category;                          
+                              ON DUPLICATE KEY UPDATE c_category=:c_category;                          
                           """, c_category=sub_category)
 
             self.db.query(""" INSERT INTO Products_categories_key
                               (product_id, category_id) VALUES 
                               (:barcode, (SELECT id FROM Categories 
-                              WHERE category= :category_id));
+                              WHERE category=:category_id));
                           """, barcode=id, category_id=category)
 
             self.db.query(""" INSERT INTO Products_categories_summary_key
                               (product_id, c_category_id) VALUES 
                               (:barcode, (SELECT id FROM Categories_summary 
-                              WHERE c_category= :category_id));
+                              WHERE c_category=:category_id));
                           """, barcode=id, category_id=sub_category)
 
     def insert_stores(self, id, name, grade, url,
@@ -135,7 +136,7 @@ class DataBaseCreator:
 
             self.db.query(""" INSERT INTO Products_stores
                               (product_id, store_id) VALUES (:barcode,
-                              (SELECT id FROM Stores WHERE store= :store_id));
+                              (SELECT id FROM Stores WHERE store=:store_id));
                           """, barcode=id, store_id=store)
 
     def create_tables(self):
