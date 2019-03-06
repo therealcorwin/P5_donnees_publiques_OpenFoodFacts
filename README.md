@@ -40,8 +40,7 @@ Rendez-vous dans le répertoire du projet avec l'invité de commande
 une fois fait, après quelques minutes:
 
 ## Tapez: 
-    pipenv install requests 
-  [L'un des packages necessaires au fonctionnement]
+    pipenv install --dev 
 
 ### Lancez un serveur SQL afin dutiliser la base de donnèes.
 
