@@ -39,7 +39,6 @@ class Main:
             if user == 'Q':
                 self.exit()
 
-
     def choice_category(self):
         """ Choice Category """
         category = \
@@ -213,7 +212,7 @@ class Main:
         """ Connecting in the database """
         self.db = rec.Database(
                   f"mysql+mysqlconnector://{conf.USER}:{conf.PASSWORD}@localhost/"
-                  f"{conf.DATABASE}?charset=utf8mb4")
+                  f"{conf.DEMO_DATABASE}?charset=utf8mb4")
         return self.db
 
     def exit(self):
