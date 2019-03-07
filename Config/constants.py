@@ -23,6 +23,7 @@ CATEGORIES = ["Plats préparés",
 USER = 'OPFF'
 PASSWORD = 'OCP5'
 DATABASE = 'PurBeurre'
+DEMO_DATABASE = 'demo'
 
 DECO = "***-------------------------------------------------***"
 SPACE_ADJUST = "          "

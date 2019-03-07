@@ -36,9 +36,9 @@ class Main:
                 self.choice_category()
             elif user == '2':
                 self.product_store()
-
             if user == 'Q':
                 self.exit()
+
 
     def choice_category(self):
         """ Choice Category """
@@ -84,6 +84,7 @@ class Main:
                      " |*** Pour choisir un produit, "
                      "tapez le chiffre associé et appuyer sur ENTREE ***| "
                      '\n')
+        self.row_control(products)
         return products[int(user) - 1]
 
     def choice_substitute(self, category, product):
@@ -127,6 +128,7 @@ class Main:
                 self.home_menu()
             if user == 'Q':
                 self.exit()
+            self.row_control(substitutes)
         return substitutes[int(user)]
 
     def choose_favorite_final(self, category, product, substitute):
@@ -188,6 +190,11 @@ class Main:
             elif user == 'Q':
                 self.exit()
         else:
+            print("Il n'y as aucun produits")
+            self.home_menu()
+
+    def row_control(self, row):
+        if len(row) == 0:
             print("Il n'y as aucun produits")
             self.home_menu()
 

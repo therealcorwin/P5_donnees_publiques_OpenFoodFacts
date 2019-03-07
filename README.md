@@ -28,6 +28,11 @@ https://github.com/Lyss74/P5_donnees_publiques_OpenFoodFacts/archive/master.zip
 ## Ou cloner le repository:
 https://github.com/Lyss74/P5_donnees_publiques_OpenFoodFacts.git
 
+## Packages nécessaire
+    - records 
+    - requests 
+    - mysql-connector-python                
+
 #### Installation:
 Rendez-vous dans le répertoire du projet avec l'invité de commande
 
@@ -40,7 +45,8 @@ Rendez-vous dans le répertoire du projet avec l'invité de commande
 une fois fait, après quelques minutes:
 
 ## Tapez: 
-    pipenv install --dev 
+    pipenv install 
+    [Cette commande installera tous les packages, en suivant le fichier Pipfile]
 
 ### Lancez un serveur SQL afin dutiliser la base de donnèes.
 
