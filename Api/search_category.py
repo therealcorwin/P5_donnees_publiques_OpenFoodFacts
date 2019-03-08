@@ -79,14 +79,14 @@ class ApiCollectingData:
                 """ PRINT RESULTS FUNCTION """
                 ###############################
                 # Print type results the stores and category count
-                # print('produit: ', name.upper(), '\n'*2,
-                      # 'disponnible dans', [len(stores)],
-                      # 'magasin(s): = ', stores,
-                      # 'présent dans', [sub_category], [len(categories)],
-                      # 'categorie(s): = ', categories, '\n',
-                      # f"Nous avons récupéré {len(product_final)} produits")
+                print('produit: ', name.upper(), '\n'*2,
+                       'disponnible dans', [len(stores)],
+                       'magasin(s): = ', stores,
+                       'présent dans', [sub_category], [len(categories)],
+                       'categorie(s): = ', categories, '\n',
+                       f"Nous avons récupéré {len(product_final)} produits")
                 # Print type results final form
-                pprint(product_final)
+                # pprint(product_final)
                 ###############################
         return product_final
 
