@@ -5,17 +5,10 @@
 # API CONSTANTS #
 
 CATEGORIES = ["Plats préparés",
-              "Plats surgelés",
-              "Conserves",
-              "Céréales",
-              "Produits laitiers",
               "Fromages",
               "Desserts",
               "Viandes",
-              "Charcuteries",
-              "Boissons",
-              "Boissons gazeuses",
-              "Boissons aux fruits"]
+              "Boissons"]
 
 #  DATABASE CONSTANTS #
 
@@ -23,7 +16,7 @@ CATEGORIES = ["Plats préparés",
 USER = 'OPFF'
 PASSWORD = 'OCP5'
 DATABASE = 'PurBeurre'
-DEMO_DATABASE = 'demo'
+DEMO = 'demo'
 
 DECO = "***-------------------------------------------------***"
 SPACE_ADJUST = "          "

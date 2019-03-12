@@ -2,7 +2,9 @@
 # -*- coding: Utf-8 -*-
 
 import records as rec
+import argparse
 
+from Database import database
 from Config import constants as conf
 from Database.database_user import DataBaseUser
 
@@ -16,6 +18,7 @@ class Main:
         """ Connect to Mysql database from the class DataBaseUser() """
         self.db = self.connect_mysql()
         self.database = DataBaseUser(self.db)
+        # self.lunch_base = DataBaseCreator(self.db)
 
     def home_menu(self):
         """ This function allows to direct the user """
@@ -27,16 +30,17 @@ class Main:
               " |-'2': Retrouver mes aliments substitués" '\n',
               " |-'Q': Pour quitter", '\n')
         user = input()
-        key_list = ["1", "2", "Q"]
+        key_list = ['1', '2', 'Q']
         if user not in key_list:
             print('\n', conf.SPACE_ADJUST,  conf.INDEX_ERROR, '\n')
             self.home_menu()
         else:
             if user == '1':
                 self.choice_category()
+                self.product_store()
             elif user == '2':
                 self.product_store()
-            if user == 'Q':
+            elif user == 'Q':
                 self.exit()
 
     def choice_category(self):
@@ -118,14 +122,14 @@ class Main:
                   "|*** Souhaitez-vous sauvegarder ce produit ? ***|", '\n')
             self.choose_favorite_final(category, product, substitute)
         else:
-            key_list = ["C", "H", "Q"]
+            key_list = ['C', 'H', 'Q']
             if user not in key_list:
                 self.choice_substitute_action(category, product)
             elif user == 'C':
                 self.choice_substitute_action(category, product)
             elif user == 'H':
                 self.home_menu()
-            if user == 'Q':
+            elif user == 'Q':
                 self.exit()
             self.row_control(substitutes)
         return substitutes[int(user)]
@@ -142,7 +146,7 @@ class Main:
             print('\n', conf.SPACE_ADJUST,  conf.INDEX_ERROR, '\n')
             self.choose_favorite_final(category, product, substitute)
         else:
-            key_list = ["O", "N", "C", "H", "Q"]
+            key_list = ['O', 'N', 'C', 'H', 'Q']
             if user not in key_list:
                 print('\n', conf.SPACE_ADJUST, conf.VALUE_ERROR, '\n')
                 self.choose_favorite_final(category, product, substitute)
@@ -179,8 +183,8 @@ class Main:
                 print(f"* ({i+1}, {select['name_substitute']}, "
                       f"{select['grade']}, {select['web_site']}, "
                       f"{select['stores']})")
-            user = input(" | tapez:" '\n' " |-'H': retour au Menu")
-            key_list = ["O", "N", "C", "H", "Q"]
+            user = input(" | tapez:" '\n' " |-'H': retour au Menu '\n'")
+            key_list = ['O', 'N', 'C', 'H', 'Q']
             if user not in key_list:
                 print('\n', conf.SPACE_ADJUST, conf.VALUE_ERROR, '\n')
                 self.home_menu()
@@ -227,6 +231,16 @@ def main():
 
     init = Main()
     init.home_menu()
+# Parse the databaseCreator
+parser = argparse.ArgumentParser(
+    description='Pur Beurre')
+parser.add_argument('--database', action="store_true",
+                    default=False, help="Option permettant de remplir la base de donnée.")
+args = parser.parse_args()
+if args.database:
+    database.main()
+else:
+    print("Lancement du programme")
 
 
 if __name__ == "__main__":
