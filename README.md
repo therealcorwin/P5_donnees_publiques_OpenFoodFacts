@@ -70,7 +70,7 @@ Rendez-vous dans le répertoire du projet avec l'invité de commande
 
 #### 1 - Quel aliment souhaitez-vous remplacer ? 
 
-## Six categories proposer:
+## Cinq categories proposer:
     -Le choix pour les catégories sont définies de façon à pouvoir proposer un grand nombre de produits référencé, 
      mais aussi de pouvoir recueillir un maximum de produits, plutôt qu'utiliser les catégories renseignèes par tous et pour tous.
 

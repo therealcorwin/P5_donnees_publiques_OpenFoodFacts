@@ -170,7 +170,7 @@ def main():
     """ Initialize the connection """
     db = rec.Database(
         f"mysql+mysqlconnector://{conf.USER}:{conf.PASSWORD}@localhost/"
-        f"{conf.DEMO}?charset=utf8mb4")
+        f"{conf.DATABASE}?charset=utf8mb4")
 
     creating = DataBaseCreator(db)
 
