@@ -84,7 +84,7 @@ class ApiCollectingData:
                       'magasin(s): = ', stores, '\n',
                       'présent dans', [sub_category], [len(categories)],
                       'categorie(s): = ', categories, '\n',
-                      f"Nous avons récupéré {len(product_final)} produits",  '\n'*2)
+                      f"Nous avons récupéré {len(product_final)} produits", '\n'*2)
                 # Print type results final form
                 # pprint(product_final)
                 ###############################
