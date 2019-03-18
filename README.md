@@ -63,7 +63,11 @@ Rendez-vous dans le répertoire du projet avec l'invité de commande
     "C:Users\Admin\Desktop\P5_donnees_publiques_OpenFoodFacts"
 
 ## Tapez: 
-    pipenv run python main.py
+    pipenv run python main.py 
+              
+## Pour directement alimenter la base de donnèes:
+    pipenv run python main.py --database 
+
 
 
 # Fonctionnalités:

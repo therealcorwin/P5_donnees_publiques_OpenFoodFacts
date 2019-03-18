@@ -34,7 +34,7 @@ class ApiCollectingData:
                       "tag_contains_0": "contains",
                       # Number of articles per page
                       # Min content 20, Max content 1000
-                      "page_size": 20,
+                      "page_size": 10,
                       # The API response in JSON
                       "json": 1}
             # Uses the configuration for the connection
@@ -79,12 +79,12 @@ class ApiCollectingData:
                 """ PRINT RESULTS FUNCTION """
                 ###############################
                 # Print type results the stores and category count
-                print('produit: ', name.upper(), '\n'*2,
-                       'disponnible dans', [len(stores)],
-                       'magasin(s): = ', stores,
-                       'présent dans', [sub_category], [len(categories)],
-                       'categorie(s): = ', categories, '\n',
-                       f"Nous avons récupéré {len(product_final)} produits")
+                print(' produit: ', name.upper(), '\n',
+                      'disponnible dans', [len(stores)],
+                      'magasin(s): = ', stores, '\n',
+                      'présent dans', [sub_category], [len(categories)],
+                      'categorie(s): = ', categories, '\n',
+                      f"Nous avons récupéré {len(product_final)} produits",  '\n'*2)
                 # Print type results final form
                 # pprint(product_final)
                 ###############################
