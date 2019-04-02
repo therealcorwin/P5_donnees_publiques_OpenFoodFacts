@@ -13,8 +13,8 @@ CATEGORIES = ["Plats préparés",
 #  DATABASE CONSTANTS #
 
 # Profile demo
-USER = 'OPFF'
-PASSWORD = 'OCP5'
+USER = 'OPP5'
+PASSWORD = 'STUDENT_OC'
 DATABASE = 'PurBeurre'
 DEMO = 'demo'
 
