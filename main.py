@@ -98,7 +98,7 @@ class Main:
         choice_substitute to control the user input
         """
         substitutes = \
-            self.database.choose_products_from_the_category(category, product)
+                self.database.choose_products_from_the_category(category, product)
         print("     "
               "| Code barre |,    | Nom Produits |,    "
               "| NutriScore |", '\n')
@@ -119,9 +119,7 @@ class Main:
             self.choose_favorite_final(category, product, substitute)
         else:
             key_list = ["C", "H", "Q"]
-            if user not in key_list:
-                self.choice_substitute_action(category, product)
-            elif user == 'C':
+            if user not in key_list or user == 'C':
                 self.choice_substitute_action(category, product)
             elif user == 'H':
                 self.home_menu()

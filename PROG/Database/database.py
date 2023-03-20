@@ -15,9 +15,9 @@ class DataBaseCreator:
 
     def connect_mysql(self):
         """ Connecting in the database """
-        connect = rec.Database("mysql+mysqlconnector://%s:%s@localhost/%s?charset=utf8mb4"
-                               % (cons.USER, cons.PASSWORD, cons.DATABASE))
-        return connect
+        return rec.Database(
+            f"mysql+mysqlconnector://{cons.USER}:{cons.PASSWORD}@localhost/{cons.DATABASE}?charset=utf8mb4"
+        )
 
     def show_database(self, connect):
         """ Control the datanase """
@@ -84,13 +84,11 @@ class DataBaseCreator:
         insert_categories = """INSERT INTO Categories (
                                Categories)
                                VALUES (%s)"""
-        pass
 
     def insert_stores(self):
         insert_Stores = """INSERT INTO Stores (
                           Stores) 
                           VALUES (%s)"""
-        pass
 
 
 def main():

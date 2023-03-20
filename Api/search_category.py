@@ -92,10 +92,10 @@ class ApiCollectingData:
 
     def validate_the_data(self, keys, products_section):
         """ Validate the complete fields """
-        for key in keys:
-            if key not in products_section or not products_section[key]:
-                return False
-        return True
+        return not any(
+            key not in products_section or not products_section[key]
+            for key in keys
+        )
 
 
 def main():
